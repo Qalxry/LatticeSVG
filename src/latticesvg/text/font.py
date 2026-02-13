@@ -234,7 +234,24 @@ class FontManager:
                         # Also index without hyphens/spaces
                         clean = stem.replace("-", "").replace(" ", "").replace("_", "")
                         index[clean] = fullpath
+                        # Index by embedded family name (FreeType only)
+                        self._index_by_family_name(index, fullpath)
         return index
+
+    def _index_by_family_name(self, index: Dict[str, str], font_path: str) -> None:
+        """Read font's embedded family name via FreeType and add to index."""
+        if not isinstance(self._backend, _FreeTypeBackend):
+            return
+        try:
+            face = self._backend._freetype.Face(font_path)
+            name = face.family_name
+            if isinstance(name, bytes):
+                name = name.decode('utf-8', errors='replace')
+            if name:
+                key = name.lower().replace(' ', '').replace('-', '').replace('_', '')
+                index.setdefault(key, font_path)
+        except Exception:
+            pass
 
     def _get_font_index(self) -> Dict[str, str]:
         if self._font_index is None:
@@ -286,6 +303,59 @@ class FontManager:
 
         return None
 
+    def find_font_chain(
+        self,
+        family_list: Optional[list] = None,
+        weight: str = "normal",
+        style: str = "normal",
+    ) -> List[str]:
+        """Resolve each family to a font path, returning an ordered fallback chain.
+
+        Unlike :meth:`find_font` (which returns only the first match), this
+        method resolves *every* distinct family in *family_list* so that
+        characters missing in the primary font can be measured with a
+        fallback font.
+        """
+        if family_list is None:
+            family_list = ["sans-serif"]
+        if isinstance(family_list, str):
+            family_list = [family_list]
+
+        chain: List[str] = []
+        seen: set = set()
+        for fam in family_list:
+            path = self._resolve_single_family(fam, weight, style)
+            if path and path not in seen:
+                chain.append(path)
+                seen.add(path)
+
+        if not chain:
+            fallback = self.find_font(family_list, weight, style)
+            if fallback:
+                chain.append(fallback)
+        return chain
+
+    def _resolve_single_family(
+        self, family: str, weight: str = "normal", style: str = "normal",
+    ) -> Optional[str]:
+        """Find a font path for a single family name."""
+        idx = self._get_font_index()
+
+        if family.lower() in _FAMILY_ALIASES:
+            names = _FAMILY_ALIASES[family.lower()]
+        else:
+            names = [family]
+
+        weight_suffix = "bold" if weight == "bold" else ""
+        style_suffix = "italic" if style in ("italic", "oblique") else ""
+
+        for name in names:
+            candidates = self._name_candidates(name, weight_suffix, style_suffix)
+            for c in candidates:
+                if c in idx:
+                    return idx[c]
+        return None
+
     @staticmethod
     def _name_candidates(name: str, weight_suffix: str, style_suffix: str) -> List[str]:
         """Generate candidate index keys for a font name."""
@@ -309,16 +379,47 @@ class FontManager:
     # Glyph measurement (cached)
     # -----------------------------------------------------------------
 
-    def glyph_metrics(self, font_path: str, size: int, char: str) -> GlyphMetrics:
+    def glyph_metrics(self, font_path, size: int, char: str) -> GlyphMetrics:
+        """Return glyph metrics for *char*.
+
+        *font_path* may be a single path string **or** an ordered list
+        of paths (a fallback chain).  When a list is given the first
+        font that contains a glyph for *char* is used.
+        """
+        if isinstance(font_path, list):
+            return self._glyph_metrics_chain(font_path, size, char)
         key = (font_path, size, char)
         if key not in self._cache:
             self._cache[key] = self._backend.glyph_metrics(font_path, size, char)
         return self._cache[key]
 
-    def ascender(self, font_path: str, size: int) -> float:
+    def _glyph_metrics_chain(self, chain: List[str], size: int, char: str) -> GlyphMetrics:
+        """Find the first font in *chain* that has a glyph for *char*."""
+        for fp in chain:
+            if self._has_glyph(fp, char):
+                return self.glyph_metrics(fp, size, char)
+        # None have it — use first font's .notdef
+        return self.glyph_metrics(chain[0], size, char)
+
+    def _has_glyph(self, font_path: str, char: str) -> bool:
+        """Return True if *font_path* contains a glyph for *char*."""
+        key = ('_has', font_path, char)
+        if key not in self._cache:
+            if isinstance(self._backend, _FreeTypeBackend):
+                face = self._backend._get_face(font_path, 16)
+                self._cache[key] = face.get_char_index(ord(char)) != 0
+            else:
+                self._cache[key] = True  # Pillow: assume yes
+        return self._cache[key]
+
+    def ascender(self, font_path, size: int) -> float:
+        if isinstance(font_path, list):
+            font_path = font_path[0]
         return self._backend.ascender(font_path, size)
 
-    def descender(self, font_path: str, size: int) -> float:
+    def descender(self, font_path, size: int) -> float:
+        if isinstance(font_path, list):
+            font_path = font_path[0]
         return self._backend.descender(font_path, size)
 
     def font_family_name(self, font_path: str) -> Optional[str]:

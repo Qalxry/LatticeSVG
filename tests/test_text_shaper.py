@@ -85,6 +85,59 @@ class TestBreakLines:
 
 
 # ------------------------------------------------------------------
+# overflow-wrap: break-word
+# ------------------------------------------------------------------
+
+class TestBreakWord:
+    """Tests for ``overflow-wrap: break-word`` behaviour."""
+
+    def test_normal_does_not_break_word(self, mock_fm):
+        # "Superlongword" = 13 chars × 10px = 130px, avail=50px
+        # With normal overflow-wrap, it stays as one unbroken token.
+        lines = break_lines("Superlongword", 50, FAKE_FONT, 16,
+                            overflow_wrap="normal", fm=mock_fm)
+        assert len(lines) == 1
+        assert lines[0].text == "Superlongword"
+
+    def test_break_word_splits_single_long_word(self, mock_fm):
+        # "Superlongword" = 13 chars × 10px = 130px, avail=50px → 5 chars per line
+        lines = break_lines("Superlongword", 50, FAKE_FONT, 16,
+                            overflow_wrap="break-word", fm=mock_fm)
+        assert len(lines) == 3
+        assert lines[0].text == "Super"
+        assert lines[1].text == "longw"
+        assert lines[2].text == "ord"
+
+    def test_break_word_moves_word_to_next_line_if_fits(self, mock_fm):
+        # "Hello World" at 60px; each char 10px.
+        # "Hello" (50) + " " (10) = 60; "World" (50) fits on a new line.
+        # overflow-wrap:break-word should behave like normal here — no breaking.
+        lines = break_lines("Hello World", 60, FAKE_FONT, 16,
+                            overflow_wrap="break-word", fm=mock_fm)
+        assert len(lines) == 2
+        assert lines[0].text == "Hello"
+        assert lines[1].text == "World"
+
+    def test_break_word_after_short_words(self, mock_fm):
+        # "Hi Superlongword" avail=50px
+        # "Hi" (20) fits, "Superlongword" (130) overflows AND > avail (50).
+        # Flush "Hi", then break "Superlongword" into 50px chunks.
+        lines = break_lines("Hi Superlongword", 50, FAKE_FONT, 16,
+                            overflow_wrap="break-word", fm=mock_fm)
+        assert lines[0].text == "Hi"
+        assert lines[1].text == "Super"
+        assert lines[2].text == "longw"
+        assert lines[3].text == "ord"
+
+    def test_break_word_anywhere_alias(self, mock_fm):
+        # "anywhere" should behave like "break-word"
+        lines = break_lines("Superlongword", 50, FAKE_FONT, 16,
+                            overflow_wrap="anywhere", fm=mock_fm)
+        assert len(lines) == 3
+        assert lines[0].text == "Super"
+
+
+# ------------------------------------------------------------------
 # align_lines
 # ------------------------------------------------------------------
 

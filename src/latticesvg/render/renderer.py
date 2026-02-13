@@ -199,7 +199,7 @@ class Renderer:
         """Render text lines."""
         cb = node.content_box
         x0 = cb.x + offset_x
-        y0 = cb.y + offset_y
+        y0 = cb.y + offset_y + getattr(node, '_text_y_offset', 0.0)
 
         font_size = node._font_size_int()
         color = node.style.get("color") or "#000000"

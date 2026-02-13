@@ -22,3 +22,5 @@ htmlcov/
 !tests/fixtures/*.png
 .old/
 demo_output/
+.vscode/
+.idea/

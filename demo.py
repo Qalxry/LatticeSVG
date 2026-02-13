@@ -267,7 +267,7 @@ def demo_08_spanning():
 
     grid = GridContainer(style={
         "width": "500px",
-        "padding": "10px",
+        "padding": "8px",
         "background-color": "#fdfefe",
         "grid-template-columns": ["1fr", "1fr", "1fr"],
         "grid-template-rows": ["80px", "80px", "80px"],
@@ -277,17 +277,16 @@ def demo_08_spanning():
     # 跨 2 列
     grid.add(ColorBox(50, 80, **{"background-color": "#e74c3c"}),
              row=1, col=1, col_span=2)
-    # 普通
+    # 跨 2 行
     grid.add(ColorBox(50, 80, **{"background-color": "#3498db"}),
-             row=1, col=3)
+             row=1, col=3, row_span=2)
     # 跨 2 行
     grid.add(ColorBox(50, 80, **{"background-color": "#2ecc71"}),
              row=2, col=1, row_span=2)
     # 普通
     grid.add(ColorBox(50, 80, **{"background-color": "#f39c12"}),
              row=2, col=2)
-    grid.add(ColorBox(50, 80, **{"background-color": "#9b59b6"}),
-             row=2, col=3)
+    # 跨 2 列
     grid.add(ColorBox(50, 80, **{"background-color": "#1abc9c"}),
              row=3, col=2, col_span=2)
 
@@ -785,6 +784,229 @@ def demo_19_layout_inspection():
 
 
 # =========================================================================
+# Demo 20：中英文混合字体
+# =========================================================================
+
+def demo_20_mixed_fonts():
+    heading("Demo 20: 中英文混合字体（字体回退链）")
+
+    grid = GridContainer(style={
+        "width": "600px",
+        "padding": "20px",
+        "grid-template-columns": ["1fr"],
+        "gap": "16px",
+        "background-color": "#fdf6e3",
+    })
+
+    # 标题 —— Times New Roman + SimSun 混排
+    title = TextNode(
+        "LatticeSVG：CSS Grid Layout Engine for SVG",
+        style={
+            "font-family": "Times New Roman, SimSun, serif",
+            "font-size": "24px",
+            "color": "#073642",
+            "text-align": "center",
+            "padding": "12px",
+            "background-color": "#eee8d5",
+        },
+    )
+    grid.add(title, row=1, col=1)
+
+    # 正文 —— 中英文混排段落
+    body = TextNode(
+        "字体回退链（Font Fallback Chain）是一种常见的排版策略。"
+        "当主字体（Primary Font）缺少某个字符的字形（Glyph）时，"
+        "引擎会自动尝试回退链中的下一个字体。"
+        "例如：英文使用 Times New Roman，中文使用 SimSun（宋体）。",
+        style={
+            "font-family": "Times New Roman, SimSun, serif",
+            "font-size": "16px",
+            "color": "#586e75",
+            "padding": "10px",
+            "background-color": "#ffffff",
+            "border": "1px solid #93a1a1",
+        },
+    )
+    grid.add(body, row=2, col=1)
+
+    # 技术说明
+    tech = TextNode(
+        "实现原理：FontManager.glyph_metrics() 接受字体路径列表，"
+        "对每个字符调用 FreeType 的 get_char_index() 判断字形覆盖，"
+        "选择第一个能提供该字符字形的字体进行度量。"
+        "SVG 输出使用 font-family 属性列出完整回退链。",
+        style={
+            "font-family": "Times New Roman, SimSun, serif",
+            "font-size": "14px",
+            "color": "#657b83",
+            "padding": "10px",
+            "background-color": "#fefbf1",
+        },
+    )
+    grid.add(tech, row=3, col=1)
+
+    save(grid, "20_mixed_fonts.svg", 600)
+    print("  → 标题与正文使用 Times New Roman + SimSun 混合渲染")
+
+
+# =========================================================================
+# Demo 21：overflow-wrap: break-word
+# =========================================================================
+
+def demo_21_overflow_wrap():
+    heading("Demo 21: overflow-wrap: break-word")
+
+    grid = GridContainer(style={
+        "width": "400px",
+        "padding": "16px",
+        "grid-template-columns": ["1fr", "1fr"],
+        "gap": "12px",
+        "background-color": "#f5f5f5",
+    })
+
+    # 左列：默认 normal — 长单词不断行
+    left = TextNode(
+        "默认模式（normal）：当主字体（PrimaryFont）缺少某个字符的字形（Glyph）时，"
+        "Pneumonoultramicroscopicsilicovolcanoconiosis 不会被截断。",
+        style={
+            "font-size": "14px",
+            "padding": "8px",
+            "background-color": "#ffffff",
+            "border": "1px solid #ccc",
+        },
+    )
+    grid.add(left, row=1, col=1)
+
+    # 右列：break-word — 长单词会在行尾断开
+    right = TextNode(
+        "断词模式（break-word）：当主字体（PrimaryFont）缺少某个字符的字形（Glyph）时，"
+        "Pneumonoultramicroscopicsilicovolcanoconiosis 会被截断。",
+        style={
+            "font-size": "14px",
+            "padding": "8px",
+            "background-color": "#ffffff",
+            "border": "1px solid #2ecc71",
+            "overflow-wrap": "break-word",
+        },
+    )
+    grid.add(right, row=1, col=2)
+
+    save(grid, "21_overflow_wrap.svg", 400)
+    print("  → 左列：长单词溢出不断行 / 右列：overflow-wrap: break-word 自动断词")
+
+
+# =========================================================================
+# Demo 22：图像生成模型 Gallery
+# =========================================================================
+
+def demo_22_image_gallery():
+    heading("Demo 22: 图像生成模型 Gallery")
+    import colorsys
+
+    IMG_H = 60                 # 统一展示高度
+    FONT = "Times New Roman, SimSun, serif"
+
+    # 10 张图片的原始分辨率 (w, h)
+    specs = [
+        (512, 512),   (512, 512),       # img 1-2  : 1:1
+        (1024, 1024), (1024, 1024),      # img 3-4  : 1:1
+        (512, 384),   (512, 384),        # img 5-6  : 4:3
+        (786, 1024),  (786, 1024),       # img 7-8  : ≈3:4
+        (1920, 1080), (1920, 1080),      # img 9-10 : 16:9
+    ]
+    # 等高缩放后的展示宽度
+    dw = [round(IMG_H * w / h, 1) for w, h in specs]
+
+    NAME_W = 90
+    GAP = 4
+    PAD = 12
+    total_w = NAME_W + sum(dw) + GAP * 10 + PAD * 2
+    cols = [f"{NAME_W}px"] + [f"{w}px" for w in dw]
+
+    grid = GridContainer(style={
+        "width": f"{total_w}px",
+        "padding": f"{PAD}px",
+        "grid-template-columns": cols,
+        "gap": f"{GAP}px",
+        "background-color": "#1a1a2e",
+    })
+
+    # ── 第 1 行：表头 ──
+    grid.add(TextNode("模型名称", style={
+        "font-family": FONT, "font-size": "12px", "font-weight": "bold",
+        "color": "#e8e8e8", "text-align": "center",
+        "padding": "8px 4px", "background-color": "#16213e",
+        "display": "flex", "align-items": "center",
+    }), row=1, col=1)
+
+    grid.add(TextNode("生成图片对比", style={
+        "font-family": FONT, "font-size": "14px", "font-weight": "bold",
+        "color": "#ffffff", "text-align": "center",
+        "padding": "8px", "background-color": "#0f3460",
+        "display": "flex", "align-items": "center",
+    }), row=1, col=2, col_span=10)
+
+    # ── 第 2–10 行：模型图片 ──
+    models = [
+        "DALL\u00b7E 3", "Midjourney v6", "SD XL 1.0",
+        "Flux.1 Pro", "Imagen 3", "Adobe Firefly",
+        "Kandinsky 3", "\u901a\u4e49\u4e07\u76f8", "Ideogram 2",
+    ]
+
+    for i, name in enumerate(models):
+        r = i + 2
+        grid.add(TextNode(name, style={
+            "font-family": FONT, "font-size": "10px",
+            "color": "#d0d0d0", "text-align": "center",
+            "padding": "4px 2px", "background-color": "#16213e",
+            "display": "flex", "align-items": "center",
+        }), row=r, col=1)
+
+        hue = i / len(models)
+        for j in range(10):
+            sat = 0.50 + (j % 5) * 0.08
+            lit = 0.32 + (j % 4) * 0.08
+            rgb = colorsys.hls_to_rgb(hue, lit, sat)
+            color = f"#{int(rgb[0]*255):02x}{int(rgb[1]*255):02x}{int(rgb[2]*255):02x}"
+            grid.add(
+                ColorBox(dw[j], IMG_H, **{"background-color": color}),
+                row=r, col=j + 2,
+            )
+
+    # ── 第 11 行：图片参数 ──
+    grid.add(TextNode("图片参数：", style={
+        "font-family": FONT, "font-size": "10px", "font-weight": "bold",
+        "color": "#e0e0e0", "text-align": "center",
+        "padding": "6px 2px", "background-color": "#16213e",
+        "display": "flex", "align-items": "center",
+    }), row=11, col=1)
+
+    param_info = [
+        ("1girl, solo, upper body, looking at viewer, smile",   "512\u00d7512",   "1:1"),
+        ("1boy, playing guitar, standing, outdoors",            "512\u00d7512",   "1:1"),
+        ("landscape, mountains, river, sunset, vibrant colors", "1024\u00d71024", "1:1"),
+        ("cityscape, night, neon lights, rainy, reflections",   "1024\u00d71024", "1:1"),
+        ("cute cat, sitting, big eyes, colorful background",    "512\u00d7384",   "4:3"),
+        ("futuristic robot, metallic, glowing eyes, city",      "512\u00d7384",   "4:3"),
+        ("fantasy castle, floating islands, bright sky",        "786\u00d71024",  "\u22483:4"),
+        ("portrait of a woman, detailed, soft lighting",        "786\u00d71024",  "\u22483:4"),
+        ("space scene, planets, stars, nebula, vibrant colors", "1920\u00d71080", "16:9"),
+        ("vintage car, driving on road, countryside, sunny",    "1920\u00d71080", "16:9"),
+    ]
+    for j, (prompt, res, ratio) in enumerate(param_info):
+        grid.add(TextNode(f"{prompt}\n{res}\n{ratio}", style={
+            "font-family": FONT, "font-size": "8px",
+            "color": "#b0b0b0", "text-align": "center",
+            "padding": "4px 2px", "background-color": "#0f3460",
+            "white-space": "pre-wrap",
+            "display": "flex", "align-items": "center",
+        }), row=11, col=j + 2)
+
+    save(grid, "22_image_gallery.svg", total_w)
+    print(f"  \u2192 9 \u4e2a\u6a21\u578b \u00d7 10 \u5f20\u56fe\u7247\u5bf9\u6bd4\uff0c\u5bbd {total_w:.0f}px")
+
+
+# =========================================================================
 # Main
 # =========================================================================
 
@@ -819,6 +1041,9 @@ def main():
     demo_17_png_output()
     demo_18_full_report()
     demo_19_layout_inspection()
+    demo_20_mixed_fonts()
+    demo_21_overflow_wrap()
+    demo_22_image_gallery()
 
     # 汇总
     svg_count = len(list(OUTPUT_DIR.glob("*.svg")))

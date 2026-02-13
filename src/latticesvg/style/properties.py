@@ -99,6 +99,12 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
     "white-space": PropertyDef(
         default="normal", inheritable=True, parser_hint="keyword"
     ),
+    "overflow-wrap": PropertyDef(
+        default="normal", inheritable=True, parser_hint="keyword"
+    ),
+    "word-break": PropertyDef(
+        default="normal", inheritable=True, parser_hint="keyword"
+    ),
     "color": PropertyDef(
         default="#000000", inheritable=True, parser_hint="color"
     ),

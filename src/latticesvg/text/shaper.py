@@ -122,6 +122,7 @@ def break_lines(
     font_path: str,
     size: int,
     white_space: str = "normal",
+    overflow_wrap: str = "normal",
     *,
     fm: Optional[FontManager] = None,
 ) -> List[Line]:
@@ -134,9 +135,16 @@ def break_lines(
         ``'nowrap'`` — collapse whitespace, no wrapping.
         ``'pre'``    — preserve whitespace and newlines, no wrapping.
         ``'pre-wrap'`` — preserve whitespace, wrap if needed.
+    overflow_wrap : str
+        ``'normal'`` — break only at allowed break points.
+        ``'break-word'`` — allow breaking within words when a word
+        overflows the available width.
+        ``'anywhere'`` — same as ``'break-word'`` (simplified).
     """
     if fm is None:
         fm = FontManager.instance()
+
+    break_word = overflow_wrap in ("break-word", "anywhere")
 
     if white_space == "pre":
         return _break_pre(text, font_path, size, fm, wrap=False)
@@ -149,7 +157,7 @@ def break_lines(
         return [Line(text=collapsed, width=w, char_count=len(collapsed))]
 
     # white_space == "normal" — default
-    return _break_normal(text, available_width, font_path, size, fm)
+    return _break_normal(text, available_width, font_path, size, fm, break_word=break_word)
 
 
 def _break_normal(
@@ -158,11 +166,17 @@ def _break_normal(
     font_path: str,
     size: int,
     fm: FontManager,
+    break_word: bool = False,
 ) -> List[Line]:
     """Greedy line-breaking for 'normal' white-space mode.
 
     Supports CJK text by treating each CJK character as an individual
     breakable unit.
+
+    When *break_word* is ``True`` (``overflow-wrap: break-word``), tokens
+    that are wider than *available_width* are split character-by-character.
+    If a token overflows the remaining space on the current line but would
+    fit on a fresh line, it simply moves to the next line (no breaking).
     """
     # Collapse whitespace
     collapsed = " ".join(text.split())
@@ -174,38 +188,98 @@ def _break_normal(
     current_parts: List[str] = []
     current_width = 0.0
 
-    for token_text, is_space in tokens:
-        token_w = measure_text(token_text, font_path, size, fm=fm)
-
-        if current_parts and current_width + token_w > available_width:
-            if is_space:
-                # Space at overflow — flush line, drop the space
-                line_text = "".join(current_parts).rstrip()
-                if line_text:
-                    line_w = measure_text(line_text, font_path, size, fm=fm)
-                    lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
-                current_parts = []
-                current_width = 0.0
-                continue
-            # Non-space overflow — flush and start new line with this token
-            line_text = "".join(current_parts).rstrip()
-            if line_text:
-                line_w = measure_text(line_text, font_path, size, fm=fm)
-                lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
-            current_parts = [token_text]
-            current_width = token_w
-        else:
-            current_parts.append(token_text)
-            current_width += token_w
-
-    # Flush remainder
-    if current_parts:
+    def _flush_line() -> None:
+        """Flush *current_parts* into *lines*."""
+        nonlocal current_parts, current_width
         line_text = "".join(current_parts).rstrip()
         if line_text:
             line_w = measure_text(line_text, font_path, size, fm=fm)
             lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
+        current_parts = []
+        current_width = 0.0
+
+    for token_text, is_space in tokens:
+        token_w = measure_text(token_text, font_path, size, fm=fm)
+
+        fits_current = (not current_parts) or (current_width + token_w <= available_width)
+
+        if not fits_current:
+            if is_space:
+                # Space at overflow — flush line, drop the space
+                _flush_line()
+                continue
+
+            if break_word and token_w > available_width:
+                # Token wider than a full line — must break it.
+                # Flush current line first, then split the token.
+                _flush_line()
+                _split_token_into_lines(
+                    token_text, available_width,
+                    font_path, size, fm,
+                    current_parts, lines,
+                )
+                current_width = measure_text(
+                    "".join(current_parts), font_path, size, fm=fm
+                )
+            else:
+                # Normal overflow — flush and start new line with this token
+                _flush_line()
+                current_parts = [token_text]
+                current_width = token_w
+        else:
+            # Check: fresh line with a single oversized token
+            if break_word and not current_parts and token_w > available_width:
+                _split_token_into_lines(
+                    token_text, available_width,
+                    font_path, size, fm,
+                    current_parts, lines,
+                )
+                current_width = measure_text(
+                    "".join(current_parts), font_path, size, fm=fm
+                )
+            else:
+                current_parts.append(token_text)
+                current_width += token_w
+
+    # Flush remainder
+    if current_parts:
+        _flush_line()
 
     return lines if lines else [Line(text="", width=0.0, char_count=0)]
+
+
+def _split_token_into_lines(
+    token: str,
+    available_width: float,
+    font_path: str,
+    size: int,
+    fm: FontManager,
+    current_parts: List[str],
+    lines: List[Line],
+) -> None:
+    """Split *token* character-by-character into lines of up to *available_width*.
+
+    Complete lines are appended to *lines*.  Any leftover characters are
+    placed into *current_parts* so the caller can continue accumulating.
+    """
+    buf = ""
+    buf_w = 0.0
+
+    for ch in token:
+        cw = fm.glyph_metrics(font_path, size, ch).advance_x
+        if buf and buf_w + cw > available_width:
+            # Flush completed line
+            lines.append(Line(text=buf, width=buf_w, char_count=len(buf)))
+            buf = ch
+            buf_w = cw
+        else:
+            buf += ch
+            buf_w += cw
+
+    # Leftover goes into current_parts for the caller
+    if buf:
+        current_parts.clear()
+        current_parts.append(buf)
 
 
 def _break_pre(
@@ -224,20 +298,74 @@ def _break_pre(
             w = measure_text(raw, font_path, size, fm=fm)
             result.append(Line(text=raw, width=w, char_count=len(raw)))
         else:
-            # Character-level wrapping for pre-wrap
-            current = ""
-            current_w = 0.0
-            for ch in raw:
-                cw = fm.glyph_metrics(font_path, size, ch).advance_x
-                if current and current_w + cw > available_width:
-                    result.append(Line(text=current, width=current_w, char_count=len(current)))
-                    current = ch
-                    current_w = cw
-                else:
-                    current += ch
-                    current_w += cw
-            result.append(Line(text=current, width=current_w, char_count=len(current)))
+            # Word-boundary wrapping for pre-wrap (preserves spaces)
+            sub_lines = _wrap_pre_line(raw, available_width, font_path, size, fm)
+            result.extend(sub_lines)
     return result if result else [Line(text="", width=0.0, char_count=0)]
+
+
+def _wrap_pre_line(
+    text: str,
+    available_width: float,
+    font_path: str,
+    size: int,
+    fm: FontManager,
+) -> List[Line]:
+    """Wrap a single physical line at word boundaries for pre-wrap.
+
+    Unlike ``_break_normal``, whitespace is preserved (not collapsed)
+    and breaking happens at word/CJK boundaries.
+    """
+    if not text:
+        return [Line(text="", width=0.0, char_count=0)]
+
+    tokens = _tokenize_breakable(text)
+    lines: List[Line] = []
+    current_parts: List[str] = []
+    current_width = 0.0
+
+    def _flush() -> None:
+        nonlocal current_parts, current_width
+        line_text = "".join(current_parts)
+        if line_text or not lines:  # allow empty first line
+            line_w = measure_text(line_text, font_path, size, fm=fm) if line_text else 0.0
+            lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
+        current_parts = []
+        current_width = 0.0
+
+    for token_text, is_space in tokens:
+        token_w = measure_text(token_text, font_path, size, fm=fm)
+
+        if current_parts and current_width + token_w > available_width:
+            if is_space:
+                # Wrap at space — include the space on the current line or drop it
+                _flush()
+                continue
+            # Word overflow — flush, put word on new line
+            _flush()
+            # If the token itself is wider than available_width, break by char
+            if token_w > available_width:
+                _split_token_into_lines(
+                    token_text, available_width,
+                    font_path, size, fm,
+                    current_parts, lines,
+                )
+                current_width = measure_text(
+                    "".join(current_parts), font_path, size, fm=fm
+                )
+            else:
+                current_parts = [token_text]
+                current_width = token_w
+        else:
+            current_parts.append(token_text)
+            current_width += token_w
+
+    # Flush remainder (always, even if empty — preserves trailing newlines)
+    line_text = "".join(current_parts)
+    line_w = measure_text(line_text, font_path, size, fm=fm) if line_text else 0.0
+    lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
+
+    return lines
 
 
 # ---------------------------------------------------------------------------
