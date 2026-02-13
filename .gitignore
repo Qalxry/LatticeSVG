@@ -21,3 +21,4 @@ htmlcov/
 !tests/fixtures/*.svg
 !tests/fixtures/*.png
 .old/
+demo_output/

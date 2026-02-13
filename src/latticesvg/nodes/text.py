@@ -94,6 +94,12 @@ class TextNode(Node):
         if content_w is None:
             content_w = constraints.available_width or 800.0
 
+        # Store resolved font info for rendering
+        self._resolved_font_path = font_path
+        self._resolved_font_family = None
+        if font_path is not None:
+            self._resolved_font_family = fm.font_family_name(font_path)
+
         if font_path is None:
             # No font available — empty box
             self._resolve_box_model(content_w, 0.0)

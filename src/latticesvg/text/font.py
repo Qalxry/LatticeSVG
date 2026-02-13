@@ -136,20 +136,23 @@ elif sys.platform == "win32":
 # Common font-family aliases
 _FAMILY_ALIASES: Dict[str, List[str]] = {
     "sans-serif": [
+        # CJK-capable fonts first for consistent measurement
+        "NotoSansCJK", "Noto Sans CJK",
+        "NotoSans", "Noto Sans",
         "DejaVuSans", "DejaVu Sans",
-        "NotoSans", "Noto Sans", "Noto Sans CJK SC",
         "Arial", "Helvetica", "Liberation Sans",
         "FreeSans",
     ],
     "serif": [
+        "NotoSerifCJK", "Noto Serif CJK",
+        "NotoSerif", "Noto Serif",
         "DejaVuSerif", "DejaVu Serif",
-        "NotoSerif", "Noto Serif", "Noto Serif CJK SC",
         "Times New Roman", "Liberation Serif",
         "FreeSerif",
     ],
     "monospace": [
-        "DejaVuSansMono", "DejaVu Sans Mono",
         "NotoSansMono", "Noto Sans Mono",
+        "DejaVuSansMono", "DejaVu Sans Mono",
         "Courier New", "Liberation Mono",
         "FreeMono",
     ],
@@ -317,3 +320,17 @@ class FontManager:
 
     def descender(self, font_path: str, size: int) -> float:
         return self._backend.descender(font_path, size)
+
+    def font_family_name(self, font_path: str) -> Optional[str]:
+        """Get the CSS font-family name from a font file using FreeType."""
+        if isinstance(self._backend, _FreeTypeBackend):
+            try:
+                face = self._backend._freetype.Face(font_path)
+                name = face.family_name
+                if isinstance(name, bytes):
+                    name = name.decode('utf-8', errors='replace')
+                return name
+            except Exception:
+                pass
+        # Fallback: derive from filename stem
+        return Path(font_path).stem.replace('-', ' ').replace('_', ' ')

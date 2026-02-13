@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from .font import FontManager
 
@@ -19,6 +19,63 @@ class Line:
     width: float          # measured width in px
     x_offset: float = 0.0 # horizontal offset after alignment
     char_count: int = 0
+
+
+# ---------------------------------------------------------------------------
+# CJK detection
+# ---------------------------------------------------------------------------
+
+def _is_cjk_char(ch: str) -> bool:
+    """Return True if *ch* is a CJK ideograph or fullwidth character."""
+    cp = ord(ch)
+    return (
+        (0x4E00 <= cp <= 0x9FFF)   or  # CJK Unified Ideographs
+        (0x3400 <= cp <= 0x4DBF)   or  # CJK Extension A
+        (0x20000 <= cp <= 0x2A6DF) or  # CJK Extension B
+        (0xF900 <= cp <= 0xFAFF)   or  # CJK Compatibility Ideographs
+        (0x3000 <= cp <= 0x303F)   or  # CJK Symbols and Punctuation
+        (0xFF01 <= cp <= 0xFF60)   or  # Fullwidth Latin / Punctuation
+        (0xFFE0 <= cp <= 0xFFEF)   or  # Fullwidth signs
+        (0x3040 <= cp <= 0x309F)   or  # Hiragana
+        (0x30A0 <= cp <= 0x30FF)   or  # Katakana
+        (0xAC00 <= cp <= 0xD7AF)   or  # Hangul Syllables
+        (0x2E80 <= cp <= 0x2EFF)   or  # CJK Radicals Supplement
+        (0x2F00 <= cp <= 0x2FDF)   or  # Kangxi Radicals
+        (0xFE30 <= cp <= 0xFE4F)   or  # CJK Compatibility Forms
+        (0x3200 <= cp <= 0x32FF)   or  # Enclosed CJK Letters
+        (0x3300 <= cp <= 0x33FF)   or  # CJK Compatibility
+        (0xFE10 <= cp <= 0xFE1F)       # Vertical Forms
+    )
+
+
+def _tokenize_breakable(text: str) -> List[Tuple[str, bool]]:
+    """Split *text* into breakable segments.
+
+    Each CJK character becomes its own segment (breakable).
+    Consecutive non-CJK/non-space characters form a "word" segment.
+    Spaces are separate segments.
+
+    Returns a list of ``(text, is_space)`` tuples.
+    """
+    tokens: List[Tuple[str, bool]] = []
+    i = 0
+    n = len(text)
+    while i < n:
+        ch = text[i]
+        if ch == ' ':
+            tokens.append((' ', True))
+            i += 1
+        elif _is_cjk_char(ch):
+            tokens.append((ch, False))
+            i += 1
+        else:
+            # Accumulate non-CJK, non-space word
+            j = i + 1
+            while j < n and text[j] != ' ' and not _is_cjk_char(text[j]):
+                j += 1
+            tokens.append((text[i:j], False))
+            i = j
+    return tokens
 
 
 # ---------------------------------------------------------------------------
@@ -102,38 +159,51 @@ def _break_normal(
     size: int,
     fm: FontManager,
 ) -> List[Line]:
-    """Greedy line-breaking for 'normal' white-space mode."""
+    """Greedy line-breaking for 'normal' white-space mode.
+
+    Supports CJK text by treating each CJK character as an individual
+    breakable unit.
+    """
     # Collapse whitespace
     collapsed = " ".join(text.split())
     if not collapsed:
         return [Line(text="", width=0.0, char_count=0)]
 
-    words = collapsed.split(" ")
+    tokens = _tokenize_breakable(collapsed)
     lines: List[Line] = []
-    current_words: List[str] = []
+    current_parts: List[str] = []
     current_width = 0.0
-    space_width = measure_text(" ", font_path, size, fm=fm)
 
-    for word in words:
-        word_width = measure_text(word, font_path, size, fm=fm)
-        needed = word_width if not current_words else current_width + space_width + word_width
-        if current_words and needed > available_width:
-            # Flush current line
-            line_text = " ".join(current_words)
-            lines.append(Line(text=line_text, width=current_width, char_count=len(line_text)))
-            current_words = [word]
-            current_width = word_width
+    for token_text, is_space in tokens:
+        token_w = measure_text(token_text, font_path, size, fm=fm)
+
+        if current_parts and current_width + token_w > available_width:
+            if is_space:
+                # Space at overflow — flush line, drop the space
+                line_text = "".join(current_parts).rstrip()
+                if line_text:
+                    line_w = measure_text(line_text, font_path, size, fm=fm)
+                    lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
+                current_parts = []
+                current_width = 0.0
+                continue
+            # Non-space overflow — flush and start new line with this token
+            line_text = "".join(current_parts).rstrip()
+            if line_text:
+                line_w = measure_text(line_text, font_path, size, fm=fm)
+                lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
+            current_parts = [token_text]
+            current_width = token_w
         else:
-            if current_words:
-                current_width += space_width + word_width
-            else:
-                current_width = word_width
-            current_words.append(word)
+            current_parts.append(token_text)
+            current_width += token_w
 
     # Flush remainder
-    if current_words:
-        line_text = " ".join(current_words)
-        lines.append(Line(text=line_text, width=current_width, char_count=len(line_text)))
+    if current_parts:
+        line_text = "".join(current_parts).rstrip()
+        if line_text:
+            line_w = measure_text(line_text, font_path, size, fm=fm)
+            lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
 
     return lines if lines else [Line(text="", width=0.0, char_count=0)]
 
@@ -236,15 +306,25 @@ def get_min_content_width(
     *,
     fm: Optional[FontManager] = None,
 ) -> float:
-    """Return the minimum content width — the width of the longest word."""
+    """Return the minimum content width — the width of the longest word.
+
+    For CJK text each character is breakable so the min width is the
+    widest single CJK character or the widest non-CJK word.
+    """
     if fm is None:
         fm = FontManager.instance()
     if white_space in ("pre", "nowrap"):
         return measure_text(text, font_path, size, fm=fm)
-    words = text.split()
-    if not words:
+    collapsed = " ".join(text.split())
+    if not collapsed:
         return 0.0
-    return max(measure_text(w, font_path, size, fm=fm) for w in words)
+    tokens = _tokenize_breakable(collapsed)
+    max_w = 0.0
+    for token_text, is_space in tokens:
+        if not is_space:
+            w = measure_text(token_text, font_path, size, fm=fm)
+            max_w = max(max_w, w)
+    return max_w
 
 
 def get_max_content_width(

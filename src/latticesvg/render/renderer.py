@@ -75,8 +75,18 @@ class Renderer:
     # Internal rendering dispatch
     # =================================================================
 
-    def _render_node(self, node: "Node", offset_x: float = 0.0, offset_y: float = 0.0) -> None:
-        """Recursively render *node* and its children."""
+    def _render_node(
+        self,
+        node: "Node",
+        offset_x: float = 0.0,
+        offset_y: float = 0.0,
+        target: Optional[dw.Group] = None,
+    ) -> None:
+        """Recursively render *node* and its children.
+
+        *target* is the drawsvg container to append into; defaults to
+        ``self.drawing``.
+        """
         from ..nodes.grid import GridContainer
         from ..nodes.text import TextNode
         from ..nodes.image import ImageNode
@@ -84,6 +94,8 @@ class Renderer:
         from ..nodes.svg import SVGNode
 
         assert self.drawing is not None
+        if target is None:
+            target = self.drawing
 
         bb = node.border_box
         x = bb.x + offset_x
@@ -119,10 +131,11 @@ class Renderer:
 
         # --- Content ---
         if isinstance(node, GridContainer):
-            # Grid container: render children
+            # Grid container: render children *into this group*
+            # so that the background is painted first, then children on top.
             for child in node.children:
-                self._render_node(child, offset_x=offset_x, offset_y=offset_y)
-            self.drawing.append(group)
+                self._render_node(child, offset_x=offset_x, offset_y=offset_y, target=group)
+            target.append(group)
             return
 
         if isinstance(node, TextNode):
@@ -134,7 +147,7 @@ class Renderer:
         elif isinstance(node, SVGNode):
             self._render_svg_node(group, node, offset_x, offset_y)
 
-        self.drawing.append(group)
+        target.append(group)
 
     # -----------------------------------------------------------------
     # Border drawing
@@ -190,7 +203,11 @@ class Renderer:
 
         font_size = node._font_size_int()
         color = node.style.get("color") or "#000000"
-        font_family = node.style.get("font-family")
+
+        # Prefer the resolved font-family from FreeType to match measurement
+        font_family = getattr(node, '_resolved_font_family', None)
+        if font_family is None:
+            font_family = node.style.get("font-family")
         if isinstance(font_family, list):
             font_family = ", ".join(font_family)
         font_weight = node.style.get("font-weight") or "normal"
@@ -205,6 +222,7 @@ class Renderer:
         # Handle text-overflow: ellipsis
         text_overflow = node.style.get("text-overflow")
         overflow = node.style.get("overflow")
+        ws = node.style.get("white-space") or "normal"
 
         for i, line in enumerate(node.lines):
             text = line.text
@@ -221,6 +239,11 @@ class Renderer:
                     # Potentially truncate with ellipsis
                     if line.width > cb.width:
                         text = self._truncate_with_ellipsis(text, cb.width, font_size)
+
+            # For pre/pre-wrap, replace spaces with non-breaking spaces
+            # so the SVG viewer doesn't collapse whitespace.
+            if ws in ("pre", "pre-wrap"):
+                text = text.replace(" ", "\u00a0")
 
             t = dw.Text(
                 text,
@@ -319,9 +342,19 @@ class Renderer:
         sx = getattr(node, "scale_x", 1.0)
         sy = getattr(node, "scale_y", 1.0)
 
+        # Strip the outer <svg> wrapper to avoid nested viewport issues
+        inner = node.get_inner_svg()
+
+        # Account for viewBox origin offset
+        vb_x = getattr(node, "_vb_min_x", 0.0)
+        vb_y = getattr(node, "_vb_min_y", 0.0)
+        transform = f"translate({x},{y}) scale({sx},{sy})"
+        if vb_x or vb_y:
+            transform += f" translate({-vb_x},{-vb_y})"
+
         raw = dw.Raw(
-            f'<g transform="translate({x},{y}) scale({sx},{sy})">'
-            f"{node.svg_content}"
+            f'<g transform="{transform}">'
+            f"{inner}"
             f"</g>"
         )
         group.append(raw)

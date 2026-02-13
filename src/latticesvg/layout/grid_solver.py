@@ -729,12 +729,39 @@ class GridSolver:
         cell_x = col_starts[item.col_start] if item.col_start < len(col_starts) else 0
         cell_y = row_starts[item.row_start] if item.row_start < len(row_starts) else 0
 
+        # Remember old position before re-resolving (needed for nested grids)
+        old_x = item.node.border_box.x
+        old_y = item.node.border_box.y
+
+        new_x = cx + cell_x + dx
+        new_y = cy + cell_y + dy
+
         item.node._resolve_box_model(
             max(0, child_w - item.node.style.padding_horizontal - item.node.style.border_horizontal),
             max(0, child_h - item.node.style.padding_vertical - item.node.style.border_vertical),
-            x=cx + cell_x + dx,
-            y=cy + cell_y + dy,
+            x=new_x,
+            y=new_y,
         )
+
+        # Shift all descendant positions by the delta so nested grid
+        # children stay correctly positioned inside their container.
+        shift_x = new_x - old_x
+        shift_y = new_y - old_y
+        if (shift_x != 0 or shift_y != 0) and item.node.children:
+            self._shift_descendants(item.node, shift_x, shift_y)
+
+    @staticmethod
+    def _shift_descendants(node: "Node", dx: float, dy: float) -> None:
+        """Recursively shift all descendant box positions by *(dx, dy)*."""
+        for child in node.children:
+            child.border_box.x += dx
+            child.border_box.y += dy
+            child.padding_box.x += dx
+            child.padding_box.y += dy
+            child.content_box.x += dx
+            child.content_box.y += dy
+            if child.children:
+                GridSolver._shift_descendants(child, dx, dy)
 
     def _col_starts(self) -> List[float]:
         starts: List[float] = []

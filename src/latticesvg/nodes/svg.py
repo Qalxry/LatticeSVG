@@ -31,6 +31,8 @@ class SVGNode(Node):
         else:
             self.svg_content = svg
         self._intrinsic: Optional[Tuple[float, float]] = None
+        self._vb_min_x: float = 0.0
+        self._vb_min_y: float = 0.0
 
     # -----------------------------------------------------------------
     # Intrinsic size parsing
@@ -47,6 +49,8 @@ class SVGNode(Node):
         if vb:
             parts = vb.group(1).split()
             if len(parts) >= 4:
+                self._vb_min_x = float(parts[0])
+                self._vb_min_y = float(parts[1])
                 w = float(parts[2])
                 h = float(parts[3])
                 self._intrinsic = (w, h)
@@ -111,6 +115,26 @@ class SVGNode(Node):
         # Scale factor for rendering
         self.scale_x = content_w / iw if iw > 0 else 1.0
         self.scale_y = content_h / ih if ih > 0 else 1.0
+
+    # -----------------------------------------------------------------
+    # SVG content helpers
+    # -----------------------------------------------------------------
+
+    def get_inner_svg(self) -> str:
+        """Return SVG content with the outer ``<svg>`` wrapper stripped.
+
+        This is used for embedding inside another SVG document.
+        """
+        content = self.svg_content
+        # Remove XML declaration
+        content = re.sub(r'<\?xml[^?]*\?>\s*', '', content)
+        # Remove DOCTYPE
+        content = re.sub(r'<!DOCTYPE[^>]*>\s*', '', content)
+        # Extract content inside <svg ...>...</svg>
+        m = re.search(r'<svg[^>]*>(.*)</svg>', content, re.DOTALL)
+        if m:
+            return m.group(1).strip()
+        return content.strip()
 
     def __repr__(self) -> str:
         return f"SVGNode({self.intrinsic_width:.0f}x{self.intrinsic_height:.0f})"

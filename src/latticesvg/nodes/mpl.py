@@ -75,6 +75,9 @@ class MplNode(Node):
         dpi = self.figure.get_dpi()
         self.figure.set_size_inches(content_w / dpi, content_h / dpi)
 
+        # Invalidate cached SVG since the figure was resized
+        self._svg_cache = None
+
         self._resolve_box_model(content_w, content_h)
 
     # -----------------------------------------------------------------
@@ -85,7 +88,7 @@ class MplNode(Node):
         """Export the figure to an SVG string (cached)."""
         if self._svg_cache is None:
             buf = io.BytesIO()
-            self.figure.savefig(buf, format="svg", bbox_inches="tight", transparent=True)
+            self.figure.savefig(buf, format="svg", transparent=True)
             buf.seek(0)
             svg = buf.read().decode("utf-8")
             # Strip the XML declaration and outer <svg> tags for embedding
