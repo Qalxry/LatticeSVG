@@ -30,11 +30,16 @@ class MplNode(Node):
     # Intrinsic size from figure
     # -----------------------------------------------------------------
 
+    # Matplotlib's SVG backend always uses 72 DPI for its coordinate
+    # system, regardless of the figure's screen DPI.  All sizing must
+    # use this value so that the embedded SVG fragment fills the
+    # allocated space exactly.
+    _SVG_DPI: float = 72.0
+
     def _fig_size_px(self) -> Tuple[float, float]:
-        """Return figure size in pixels."""
+        """Return figure size in SVG coordinate units (72 DPI)."""
         w_in, h_in = self.figure.get_size_inches()
-        dpi = self.figure.get_dpi()
-        return (w_in * dpi, h_in * dpi)
+        return (w_in * self._SVG_DPI, h_in * self._SVG_DPI)
 
     # -----------------------------------------------------------------
     # Measurement
@@ -71,9 +76,12 @@ class MplNode(Node):
             else:
                 content_h = fh
 
-        # Resize the figure to match the allocated space
-        dpi = self.figure.get_dpi()
-        self.figure.set_size_inches(content_w / dpi, content_h / dpi)
+        # Resize the figure so the SVG output coordinate system
+        # exactly matches the allocated content area.
+        self.figure.set_size_inches(
+            content_w / self._SVG_DPI,
+            content_h / self._SVG_DPI,
+        )
 
         # Invalidate cached SVG since the figure was resized
         self._svg_cache = None

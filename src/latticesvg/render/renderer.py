@@ -240,10 +240,11 @@ class Renderer:
                     if line.width > cb.width:
                         text = self._truncate_with_ellipsis(text, cb.width, font_size)
 
-            # For pre/pre-wrap, replace spaces with non-breaking spaces
-            # so the SVG viewer doesn't collapse whitespace.
+            # For pre/pre-wrap, use xml:space="preserve" so the SVG
+            # viewer keeps leading/trailing/multiple whitespace intact.
+            extra_attrs = {}
             if ws in ("pre", "pre-wrap"):
-                text = text.replace(" ", "\u00a0")
+                extra_attrs["xml:space"] = "preserve"
 
             t = dw.Text(
                 text,
@@ -255,6 +256,8 @@ class Renderer:
                 font_weight=font_weight,
                 font_style=font_style,
             )
+            if extra_attrs:
+                t.args.update(extra_attrs)
             group.append(t)
 
     @staticmethod
