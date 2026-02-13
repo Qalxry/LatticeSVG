@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "latticesvg"
+version = "0.1.0"
+description = "Grid-based vector layout engine — CSS Grid layout to SVG/PNG"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+dependencies = [
+    "drawsvg>=2.0",
+    "freetype-py>=2.3",
+]
+
+[project.optional-dependencies]
+png = ["cairosvg>=2.5"]
+dev = [
+    "pytest>=7.0",
+    "pillow>=9.0",
+    "matplotlib>=3.5",
+    "cairosvg>=2.5",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/latticesvg"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
