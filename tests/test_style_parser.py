@@ -3,11 +3,13 @@
 import pytest
 from latticesvg.style.parser import (
     AUTO,
+    AreaMapping,
     FrValue,
     MIN_CONTENT,
     MAX_CONTENT,
     _Percentage,
     expand_shorthand,
+    parse_grid_template_areas,
     parse_track_template,
     parse_value,
 )
@@ -166,3 +168,69 @@ class TestTrackTemplate:
     def test_single_value(self):
         result = parse_track_template("300px")
         assert result == [300.0]
+
+
+# ------------------------------------------------------------------
+# grid-template-areas parsing
+# ------------------------------------------------------------------
+
+class TestGridTemplateAreas:
+    def test_simple_three_by_three(self):
+        result = parse_grid_template_areas(
+            '"header header header" "sidebar main main" "footer footer footer"'
+        )
+        assert isinstance(result, AreaMapping)
+        assert result.num_rows == 3
+        assert result.num_cols == 3
+        assert result.areas["header"] == (0, 0, 1, 3)
+        assert result.areas["sidebar"] == (1, 0, 1, 1)
+        assert result.areas["main"] == (1, 1, 1, 2)
+        assert result.areas["footer"] == (2, 0, 1, 3)
+
+    def test_two_by_two_with_span(self):
+        result = parse_grid_template_areas(
+            '"a a" "b c"'
+        )
+        assert result.num_rows == 2
+        assert result.num_cols == 2
+        assert result.areas["a"] == (0, 0, 1, 2)
+        assert result.areas["b"] == (1, 0, 1, 1)
+        assert result.areas["c"] == (1, 1, 1, 1)
+
+    def test_dot_empty_cell(self):
+        result = parse_grid_template_areas(
+            '"header header" ". main"'
+        )
+        assert result.num_rows == 2
+        assert result.num_cols == 2
+        assert "." not in result.areas
+        assert result.areas["header"] == (0, 0, 1, 2)
+        assert result.areas["main"] == (1, 1, 1, 1)
+
+    def test_list_input(self):
+        result = parse_grid_template_areas(
+            ["header header", "sidebar main"]
+        )
+        assert result.num_rows == 2
+        assert result.num_cols == 2
+        assert result.areas["header"] == (0, 0, 1, 2)
+
+    def test_row_spanning_area(self):
+        result = parse_grid_template_areas(
+            '"sidebar main" "sidebar footer"'
+        )
+        assert result.areas["sidebar"] == (0, 0, 2, 1)
+        assert result.areas["main"] == (0, 1, 1, 1)
+        assert result.areas["footer"] == (1, 1, 1, 1)
+
+    def test_none_returns_none(self):
+        assert parse_grid_template_areas(None) is None
+        assert parse_grid_template_areas("none") is None
+
+    def test_non_rectangular_raises(self):
+        with pytest.raises(ValueError, match="not rectangular"):
+            parse_grid_template_areas('"a b" "b a"')
+
+    def test_inconsistent_columns_raises(self):
+        with pytest.raises(ValueError, match="columns"):
+            parse_grid_template_areas('"a b" "c d e"')

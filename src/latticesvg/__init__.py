@@ -12,6 +12,7 @@ from .nodes.svg import SVGNode
 from .render.renderer import Renderer
 from .style.computed import ComputedStyle
 from . import templates
+from .templates import build_table
 
 __all__ = [
     "Node",
@@ -25,6 +26,7 @@ __all__ = [
     "Renderer",
     "ComputedStyle",
     "templates",
+    "build_table",
 ]
 
 __version__ = "0.1.0"

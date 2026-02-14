@@ -57,6 +57,7 @@ class PlacementHint:
     row_span: int = 1
     col_start: Optional[int] = None
     col_span: int = 1
+    area: Optional[str] = None
 
 
 # ---------------------------------------------------------------------------
@@ -88,10 +89,12 @@ class Node:
     # -----------------------------------------------------------------
 
     def add(self, child: "Node", *, row: Optional[int] = None, col: Optional[int] = None,
-            row_span: int = 1, col_span: int = 1) -> "Node":
+            row_span: int = 1, col_span: int = 1, area: Optional[str] = None) -> "Node":
         """Append *child* to this node and optionally set grid placement.
 
         ``row`` and ``col`` use 1-based line numbers consistent with CSS Grid.
+        ``area`` places the child in a named grid area defined by
+        ``grid-template-areas`` on the container.
         """
         child.parent = self
         # Re-compute style with parent inheritance
@@ -103,17 +106,21 @@ class Node:
             row_span=row_span,
             col_start=col,
             col_span=col_span,
+            area=area,
         )
 
-        # Also honour grid-row / grid-column from the child's own style
+        # Also honour grid-row / grid-column / grid-area from the child's own style
         gr = child.style.get("grid-row")
         gc = child.style.get("grid-column")
+        ga = child.style.get("grid-area")
         if gr is not None and isinstance(gr, tuple):
             child.placement.row_start = gr[0]
             child.placement.row_span = gr[1]
         if gc is not None and isinstance(gc, tuple):
             child.placement.col_start = gc[0]
             child.placement.col_span = gc[1]
+        if ga is not None and isinstance(ga, str) and ga != "auto":
+            child.placement.area = ga
 
         self.children.append(child)
         return child

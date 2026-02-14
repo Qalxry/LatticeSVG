@@ -9,6 +9,7 @@ from .parser import (
     FrValue,
     _Percentage,
     expand_shorthand,
+    parse_grid_template_areas,
     parse_track_template,
     parse_value,
 )
@@ -71,6 +72,8 @@ class ComputedStyle:
                         hint = PROPERTY_REGISTRY[long_prop].parser_hint
                         if hint == "track-list":
                             self._values[long_prop] = parse_track_template(long_val)
+                        elif hint == "grid-areas":
+                            self._values[long_prop] = parse_grid_template_areas(long_val)
                         else:
                             self._values[long_prop] = parse_value(
                                 long_val, font_size=font_size

@@ -76,9 +76,11 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
     "align-items": PropertyDef(default="stretch", parser_hint="keyword"),
     "justify-self": PropertyDef(default="auto", parser_hint="keyword"),
     "align-self": PropertyDef(default="auto", parser_hint="keyword"),
+    "grid-template-areas": PropertyDef(default=None, parser_hint="grid-areas"),
     "grid-auto-flow": PropertyDef(default="row", parser_hint="keyword"),
     "grid-row": PropertyDef(default=None, parser_hint="grid-line"),
     "grid-column": PropertyDef(default=None, parser_hint="grid-line"),
+    "grid-area": PropertyDef(default=None, parser_hint="keyword"),
 
     # ── Text ──────────────────────────────────────────────────────────
     "font-family": PropertyDef(

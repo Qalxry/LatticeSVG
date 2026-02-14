@@ -284,3 +284,144 @@ class TestMinMaxSize:
 
         assert a.border_box.width == pytest.approx(300.0)
         assert a.border_box.height == pytest.approx(50.0)
+
+
+# ------------------------------------------------------------------
+# grid-template-areas placement
+# ------------------------------------------------------------------
+
+class TestGridTemplateAreas:
+    def test_area_placement_via_add_kwarg(self):
+        """Children placed via area= kwarg get positioned correctly."""
+        grid = GridContainer(style={
+            "width": "600px",
+            "grid-template-columns": ["200px", "200px", "200px"],
+            "grid-template-rows": ["50px", "100px", "40px"],
+            "grid-template-areas": '"header header header" "sidebar main main" "footer footer footer"',
+        })
+        header = MockNode(height=50)
+        sidebar = MockNode(height=100)
+        main = MockNode(height=100)
+        footer = MockNode(height=40)
+        grid.add(header, area="header")
+        grid.add(sidebar, area="sidebar")
+        grid.add(main, area="main")
+        grid.add(footer, area="footer")
+        grid.layout(available_width=600)
+
+        # header spans all 3 columns
+        assert header.border_box.width == pytest.approx(600.0)
+        assert header.border_box.x == pytest.approx(0.0)
+        assert header.border_box.y == pytest.approx(0.0)
+
+        # sidebar is column 1 only, row 2
+        assert sidebar.border_box.width == pytest.approx(200.0)
+        assert sidebar.border_box.x == pytest.approx(0.0)
+        assert sidebar.border_box.y == pytest.approx(50.0)
+
+        # main spans columns 2-3, row 2
+        assert main.border_box.width == pytest.approx(400.0)
+        assert main.border_box.x == pytest.approx(200.0)
+        assert main.border_box.y == pytest.approx(50.0)
+
+        # footer spans all 3 columns, row 3
+        assert footer.border_box.width == pytest.approx(600.0)
+        assert footer.border_box.y == pytest.approx(150.0)
+
+    def test_area_placement_via_grid_area_style(self):
+        """Children placed via grid-area CSS property."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": ["200px", "200px"],
+            "grid-template-areas": '"a a" "b c"',
+        })
+        node_a = MockNode(height=30)
+        node_b = MockNode(height=50)
+        node_c = MockNode(height=50)
+        grid.add(node_a, area="a")
+        grid.add(node_b, area="b")
+        grid.add(node_c, area="c")
+        grid.layout(available_width=400)
+
+        assert node_a.border_box.width == pytest.approx(400.0)
+        assert node_b.border_box.width == pytest.approx(200.0)
+        assert node_c.border_box.x == pytest.approx(200.0)
+
+    def test_area_with_empty_cells(self):
+        """Dot cells don't create named areas but affect grid structure."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": ["200px", "200px"],
+            "grid-template-areas": '"header header" ". content"',
+        })
+        h = MockNode(height=30)
+        c = MockNode(height=50)
+        grid.add(h, area="header")
+        grid.add(c, area="content")
+        grid.layout(available_width=400)
+
+        assert h.border_box.width == pytest.approx(400.0)
+        assert c.border_box.x == pytest.approx(200.0)
+        assert c.border_box.y == pytest.approx(30.0)
+
+    def test_area_with_row_span(self):
+        """Area spanning multiple rows."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": ["200px", "200px"],
+            "grid-template-rows": ["50px", "50px"],
+            "grid-template-areas": '"side main" "side footer"',
+        })
+        side = MockNode(height=100)
+        main_node = MockNode(height=50)
+        foot = MockNode(height=50)
+        grid.add(side, area="side")
+        grid.add(main_node, area="main")
+        grid.add(foot, area="footer")
+        grid.layout(available_width=400)
+
+        # side spans 2 rows
+        assert side.border_box.height == pytest.approx(100.0)
+        assert side.border_box.x == pytest.approx(0.0)
+        assert main_node.border_box.y == pytest.approx(0.0)
+        assert foot.border_box.y == pytest.approx(50.0)
+
+    def test_area_implicit_tracks(self):
+        """Areas define implicit tracks when no explicit track defs given."""
+        grid = GridContainer(style={
+            "width": "600px",
+            "grid-template-columns": ["1fr", "1fr", "1fr"],
+            "grid-template-areas": '"a b c"',
+        })
+        a = MockNode(height=40)
+        b = MockNode(height=40)
+        c = MockNode(height=40)
+        grid.add(a, area="a")
+        grid.add(b, area="b")
+        grid.add(c, area="c")
+        grid.layout(available_width=600)
+
+        # 3 equal fr columns should share 600px equally
+        assert a.border_box.width == pytest.approx(200.0)
+        assert b.border_box.width == pytest.approx(200.0)
+        assert c.border_box.width == pytest.approx(200.0)
+
+    def test_area_mixed_with_explicit_placement(self):
+        """Mix of area placement and row/col placement."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": ["200px", "200px"],
+            "grid-template-areas": '"header header" "left right"',
+        })
+        h = MockNode(height=30)
+        left = MockNode(height=50)
+        right = MockNode(height=50)
+        grid.add(h, area="header")
+        grid.add(left, row=2, col=1)  # explicit placement
+        grid.add(right, area="right")
+        grid.layout(available_width=400)
+
+        assert h.border_box.width == pytest.approx(400.0)
+        assert left.border_box.x == pytest.approx(0.0)
+        assert left.border_box.y == pytest.approx(30.0)
+        assert right.border_box.x == pytest.approx(200.0)

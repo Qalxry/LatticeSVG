@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from enum import Enum, auto
 from typing import Any, Dict, List, Optional, Set, Tuple, TYPE_CHECKING
 
-from ..style.parser import AUTO, AutoValue, FrValue, MinContent, MaxContent, _Percentage
+from ..style.parser import AUTO, AutoValue, FrValue, MinContent, MaxContent, _Percentage, AreaMapping
 
 if TYPE_CHECKING:
     from ..nodes.base import LayoutConstraints, Node, Rect
@@ -128,8 +128,16 @@ class GridSolver:
         col_defs = self._parse_track_defs(s.get("grid-template-columns"))
         row_defs = self._parse_track_defs(s.get("grid-template-rows"))
 
+        # ---- Parse grid-template-areas & ensure track counts ---------
+        area_mapping = s.get("grid-template-areas")
+        if isinstance(area_mapping, AreaMapping):
+            while len(col_defs) < area_mapping.num_cols:
+                col_defs.append(TrackDef(SizeType.AUTO))
+            while len(row_defs) < area_mapping.num_rows:
+                row_defs.append(TrackDef(SizeType.AUTO))
+
         # ---- Place items --------------------------------------------
-        self.items = self._place_items(col_defs, row_defs)
+        self.items = self._place_items(col_defs, row_defs, area_mapping)
 
         # Ensure enough tracks exist for all items
         max_col = max((it.col_end for it in self.items), default=len(col_defs))
@@ -265,7 +273,15 @@ class GridSolver:
         self._col_gap = s._float("column-gap")
         self._row_gap = s._float("row-gap")
 
-        self.items = self._place_items(col_defs, row_defs)
+        # ---- Parse grid-template-areas & ensure track counts ---------
+        area_mapping = s.get("grid-template-areas")
+        if isinstance(area_mapping, AreaMapping):
+            while len(col_defs) < area_mapping.num_cols:
+                col_defs.append(TrackDef(SizeType.AUTO))
+            while len(row_defs) < area_mapping.num_rows:
+                row_defs.append(TrackDef(SizeType.AUTO))
+
+        self.items = self._place_items(col_defs, row_defs, area_mapping)
 
         max_col = max((it.col_end for it in self.items), default=len(col_defs))
         max_row = max((it.row_end for it in self.items), default=len(row_defs))
@@ -322,11 +338,17 @@ class GridSolver:
         self,
         col_defs: List[TrackDef],
         row_defs: List[TrackDef],
+        area_mapping: Any = None,
     ) -> List[GridItem]:
         """Place all child nodes on the grid."""
         children = self.container.children
         if not children:
             return []
+
+        # Resolve area mapping
+        areas: Dict[str, Tuple[int, int, int, int]] = {}
+        if isinstance(area_mapping, AreaMapping):
+            areas = area_mapping.areas
 
         flow = self.container.style.get("grid-auto-flow") or "row"
         dense = "dense" in flow if isinstance(flow, str) else False
@@ -338,9 +360,20 @@ class GridSolver:
         items: List[GridItem] = []
         occupied: Set[Tuple[int, int]] = set()
 
-        # Pass 1: explicitly placed items
+        # Pass 1: explicitly placed items (including area-placed)
         for child in children:
             p = child.placement
+
+            # Resolve area name to explicit placement
+            if p.area and p.area in areas:
+                r, c, rs, cs = areas[p.area]
+                item = GridItem(child, r, r + rs, c, c + cs)
+                items.append(item)
+                for rr in range(r, r + rs):
+                    for cc in range(c, c + cs):
+                        occupied.add((rr, cc))
+                continue
+
             if p.row_start is not None and p.col_start is not None:
                 r = p.row_start - 1  # convert 1-based → 0-based
                 c = p.col_start - 1
@@ -356,6 +389,8 @@ class GridSolver:
         cursor_r, cursor_c = 0, 0
         for child in children:
             p = child.placement
+            if p.area and p.area in areas:
+                continue  # placed by area in pass 1
             if p.row_start is not None and p.col_start is not None:
                 continue  # already placed
 

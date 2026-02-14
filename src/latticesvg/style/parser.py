@@ -378,3 +378,122 @@ def parse_track_template(raw: Any, reference_length: Optional[float] = None) -> 
         return [parse_value(raw, reference_length=reference_length)]
 
     return [parse_value(p, reference_length=reference_length) for p in parts]
+
+
+# ---------------------------------------------------------------------------
+# grid-template-areas parsing
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class AreaMapping:
+    """Parsed result of ``grid-template-areas``.
+
+    Attributes
+    ----------
+    areas : dict mapping area name → (row_start, col_start, row_span, col_span)
+        Indices are **0-based**.
+    num_rows : int
+        Number of rows implied by the template.
+    num_cols : int
+        Number of columns implied by the template.
+    """
+    areas: Dict[str, Tuple[int, int, int, int]]
+    num_rows: int
+    num_cols: int
+
+
+def parse_grid_template_areas(raw: Any) -> Optional[AreaMapping]:
+    """Parse a ``grid-template-areas`` value.
+
+    The CSS syntax is a series of quoted row strings, e.g.::
+
+        "header header header"
+        "sidebar main main"
+        "footer footer footer"
+
+    A single dot ``.`` represents an empty cell (unnamed).
+
+    The value may be supplied as:
+    * a single string with quoted substrings (CSS syntax)
+    * a list of strings, each representing one row
+
+    Returns ``None`` if the value is ``None`` or ``"none"``.
+    Raises ``ValueError`` on malformed input (non-rectangular areas, etc.).
+    """
+    if raw is None or raw == "none":
+        return None
+
+    # Accept a list of row strings directly
+    if isinstance(raw, (list, tuple)):
+        row_strings = [str(r).strip() for r in raw]
+    elif isinstance(raw, str):
+        # Try to extract quoted strings first  ("header header" "main main")
+        quoted = re.findall(r'"([^"]*)"', raw)
+        if quoted:
+            row_strings = [s.strip() for s in quoted]
+        else:
+            # Maybe it's a single-row template without quotes
+            row_strings = [raw.strip()]
+    else:
+        return None
+
+    if not row_strings:
+        return None
+
+    # Build the 2-D grid of cell names
+    grid: List[List[str]] = []
+    num_cols: Optional[int] = None
+    for r_idx, row_str in enumerate(row_strings):
+        tokens = row_str.split()
+        if not tokens:
+            continue
+        if num_cols is None:
+            num_cols = len(tokens)
+        elif len(tokens) != num_cols:
+            raise ValueError(
+                f"grid-template-areas row {r_idx} has {len(tokens)} columns, "
+                f"expected {num_cols}"
+            )
+        grid.append(tokens)
+
+    if not grid or num_cols is None:
+        return None
+
+    num_rows = len(grid)
+
+    # Collect each area name → list of (row, col) cells
+    name_cells: Dict[str, List[Tuple[int, int]]] = {}
+    for r in range(num_rows):
+        for c in range(num_cols):
+            name = grid[r][c]
+            if name == ".":
+                continue
+            name_cells.setdefault(name, []).append((r, c))
+
+    # Convert to rectangular area mappings
+    areas: Dict[str, Tuple[int, int, int, int]] = {}
+    for name, cells in name_cells.items():
+        rows = [rc[0] for rc in cells]
+        cols = [rc[1] for rc in cells]
+        r_min, r_max = min(rows), max(rows)
+        c_min, c_max = min(cols), max(cols)
+        row_span = r_max - r_min + 1
+        col_span = c_max - c_min + 1
+
+        # Verify that the area forms a proper rectangle
+        if len(cells) != row_span * col_span:
+            raise ValueError(
+                f"grid-template-areas: area '{name}' is not rectangular"
+            )
+        # Verify all cells in the bounding rect belong to this area
+        for rr in range(r_min, r_max + 1):
+            for cc in range(c_min, c_max + 1):
+                if grid[rr][cc] != name:
+                    raise ValueError(
+                        f"grid-template-areas: area '{name}' is not rectangular "
+                        f"(cell [{rr}][{cc}] is '{grid[rr][cc]}')"
+                    )
+
+        areas[name] = (r_min, c_min, row_span, col_span)
+
+    return AreaMapping(areas=areas, num_rows=num_rows, num_cols=num_cols)
