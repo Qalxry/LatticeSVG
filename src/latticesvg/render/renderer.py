@@ -110,9 +110,16 @@ class Renderer:
         # --- Clip path for overflow: hidden ---
         clip = None
         overflow = node.style.get("overflow")
+        raw_radius = node.style.get("border-radius")
+        radius = float(raw_radius) if isinstance(raw_radius, (int, float)) else 0.0
+
         if overflow == "hidden":
             clip = dw.ClipPath()
-            clip.append(dw.Rectangle(x, y, bb.width, bb.height))
+            clip_kwargs: dict = {}
+            if radius > 0:
+                clip_kwargs["rx"] = radius
+                clip_kwargs["ry"] = radius
+            clip.append(dw.Rectangle(x, y, bb.width, bb.height, **clip_kwargs))
             self.drawing.append(clip)
 
         # Create a group for this node
@@ -120,9 +127,7 @@ class Renderer:
         if clip:
             group = dw.Group(clip_path=clip)
 
-        # --- Border radius ---
-        raw_radius = node.style.get("border-radius")
-        radius = float(raw_radius) if isinstance(raw_radius, (int, float)) else 0.0
+        # --- Border radius (already resolved above) ---
 
         # --- Background ---
         bg = node.style.get("background-color")
@@ -404,15 +409,19 @@ class Renderer:
 
         # Prefer base64 embedding for portability
         try:
-            href = node.get_base64()
+            data_uri = node.get_base64()
+            # Use data parameter for base64 data URIs
+            img = dw.Image(
+                x, y, ir.width, ir.height,
+                data=data_uri,
+            )
         except Exception:
-            href = node.src
-
-        img = dw.Image(
-            x, y, ir.width, ir.height,
-            href=href,
-            embed=True,
-        )
+            # Fallback to path if base64 fails
+            img = dw.Image(
+                x, y, ir.width, ir.height,
+                path=node.src if isinstance(node.src, str) else None,
+                embed=True,
+            )
         group.append(img)
 
     # -----------------------------------------------------------------

@@ -94,13 +94,13 @@ resolved_w = max(min_width, min(resolved_w, max_width))
 
 以下功能有一定价值但不紧迫，可根据实际使用反馈决定是否实现。
 
-### P2-1. `grid-template-areas` 命名区域
+### ~~P2-1. `grid-template-areas` 命名区域~~（已完成）
 
 **价值**：`"header header" "sidebar main" "footer footer"` 式语义化布局声明可读性更好。
 **代价**：解析器 + GridSolver 均需扩展，中等复杂度。
 **评估**：当前行列线放置（`row=1, col=2, col_span=2`）已够用，命名区域是锦上添花。
 
-### P2-2. 表格便捷 API
+### ~~P2-2. 表格便捷 API~~（已完成）
 
 **价值**：`Table(headers=["名称", "值"], rows=data, style=...)` 式的快速封装，在实验报告场景高频出现。
 **评估**：这属于"上层工具" 而非"引擎核心"——可以作为 `templates.py` 中的辅助函数或独立的 `contrib` 模块，不应侵入核心节点体系。

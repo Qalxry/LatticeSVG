@@ -14,6 +14,20 @@ class SVGNode(Node):
     The SVG's ``viewBox`` or ``width``/``height`` attributes are used to
     determine its intrinsic size.  During rendering the content is scaled
     to fit the allocated space.
+
+    Parameters
+    ----------
+    svg : str
+        SVG source:
+        - File path (when is_file=True)
+        - URL starting with 'http://' or 'https://'
+        - Raw SVG string
+    style : dict, optional
+        Style properties
+    parent : Node, optional
+        Parent node
+    is_file : bool, optional
+        If True, treat svg as a file path. Default False.
     """
 
     def __init__(
@@ -25,11 +39,19 @@ class SVGNode(Node):
         is_file: bool = False,
     ) -> None:
         super().__init__(style=style, parent=parent)
+        
+        # Load SVG content from various sources
         if is_file:
             with open(svg, "r", encoding="utf-8") as f:
                 self.svg_content: str = f.read()
+        elif svg.startswith('http://') or svg.startswith('https://'):
+            # Load from URL
+            import urllib.request
+            with urllib.request.urlopen(svg) as response:
+                self.svg_content = response.read().decode('utf-8')
         else:
             self.svg_content = svg
+        
         self._intrinsic: Optional[Tuple[float, float]] = None
         self._vb_min_x: float = 0.0
         self._vb_min_y: float = 0.0
@@ -124,16 +146,37 @@ class SVGNode(Node):
         """Return SVG content with the outer ``<svg>`` wrapper stripped.
 
         This is used for embedding inside another SVG document.
+        Presentation attributes (fill, stroke, etc.) from the outer
+        ``<svg>`` element are preserved by wrapping inner content in
+        a ``<g>`` that carries those attributes forward.
         """
         content = self.svg_content
         # Remove XML declaration
         content = re.sub(r'<\?xml[^?]*\?>\s*', '', content)
         # Remove DOCTYPE
         content = re.sub(r'<!DOCTYPE[^>]*>\s*', '', content)
+        # Remove HTML comments (license headers etc.)
+        content = re.sub(r'<!--.*?-->', '', content, flags=re.DOTALL)
         # Extract content inside <svg ...>...</svg>
-        m = re.search(r'<svg[^>]*>(.*)</svg>', content, re.DOTALL)
+        m = re.search(r'<svg([^>]*)>(.*)</svg>', content, re.DOTALL)
         if m:
-            return m.group(1).strip()
+            svg_attrs = m.group(1)
+            inner = m.group(2).strip()
+            # Extract presentation attributes from <svg> to carry forward
+            pres_attrs = []
+            for attr in ('fill', 'stroke', 'stroke-width', 'stroke-linecap',
+                         'stroke-linejoin', 'opacity', 'color'):
+                match = re.search(rf'\b{attr}\s*=\s*"([^"]*)"', svg_attrs)
+                if match:
+                    val = match.group(1)
+                    # Replace currentColor with a usable default
+                    if val == 'currentColor':
+                        val = '#000000'
+                    pres_attrs.append(f'{attr}="{val}"')
+            if pres_attrs:
+                attrs_str = ' '.join(pres_attrs)
+                return f'<g {attrs_str}>{inner}</g>'
+            return inner
         return content.strip()
 
     def __repr__(self) -> str:

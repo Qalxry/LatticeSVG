@@ -35,6 +35,7 @@ from latticesvg import (
     LayoutConstraints,
     ComputedStyle,   # 计算后的样式对象
     templates,       # 17 个内置样式模板
+    build_table,     # 表格便捷构建函数
 )
 ```
 
@@ -86,7 +87,8 @@ from latticesvg import (
 | `padding-top/right/bottom/left` | `0px` | 内边距（支持 `padding` 简写） |
 | `border-*-width` | `0px` | 边框宽度（支持 `border-width` / `border` 简写） |
 | `border-*-color` | `none` | 边框颜色 |
-| `border-*-style` | `none` | 边框样式 |
+| `border-*-style` | `none` | 边框样式（`solid` / `dashed` / `dotted`） |
+| `border-radius` | `0px` | 圆角半径（统一值） |
 
 #### Grid 布局（不可继承）
 
@@ -95,6 +97,7 @@ from latticesvg import (
 | `display` | `block` | 仅 `grid` 有效 |
 | `grid-template-columns` | `None` | 列轨道模板 |
 | `grid-template-rows` | `None` | 行轨道模板 |
+| `grid-template-areas` | `None` | 命名区域模板 |
 | `row-gap` / `column-gap` | `0px` | 轨道间距（支持 `gap` 简写） |
 | `justify-items` / `align-items` | `stretch` | 网格项默认对齐 |
 | `justify-self` / `align-self` | `auto` | 网格项个体对齐 |
@@ -111,7 +114,7 @@ from latticesvg import (
 | `font-style` | `normal` | 字形（`normal` / `italic`） |
 | `text-align` | `left` | 水平对齐（`left` / `center` / `right`） |
 | `line-height` | `1.2` | 行高（≤ 5.0 视为倍数，否则为绝对值） |
-| `white-space` | `normal` | 空白处理（`normal` / `nowrap` / `pre` / `pre-wrap`） |
+| `white-space` | `normal` | 空白处理（`normal` / `nowrap` / `pre` / `pre-wrap` / `pre-line`） |
 | `overflow-wrap` | `normal` | 溢出折行（`normal` / `break-word` / `anywhere`） |
 | `word-break` | `normal` | 单词断行方式 |
 | `color` | `#000000` | 文本颜色 |
@@ -206,6 +209,8 @@ grid.layout(available_width=800)
 
 **支持的轨道类型**：`<length>` / `<percentage>` / `fr` / `auto` / `min-content` / `max-content`
 
+**命名区域**：`grid-template-areas` 支持语义化布局声明，如 `"header header" "sidebar main" "footer footer"`。使用 `.add(child, area="header")` 将子节点放置到命名区域。
+
 **自动放置**：`grid-auto-flow: row | column | row dense | column dense`
 
 **对齐**：`justify-items/self` + `align-items/self`，值可为 `stretch`（默认）/ `start` / `center` / `end`
@@ -230,7 +235,7 @@ text = TextNode("Hello, 世界！", style={
 
 - **字体回退链**：按 `font-family` 列表顺序逐字符查找可用字形
 - **CJK 混排**：中日韩字符逐字可断行，与西文自然混排
-- **white-space 模式**：`normal`（折行+折叠空白）、`nowrap`（不折行）、`pre`（保留换行和空白）、`pre-wrap`（保留空白但可折行）
+- **white-space 模式**：`normal`（折行+折叠空白）、`nowrap`（不折行）、`pre`（保留换行和空白）、`pre-wrap`（保留空白但可折行）、`pre-line`（折叠空白但保留显式换行）
 - **overflow-wrap**：`normal` / `break-word`（超宽单词逐字符拆分）/ `anywhere`
 - **text-align**：`left` / `center` / `right`
 - **line-height**：支持倍数和绝对值
@@ -377,6 +382,7 @@ font-family: "Times New Roman, SimSun, serif"
 | 方法 | 输出 |
 |---|---|
 | `renderer.render(node, "out.svg")` | SVG 文件（返回 `drawsvg.Drawing`） |
+| `renderer.render_to_drawing(node)` | `drawsvg.Drawing` 对象（不写文件） |
 | `renderer.render_to_string(node)` | SVG 字符串 |
 | `renderer.render_png(node, "out.png", scale=2)` | PNG 文件（依赖 cairosvg） |
 
@@ -394,8 +400,11 @@ font-family: "Times New Roman, SimSun, serif"
 **额外特性**：
 
 - `overflow: hidden` → 生成 `<clipPath>` 裁切
-- `text-overflow: ellipsis` + `overflow: hidden` → 截断末行加 `…`
+- `text-overflow: ellipsis` + `overflow: hidden` → 精确截断末行加 `…`（使用字形测量）
 - `white-space: pre/pre-wrap` → `xml:space="preserve"`
+- `border-radius` → SVG `<rect rx="..." ry="...">` 圆角矩形
+- `border-style: dashed / dotted` → `stroke-dasharray` 属性
+- `opacity` → 背景和文本透明度
 
 ---
 
@@ -429,38 +438,70 @@ title = TextNode("标题", style=TITLE)
 
 `ALL_TEMPLATES` 字典提供按名称的程序化访问。
 
+### 8.2 表格便捷构建
+
+`build_table()` 函数提供快速创建表格的便捷 API：
+
+```python
+from latticesvg import build_table
+
+table = build_table(
+    headers=["编号", "名称", "数值"],
+    rows=[
+        ["001", "Alpha", "1.23"],
+        ["002", "Beta", "4.56"],
+        ["003", "Gamma", "7.89"],
+    ],
+    col_widths=["100px", "1fr", "1fr"],
+    stripe_color="#f8f9fa",  # 斑马纹背景色
+)
+```
+
+**参数**：
+- `headers`: 列标题
+- `rows`: 数据行（每行为一个序列）
+- `style`: 覆盖表格容器样式
+- `header_style`: 覆盖表头单元格样式
+- `cell_style`: 覆盖数据单元格样式
+- `col_widths`: 列宽度列表（默认全部 `1fr`）
+- `stripe_color`: 偶数行背景色（设为 `None` 禁用斑马纹）
+
+返回一个完全构建好的 `GridContainer` 节点树，可直接布局和渲染。
+
 ---
 
 ## 9. 已知限制
 
-以下是 v0.1.0 中已知的限制和未完成项：
+以下是当前版本中已知的限制和未完成项：
 
-1. **无 `border-radius`**：属性注册表中未定义，无法生成圆角矩形
-2. **`text-align: justify`**：代码注释中标注了计划但渲染器未实现逐词分布
-3. **`text-overflow: ellipsis` 精度不足**：使用近似字符宽度 `font_size × 0.6` 而非精确字形度量
-4. **`min-width` / `max-width` / `min-height` / `max-height` 未生效**：属性已注册但布局器未读取使用
-5. **`white-space: pre-line` 未实现**：parser 接受该关键字但 shaper 无对应处理逻辑
-6. **`opacity` 未渲染**：属性已注册但渲染器未使用
-7. **无 `border-radius`**：仅渲染为四条直线，不支持圆角或虚线样式
-8. **`grid-template-areas` 不支持**：仅支持行列线放置，无语义化区域命名
-9. **`grid-auto-rows/columns` 未显式支持**：隐式轨道总是按 `auto` 处理
-10. **无 `z-index` / 叠放控制**：渲染顺序固定为节点添加顺序
-11. **Pillow 后备的字形检测**：`_has_glyph()` 始终返回 `True`，无法真正判断字体覆盖
-12. **自动放置搜索上限**：行上限硬编码为 200，迭代上限 10000 次
+1. **`text-align: justify`**：代码注释中标注了计划但渲染器未实现逐词分布
+2. **`grid-auto-rows/columns` 未显式支持**：隐式轨道总是按 `auto` 处理
+3. **无 `z-index` / 叠放控制**：渲染顺序固定为节点添加顺序
+4. **Pillow 后备的字形检测**：`_has_glyph()` 始终返回 `True`，无法真正判断字体覆盖
+5. **自动放置搜索上限**：行上限硬编码为 200，迭代上限 10000 次
+6. **四角独立 `border-radius`**：仅支持统一圆角值，不支持 `10px 20px 0 5px` 四角独立语法
 
 ---
 
 ## 10. 演示覆盖
 
-`demo.py` 包含 22 个演示（demo_01 ~ demo_22），覆盖：
+`examples/` 包含 31 个演示（demo_01 ~ demo_31），覆盖：
 
 - CSS 值解析、简写展开、样式继承
 - 固定列 / fr 弹性列 / 混合轨道
 - 自动放置、跨行列、对齐
 - 嵌套 Grid、padding + border 盒模型
-- TextNode 排版、white-space 模式、overflow-wrap
+- TextNode 排版、white-space 模式（包括 `pre-line`）、overflow-wrap
 - SVGNode / MplNode / ImageNode 嵌入
 - 内置模板、PNG 输出
+- `min-width` / `max-width` / `min-height` / `max-height` 尺寸约束
+- `text-overflow: ellipsis` 精确截断
+- `opacity` 透明度渲染
+- `border-radius` 圆角矩形
+- `border-style: dashed / dotted` 虚线边框
+- `render_to_drawing()` 无文件写入渲染
+- `grid-template-areas` 命名区域布局
+- `build_table()` 表格便捷 API
 - 综合报告页面、中英文混排
 - 复杂画廊表格（9×10 矩阵，11 行 11 列）
 
