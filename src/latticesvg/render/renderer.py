@@ -570,7 +570,35 @@ class Renderer:
                     if span_src.font_style:
                         f_style = span_src.font_style
                     if span_src.font_family:
-                        family = span_src.font_family
+                        # Resolve to FreeType family names so that
+                        # the name matches @font-face declarations.
+                        from ..text.font import FontManager as _FM2
+                        _fm = _FM2.instance()
+                        _sfam = [f.strip().strip('"').strip("'")
+                                 for f in span_src.font_family.split(",")
+                                 if f.strip()]
+                        _schain = _fm.find_font_chain(
+                            _sfam,
+                            weight=span_src.font_weight or "normal",
+                            style=span_src.font_style or "normal",
+                        )
+                        if _schain:
+                            _snames = []
+                            for _fp in _schain:
+                                _n = _fm.font_family_name(_fp)
+                                if _n and _n not in _snames:
+                                    _snames.append(_n)
+                            _GENS = {"sans-serif", "serif", "monospace",
+                                     "cursive", "fantasy", "system-ui"}
+                            _gen = next(
+                                (f for f in _sfam if f.lower() in _GENS),
+                                "sans-serif",
+                            )
+                            if _gen not in _snames:
+                                _snames.append(_gen)
+                            family = ", ".join(_snames) if _snames else span_src.font_family
+                        else:
+                            family = span_src.font_family
                     if span_src.font_size is not None:
                         fsize = span_src.font_size
                     if span_src.baseline_shift:

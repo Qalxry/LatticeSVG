@@ -36,7 +36,36 @@ class _FontUsage:
     css_family: str
     css_weight: str = "normal"          # "normal" | "bold"
     css_style: str = "normal"           # "normal" | "italic"
+    face_index: int = 0                 # TTC face index
     chars: Set[str] = field(default_factory=set)
+
+
+def _detect_face_index(font_path: str, target_family: str) -> int:
+    """Detect the face index for *target_family* within a TTC font.
+
+    Returns 0 for non-TTC fonts or if the matching face cannot be found.
+    """
+    if not font_path.lower().endswith(".ttc"):
+        return 0
+    try:
+        from .font import FontManager, _FreeTypeBackend
+        fm = FontManager.instance()
+        if not isinstance(fm._backend, _FreeTypeBackend):
+            return 0
+        freetype = fm._backend._freetype
+        face = freetype.Face(font_path)
+        num_faces = face.num_faces
+        target_lower = target_family.lower()
+        for i in range(num_faces):
+            f = freetype.Face(font_path, i)
+            name = f.family_name
+            if isinstance(name, bytes):
+                name = name.decode("utf-8", errors="replace")
+            if name and name.lower() == target_lower:
+                return i
+    except Exception:
+        pass
+    return 0
 
 
 # -----------------------------------------------------------------------
@@ -57,11 +86,13 @@ def _collect_font_usage(root: "Node") -> Dict[str, _FontUsage]:
         if font_path in usage:
             return usage[font_path]
         css_name = fm.font_family_name(font_path) or Path(font_path).stem
+        fi = _detect_face_index(font_path, css_name)
         u = _FontUsage(
             font_path=font_path,
             css_family=css_name,
             css_weight=weight,
             css_style=style,
+            face_index=fi,
         )
         usage[font_path] = u
         return u
@@ -244,6 +275,29 @@ def _font_style_from_path(font_path: str) -> str:
     return "normal"
 
 
+def _unicode_range(chars: Set[str]) -> str:
+    """Generate a CSS ``unicode-range`` descriptor value from *chars*."""
+    codepoints = sorted(ord(c) for c in chars)
+    if not codepoints:
+        return ""
+    ranges: List[tuple] = []
+    start = end = codepoints[0]
+    for cp in codepoints[1:]:
+        if cp == end + 1:
+            end = cp
+        else:
+            ranges.append((start, end))
+            start = end = cp
+    ranges.append((start, end))
+    parts: List[str] = []
+    for s, e in ranges:
+        if s == e:
+            parts.append(f"U+{s:04X}")
+        else:
+            parts.append(f"U+{s:04X}-{e:04X}")
+    return ", ".join(parts)
+
+
 # -----------------------------------------------------------------------
 # CSS generation
 # -----------------------------------------------------------------------
@@ -258,31 +312,33 @@ def _generate_font_face_css(usage_map: Dict[str, _FontUsage]) -> str:
     """
     # ── Step 1: Group by CSS triplet  ──────────────────────────────
     # key = (css_family, css_weight, css_style)
-    # value = (font_path, merged_chars)
-    merged: Dict[tuple, tuple] = {}  # triplet → (font_path, chars)
+    # value = (font_path, merged_chars, face_index)
+    merged: Dict[tuple, tuple] = {}  # triplet → (font_path, chars, face_index)
 
     for font_path, usg in usage_map.items():
         if not usg.chars:
             continue
-        weight = _font_weight_from_path(font_path)
-        style = _font_style_from_path(font_path)
+        # Prefer CSS-specified weight/style so that @font-face
+        # declarations match the presentation attributes on <text>.
+        weight = usg.css_weight or _font_weight_from_path(font_path)
+        style = usg.css_style or _font_style_from_path(font_path)
         triplet = (usg.css_family, weight, style)
 
         if triplet in merged:
-            existing_path, existing_chars = merged[triplet]
-            merged[triplet] = (existing_path, existing_chars | usg.chars)
+            existing_path, existing_chars, existing_fi = merged[triplet]
+            merged[triplet] = (existing_path, existing_chars | usg.chars, existing_fi)
         else:
-            merged[triplet] = (font_path, set(usg.chars))
+            merged[triplet] = (font_path, set(usg.chars), usg.face_index)
 
     # ── Step 2: Subset and emit CSS rules ─────────────────────────
     rules: List[str] = []
 
-    for (css_family, weight, style), (font_path, chars) in merged.items():
+    for (css_family, weight, style), (font_path, chars, fi) in merged.items():
         if not chars:
             continue
 
         try:
-            data, fmt = _subset_font_woff2(font_path, chars)
+            data, fmt = _subset_font_woff2(font_path, chars, face_index=fi)
         except Exception as exc:
             log.warning("Failed to subset %s: %s", font_path, exc)
             continue
@@ -293,17 +349,26 @@ def _generate_font_face_css(usage_map: Dict[str, _FontUsage]) -> str:
             mime = "font/woff2"
             fmt_hint = 'format("woff2")'
         else:
-            mime = "font/otf"
-            fmt_hint = 'format("opentype")'
+            ext = Path(font_path).suffix.lower()
+            if ext in (".ttf", ".ttc"):
+                mime = "font/ttf"
+                fmt_hint = 'format("truetype")'
+            else:
+                mime = "font/otf"
+                fmt_hint = 'format("opentype")'
 
+        u_range = _unicode_range(chars)
         rule = (
             f"@font-face {{\n"
             f'  font-family: "{css_family}";\n'
             f"  font-weight: {weight};\n"
             f"  font-style: {style};\n"
+            f"  font-display: block;\n"
             f"  src: url(data:{mime};base64,{b64}) {fmt_hint};\n"
-            f"}}"
         )
+        if u_range:
+            rule += f"  unicode-range: {u_range};\n"
+        rule += "}"
         rules.append(rule)
 
     return "\n".join(rules)

@@ -161,6 +161,17 @@ class TextNode(Node):
                 n = fm.font_family_name(fp)
                 if n and n not in names:
                     names.append(n)
+            # Append a generic family as ultimate fallback so that
+            # devices without the embedded font still avoid serif.
+            _GENERICS = {"sans-serif", "serif", "monospace", "cursive",
+                         "fantasy", "system-ui"}
+            user_families = self._parse_font_families()
+            generic = next(
+                (f for f in user_families if f.lower() in _GENERICS),
+                "sans-serif",
+            )
+            if generic not in names:
+                names.append(generic)
             self._resolved_font_family = ", ".join(names) if names else None
         else:
             self._resolved_font_family = None
