@@ -66,6 +66,15 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
     # Border radius (unified, single value)
     "border-radius": PropertyDef(default="0px", parser_hint="length"),
 
+    # Box sizing
+    "box-sizing": PropertyDef(default="border-box", parser_hint="keyword"),
+
+    # Outline (does not affect layout, drawn outside border-box)
+    "outline-width": PropertyDef(default="0px", parser_hint="length"),
+    "outline-color": PropertyDef(default="none", parser_hint="color"),
+    "outline-style": PropertyDef(default="none", parser_hint="keyword"),
+    "outline-offset": PropertyDef(default="0px", parser_hint="length"),
+
     # ── Grid layout ───────────────────────────────────────────────────
     "display": PropertyDef(default="block", parser_hint="keyword"),
     "grid-template-columns": PropertyDef(default=None, parser_hint="track-list"),
@@ -112,6 +121,9 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
     ),
     "color": PropertyDef(
         default="#000000", inheritable=True, parser_hint="color"
+    ),
+    "text-decoration": PropertyDef(
+        default="none", inheritable=False, parser_hint="keyword"
     ),
     "text-overflow": PropertyDef(default="clip", parser_hint="keyword"),
 

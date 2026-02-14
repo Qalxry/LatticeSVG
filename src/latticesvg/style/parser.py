@@ -334,6 +334,20 @@ def expand_shorthand(prop: str, value: Any) -> Dict[str, Any]:
                     result[f"border-{side}-style"] = p
         return result if result else {prop: value}
 
+    # --- outline (simplified: width style color) ---
+    if prop == "outline":
+        parts = _split_shorthand_parts(value)
+        result2: Dict[str, Any] = {}
+        for p in parts:
+            pv = parse_value(p)
+            if isinstance(pv, (int, float)):
+                result2["outline-width"] = p
+            elif isinstance(pv, str) and (pv.startswith("#") or pv.startswith("rgb") or pv in NAMED_COLORS):
+                result2["outline-color"] = p
+            else:
+                result2["outline-style"] = p
+        return result2 if result2 else {prop: value}
+
     # --- Not a shorthand ---
     return {prop: value}
 

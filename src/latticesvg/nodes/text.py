@@ -8,11 +8,18 @@ from .base import LayoutConstraints, Node, Rect
 from ..text.font import FontManager
 from ..text.shaper import (
     Line,
+    RichLine,
+    SpanFragment,
     align_lines,
+    align_lines_rich,
     break_lines,
+    break_lines_rich,
     compute_text_block_size,
+    compute_rich_block_size,
     get_max_content_width,
+    get_max_content_width_rich,
     get_min_content_width,
+    get_min_content_width_rich,
     measure_text,
 )
 
@@ -22,6 +29,9 @@ class TextNode(Node):
 
     The text is measured using FreeType (or Pillow fallback) and
     automatically wrapped according to the ``white-space`` property.
+
+    When *markup* is ``"html"`` or ``"markdown"``, inline tags/syntax
+    are parsed to produce styled spans (bold, italic, colour, …).
     """
 
     def __init__(
@@ -29,10 +39,21 @@ class TextNode(Node):
         text: str,
         style: Optional[Dict[str, Any]] = None,
         parent: Optional[Node] = None,
+        markup: str = "none",
     ) -> None:
         super().__init__(style=style, parent=parent)
         self.text: str = text
-        self.lines: List[Line] = []  # populated after layout
+        self.markup: str = markup
+        self.lines: List[Line] = []  # populated after layout (plain mode)
+
+        # Rich-text fields (populated when markup != "none")
+        self._spans: Optional[list] = None
+        self._rich_lines: Optional[List[RichLine]] = None
+
+        if markup in ("html", "markdown"):
+            from ..markup.parser import parse_markup
+            self._spans = parse_markup(text, markup)
+
 
     # -----------------------------------------------------------------
     # Font resolution helpers
@@ -95,13 +116,22 @@ class TextNode(Node):
         ow = self.style.get("overflow-wrap") or "normal"
         fm = FontManager.instance()
 
-        min_w = get_min_content_width(self.text, font_chain, size, ws, fm=fm)
-        max_w = get_max_content_width(self.text, font_chain, size, ws, fm=fm)
+        if self._spans is not None:
+            # Rich text measurement
+            math_be = self._math_backend()
+            min_w = get_min_content_width_rich(self._spans, font_chain, size, ws, fm=fm, math_backend=math_be)
+            max_w = get_max_content_width_rich(self._spans, font_chain, size, ws, fm=fm, math_backend=math_be)
+            lines = break_lines_rich(self._spans, max_w + 1, font_chain, size, ws, ow, fm=fm, math_backend=math_be)
+            lh = self._line_height()
+            _, h = compute_rich_block_size(lines, lh, float(size))
+        else:
+            min_w = get_min_content_width(self.text, font_chain, size, ws, fm=fm)
+            max_w = get_max_content_width(self.text, font_chain, size, ws, fm=fm)
 
-        # Intrinsic height at max-content width (single line for normal)
-        lines = break_lines(self.text, max_w + 1, font_chain, size, ws, ow, fm=fm)
-        lh = self._line_height()
-        _, h = compute_text_block_size(lines, lh, float(size))
+            # Intrinsic height at max-content width (single line for normal)
+            lines = break_lines(self.text, max_w + 1, font_chain, size, ws, ow, fm=fm)
+            lh = self._line_height()
+            _, h = compute_text_block_size(lines, lh, float(size))
 
         # Add padding + border
         ph = self.style.padding_horizontal + self.style.border_horizontal
@@ -139,19 +169,31 @@ class TextNode(Node):
             # No font available — empty box
             self._resolve_box_model(content_w, 0.0)
             self.lines = []
+            self._rich_lines = None
             return
 
-        # Break lines
-        self.lines = break_lines(self.text, content_w, font_chain, size, ws, ow, fm=fm)
-
-        # Align
-        text_align = self.style.get("text-align") or "left"
-        self.lines = align_lines(self.lines, content_w, text_align)
-
-        # Compute content height
-        lh = self._line_height()
-        _, text_block_h = compute_text_block_size(self.lines, lh, float(size))
-        content_h = text_block_h
+        if self._spans is not None:
+            # ---- Rich text layout ----
+            math_be = self._math_backend()
+            self._rich_lines = break_lines_rich(
+                self._spans, content_w, font_chain, size, ws, ow,
+                fm=fm, math_backend=math_be,
+            )
+            text_align = self.style.get("text-align") or "left"
+            self._rich_lines = align_lines_rich(self._rich_lines, content_w, text_align)
+            lh = self._line_height()
+            _, text_block_h = compute_rich_block_size(self._rich_lines, lh, float(size))
+            content_h = text_block_h
+            self.lines = []  # unused in rich mode
+        else:
+            # ---- Plain text layout (original path) ----
+            self._rich_lines = None
+            self.lines = break_lines(self.text, content_w, font_chain, size, ws, ow, fm=fm)
+            text_align = self.style.get("text-align") or "left"
+            self.lines = align_lines(self.lines, content_w, text_align)
+            lh = self._line_height()
+            _, text_block_h = compute_text_block_size(self.lines, lh, float(size))
+            content_h = text_block_h
 
         # Handle explicit width/height
         explicit_w = self._resolve_width(constraints)
@@ -192,6 +234,14 @@ class TextNode(Node):
         if isinstance(lh, (int, float)):
             return float(lh)
         return 1.2
+
+    def _math_backend(self):
+        """Return the active math backend, or *None* if unavailable."""
+        try:
+            from ..math import get_backend
+            return get_backend(None)
+        except Exception:
+            return None
 
     def __repr__(self) -> str:
         preview = self.text[:30] + ("…" if len(self.text) > 30 else "")

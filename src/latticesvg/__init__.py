@@ -9,6 +9,7 @@ from .nodes.text import TextNode
 from .nodes.image import ImageNode
 from .nodes.mpl import MplNode
 from .nodes.svg import SVGNode
+from .nodes.math import MathNode
 from .render.renderer import Renderer
 from .style.computed import ComputedStyle
 from . import templates
@@ -23,6 +24,7 @@ __all__ = [
     "ImageNode",
     "MplNode",
     "SVGNode",
+    "MathNode",
     "Renderer",
     "ComputedStyle",
     "templates",

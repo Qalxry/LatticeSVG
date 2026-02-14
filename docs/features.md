@@ -89,6 +89,10 @@ from latticesvg import (
 | `border-*-color` | `none` | 边框颜色 |
 | `border-*-style` | `none` | 边框样式（`solid` / `dashed` / `dotted`） |
 | `border-radius` | `0px` | 圆角半径（统一值） |
+| `box-sizing` | `border-box` | 盒尺寸模型（`border-box` / `content-box`） |
+| `outline-width` / `outline-color` | `0px` / `none` | 外轮廓宽度和颜色 |
+| `outline-style` | `none` | 外轮廓样式（`solid` / `dashed` / `dotted`） |
+| `outline-offset` | `0px` | 外轮廓与边框的间距 |
 
 #### Grid 布局（不可继承）
 
@@ -103,6 +107,7 @@ from latticesvg import (
 | `justify-self` / `align-self` | `auto` | 网格项个体对齐 |
 | `grid-auto-flow` | `row` | 自动放置方向 |
 | `grid-row` / `grid-column` | `None` | 显式行/列位置 |
+| `grid-area` | `None` | 命名区域放置（配合 `grid-template-areas`） |
 
 #### 文本（可继承）
 
@@ -116,7 +121,6 @@ from latticesvg import (
 | `line-height` | `1.2` | 行高（≤ 5.0 视为倍数，否则为绝对值） |
 | `white-space` | `normal` | 空白处理（`normal` / `nowrap` / `pre` / `pre-wrap` / `pre-line`） |
 | `overflow-wrap` | `normal` | 溢出折行（`normal` / `break-word` / `anywhere`） |
-| `word-break` | `normal` | 单词断行方式 |
 | `color` | `#000000` | 文本颜色 |
 
 #### 视觉（不可继承，除 `color`）
@@ -161,6 +165,7 @@ from latticesvg import (
 | `border-color` | `border-top/right/bottom/left-color` |
 | `gap` | `row-gap` + `column-gap` |
 | `border` | 拆解为 `width` + `style` + `color` |
+| `outline` | 拆解为 `outline-width` + `outline-style` + `outline-color` |
 
 **Grid 行列线规范**：支持 `"2 / span 3"` 语法，解析为 `(start, span)` 元组。
 
@@ -405,6 +410,7 @@ font-family: "Times New Roman, SimSun, serif"
 - `border-radius` → SVG `<rect rx="..." ry="...">` 圆角矩形
 - `border-style: dashed / dotted` → `stroke-dasharray` 属性
 - `opacity` → 背景和文本透明度
+- `outline` → 不占布局空间的外部描边（支持 `solid` / `dashed` / `dotted` + 圆角外扩）
 
 ---
 
@@ -485,7 +491,7 @@ table = build_table(
 
 ## 10. 演示覆盖
 
-`examples/` 包含 31 个演示（demo_01 ~ demo_31），覆盖：
+`examples/` 包含 32 个演示（demo_01 ~ demo_32），覆盖：
 
 - CSS 值解析、简写展开、样式继承
 - 固定列 / fr 弹性列 / 混合轨道
@@ -504,6 +510,7 @@ table = build_table(
 - `build_table()` 表格便捷 API
 - 综合报告页面、中英文混排
 - 复杂画廊表格（9×10 矩阵，11 行 11 列）
+- 多级嵌套卡片式布局（瀑布流风格）
 
 ---
 
@@ -520,3 +527,4 @@ table = build_table(
 | `test_renderer.py` | SVG 输出、背景色、边框渲染 |
 | `test_text_shaper.py` | 文本度量、折行、空白处理、break-word、对齐 |
 | `test_integration.py` | 端到端：两栏布局、嵌套 Grid、自动放置、SVG 嵌入 |
+| `test_table_builder.py` | 表格便捷构建函数 |

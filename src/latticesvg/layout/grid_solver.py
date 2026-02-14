@@ -114,11 +114,14 @@ class GridSolver:
         container_w = self.container._resolve_width(constraints)
         if container_w is None:
             container_w = constraints.available_width or 800.0
-
-        content_w = max(
-            0.0,
-            container_w - s.padding_horizontal - s.border_horizontal,
-        )
+            # available_width is always a border-box concept
+            content_w = max(
+                0.0,
+                container_w - s.padding_horizontal - s.border_horizontal,
+            )
+        else:
+            # _resolve_width returns the raw value; convert via box-sizing
+            content_w = self.container._width_to_content(container_w)
 
         # ---- Gap ----------------------------------------------------
         self._col_gap = s._float("column-gap")
@@ -160,9 +163,13 @@ class GridSolver:
 
         # ---- Row sizing (depends on column widths for text reflow) --
         # First compute item content heights given column widths
+        raw_h = self.container._resolve_height(constraints)
+        content_h_for_rows = (
+            self.container._height_to_content(raw_h) if raw_h is not None else None
+        )
         self._resolve_tracks_axis(
             self.row_tracks,
-            self.container._resolve_height(constraints) or None,
+            content_h_for_rows,
             self._row_gap,
             axis="row",
         )
@@ -177,10 +184,7 @@ class GridSolver:
         if container_h is None:
             content_h = total_row_height
         else:
-            content_h = max(
-                0.0,
-                container_h - s.padding_vertical - s.border_vertical,
-            )
+            content_h = self.container._height_to_content(container_h)
 
         # ---- Resolve container boxes --------------------------------
         self.container._resolve_box_model(content_w, content_h)
@@ -238,6 +242,7 @@ class GridSolver:
 
         Adjusts the node's border_box, padding_box, and content_box
         according to the CSS min/max sizing properties.
+        The values follow the same ``box-sizing`` as ``width``/``height``.
         """
         s = node.style
 
@@ -255,9 +260,22 @@ class GridSolver:
         if min_w <= 0 and max_w == float("inf") and min_h <= 0 and max_h == float("inf"):
             return
 
+        # Convert min/max to border-box for comparison with border_box rect
+        if node._is_border_box():
+            bb_min_w = min_w
+            bb_max_w = max_w
+            bb_min_h = min_h
+            bb_max_h = max_h
+        else:
+            # content-box: the given min/max are content sizes
+            bb_min_w = min_w + s.padding_horizontal + s.border_horizontal if min_w > 0 else 0.0
+            bb_max_w = max_w + s.padding_horizontal + s.border_horizontal if max_w != float("inf") else float("inf")
+            bb_min_h = min_h + s.padding_vertical + s.border_vertical if min_h > 0 else 0.0
+            bb_max_h = max_h + s.padding_vertical + s.border_vertical if max_h != float("inf") else float("inf")
+
         bb = node.border_box
-        new_w = max(min_w, min(bb.width, max_w))
-        new_h = max(min_h, min(bb.height, max_h))
+        new_w = max(bb_min_w, min(bb.width, bb_max_w))
+        new_h = max(bb_min_h, min(bb.height, bb_max_h))
 
         if new_w != bb.width or new_h != bb.height:
             content_w = max(0.0, new_w - s.padding_horizontal - s.border_horizontal)

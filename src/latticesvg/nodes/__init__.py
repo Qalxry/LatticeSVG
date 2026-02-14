@@ -4,6 +4,7 @@ from .text import TextNode
 from .image import ImageNode
 from .mpl import MplNode
 from .svg import SVGNode
+from .math import MathNode
 
 __all__ = [
     "Node",
@@ -14,4 +15,5 @@ __all__ = [
     "ImageNode",
     "MplNode",
     "SVGNode",
+    "MathNode",
 ]

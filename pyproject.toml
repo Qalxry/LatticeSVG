@@ -12,6 +12,7 @@ license = "MIT"
 dependencies = [
     "drawsvg>=2.0",
     "freetype-py>=2.3",
+    "quickjax>=0.1.0",
 ]
 
 [project.optional-dependencies]

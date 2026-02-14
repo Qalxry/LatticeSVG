@@ -150,6 +150,7 @@ def demo_32_waterfall_cards():
             "background-color": "#ffffff",
             "border-radius": "16px",
             "overflow": "hidden",
+            "outline": "1px solid #e0e0e0",
             "grid-template-columns": ["1fr"],
             "grid-template-rows": ["auto", "auto"],
             "gap": "0px",

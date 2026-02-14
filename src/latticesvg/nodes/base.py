@@ -186,7 +186,12 @@ class Node:
         )
 
     def _resolve_width(self, constraints: LayoutConstraints) -> Optional[float]:
-        """Resolve the explicit ``width`` property to a pixel value, or ``None`` for auto."""
+        """Resolve the explicit ``width`` property to a pixel value, or ``None`` for auto.
+
+        When ``box-sizing`` is ``border-box``, the returned value is the
+        *border-box* width (i.e. it includes padding and border).
+        When ``content-box`` (default), it is the *content* width.
+        """
         w = self.style.get("width")
         if w is None or isinstance(w, AutoValue) or w == "auto":
             return None
@@ -195,7 +200,12 @@ class Node:
         return None
 
     def _resolve_height(self, constraints: LayoutConstraints) -> Optional[float]:
-        """Resolve the explicit ``height`` property to a pixel value, or ``None`` for auto."""
+        """Resolve the explicit ``height`` property to a pixel value, or ``None`` for auto.
+
+        When ``box-sizing`` is ``border-box``, the returned value is the
+        *border-box* height (i.e. it includes padding and border).
+        When ``content-box`` (default), it is the *content* height.
+        """
         h = self.style.get("height")
         if h is None or isinstance(h, AutoValue) or h == "auto":
             return None
@@ -203,11 +213,35 @@ class Node:
             return float(h)
         return None
 
+    def _is_border_box(self) -> bool:
+        """Return True when ``box-sizing`` is ``border-box``."""
+        return self.style.get("box-sizing") == "border-box"
+
+    def _width_to_content(self, explicit_w: float) -> float:
+        """Convert an explicit width to content width.
+
+        If ``box-sizing: border-box``, subtract padding + border.
+        Otherwise return as-is (content-box).
+        """
+        if self._is_border_box():
+            return max(0.0, explicit_w - self.style.padding_horizontal - self.style.border_horizontal)
+        return explicit_w
+
+    def _height_to_content(self, explicit_h: float) -> float:
+        """Convert an explicit height to content height.
+
+        If ``box-sizing: border-box``, subtract padding + border.
+        Otherwise return as-is (content-box).
+        """
+        if self._is_border_box():
+            return max(0.0, explicit_h - self.style.padding_vertical - self.style.border_vertical)
+        return explicit_h
+
     def _content_available_width(self, constraints: LayoutConstraints) -> Optional[float]:
         """Content-area available width after subtracting padding + border."""
         explicit_w = self._resolve_width(constraints)
         if explicit_w is not None:
-            return max(0.0, explicit_w - self.style.padding_horizontal - self.style.border_horizontal)
+            return self._width_to_content(explicit_w)
         if constraints.available_width is not None:
             return max(
                 0.0,
