@@ -10,6 +10,7 @@ from .parser import (
     _Percentage,
     expand_shorthand,
     parse_clip_path,
+    parse_gradient,
     parse_grid_template_areas,
     parse_track_template,
     parse_value,
@@ -77,6 +78,8 @@ class ComputedStyle:
                             self._values[long_prop] = parse_grid_template_areas(long_val)
                         elif hint == "clip-path":
                             self._values[long_prop] = parse_clip_path(long_val)
+                        elif hint == "gradient":
+                            self._values[long_prop] = parse_gradient(long_val)
                         else:
                             self._values[long_prop] = parse_value(
                                 long_val, font_size=font_size

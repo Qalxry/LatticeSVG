@@ -698,3 +698,54 @@ class TestClipPathRendering:
         renderer = Renderer()
         svg = renderer.render_to_string(grid)
         assert "clipPath" not in svg
+
+
+# ------------------------------------------------------------------
+# Gradient background rendering (P2-4)
+# ------------------------------------------------------------------
+
+class TestGradientRendering:
+    def test_linear_gradient_svg_output(self):
+        """A linear-gradient background should produce a <linearGradient> in the SVG."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+            "background": "linear-gradient(#e66465, #9198e5)",
+        })
+        box = BoxNode()
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=200)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "linearGradient" in svg
+
+    def test_radial_gradient_svg_output(self):
+        """A radial-gradient background should produce a <radialGradient> in the SVG."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+            "background": "radial-gradient(circle, red, blue)",
+        })
+        box = BoxNode()
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=200)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "radialGradient" in svg
+
+    def test_gradient_with_solid_bg_child(self):
+        """Grid with gradient bg + child with solid bg color."""
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": ["300px"],
+            "background": "linear-gradient(to right, #ff0000, #0000ff)",
+        })
+        box = BoxNode(background_color="#ffffff")
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=300)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "linearGradient" in svg

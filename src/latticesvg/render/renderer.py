@@ -11,6 +11,7 @@ import drawsvg as dw
 
 from ..style.parser import (
     ClipCircle, ClipEllipse, ClipPolygon, ClipInset, _Percentage,
+    LinearGradientValue, RadialGradientValue,
 )
 
 if TYPE_CHECKING:
@@ -203,11 +204,20 @@ class Renderer:
             group = dw.Group()
 
         # --- Background ---
-        bg = node.style.get("background-color")
+        bg = node.style.get("background-image")
+        if not bg or bg == "none":
+            bg = node.style.get("background-color")
         if bg and bg != "none":
             opacity = node.style.get("opacity")
             op = float(opacity) if isinstance(opacity, (int, float)) else 1.0
-            bg_kwargs: dict = dict(fill=bg, opacity=op)
+            # Resolve gradient or solid color
+            if isinstance(bg, LinearGradientValue):
+                fill = self._create_linear_gradient(bg, x, y, bb.width, bb.height)
+            elif isinstance(bg, RadialGradientValue):
+                fill = self._create_radial_gradient(bg, x, y, bb.width, bb.height)
+            else:
+                fill = bg
+            bg_kwargs: dict = dict(fill=fill, opacity=op)
             if any_radius and not uniform_radius:
                 group.append(self._rounded_rect_path(
                     x, y, bb.width, bb.height, *radii, **bg_kwargs))
@@ -319,6 +329,69 @@ class Renderer:
             p.A(r_tl, r_tl, 0, 0, 1, x + r_tl, y)
         p.Z()
         return p
+
+    # -----------------------------------------------------------------
+    # Gradient helpers  (P2-4)
+    # -----------------------------------------------------------------
+
+    def _create_linear_gradient(
+        self,
+        grad: LinearGradientValue,
+        x: float,
+        y: float,
+        w: float,
+        h: float,
+    ) -> dw.LinearGradient:
+        """Create a ``dw.LinearGradient`` from a parsed :class:`LinearGradientValue`.
+
+        Converts the CSS angle convention to SVG ``(x1, y1, x2, y2)``
+        coordinates in ``userSpaceOnUse`` units.
+        """
+        # CSS gradient angles: 0deg = to top, 90deg = to right, 180deg = to bottom
+        # Convert to radians — CSS angle 0° points up, measuring clockwise
+        angle_rad = math.radians(grad.angle)
+        # Unit vector in CSS direction (0° = up = (0, -1), 90° = right = (1, 0))
+        dx = math.sin(angle_rad)
+        dy = -math.cos(angle_rad)
+        # Project onto the box — the gradient line passes through center and
+        # extends to the corners of the bounding box.
+        cx = x + w / 2
+        cy = y + h / 2
+        # Half-length of the gradient line (corner-to-corner projection)
+        half_len = abs(dx) * w / 2 + abs(dy) * h / 2
+        x1 = cx - dx * half_len
+        y1 = cy - dy * half_len
+        x2 = cx + dx * half_len
+        y2 = cy + dy * half_len
+
+        svg_grad = dw.LinearGradient(x1, y1, x2, y2)
+        for stop in grad.stops:
+            pos = stop.position if stop.position is not None else 0
+            svg_grad.add_stop(pos, stop.color)
+        return svg_grad
+
+    def _create_radial_gradient(
+        self,
+        grad: RadialGradientValue,
+        x: float,
+        y: float,
+        w: float,
+        h: float,
+    ) -> dw.RadialGradient:
+        """Create a ``dw.RadialGradient`` from a parsed :class:`RadialGradientValue`."""
+        cx = x + w * grad.cx
+        cy = y + h * grad.cy
+        # Radius: use the larger half-dimension for circle,
+        # or average for ellipse
+        if grad.shape == "circle":
+            r = max(w, h) / 2
+        else:
+            r = (w + h) / 4  # reasonable default for ellipse
+        svg_grad = dw.RadialGradient(cx, cy, r)
+        for stop in grad.stops:
+            pos = stop.position if stop.position is not None else 0
+            svg_grad.add_stop(pos, stop.color)
+        return svg_grad
 
     # -----------------------------------------------------------------
     # clip-path helpers

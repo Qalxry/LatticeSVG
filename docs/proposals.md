@@ -139,7 +139,7 @@ grid = GridContainer(style={
 
 ## P2 — 按需评估
 
-### P2-1. 四角独立 `border-radius`
+### ~~P2-1. 四角独立 `border-radius`~~（已完成）
 
 **价值**：支持 `border-radius: 10px 20px 0 5px` 四角独立值，可实现 Tab 标签、对话气泡等仅部分圆角的场景。
 
@@ -147,7 +147,7 @@ grid = GridContainer(style={
 
 **评估**：当前统一单值已覆盖卡片/按钮等主流场景，四角独立按需再做。
 
-### P2-2. `clip-path` 支持
+### ~~P2-2. `clip-path` 支持~~（已完成）
 
 **价值**：CSS `clip-path` 可实现圆形裁剪、多边形蒙版等高级视觉效果（头像裁圆、斜切 Banner 等）。
 

@@ -63,6 +63,45 @@ MIN_CONTENT = MinContent()
 MAX_CONTENT = MaxContent()
 
 
+@dataclass(frozen=True)
+class MinMaxValue:
+    """Represents a ``minmax(min, max)`` track sizing function."""
+    min_val: Any   # float(px) | MinContent | MaxContent | AutoValue | _Percentage
+    max_val: Any   # float(px) | FrValue | MinContent | MaxContent | AutoValue | _Percentage
+
+    def __repr__(self) -> str:
+        return f"MinMaxValue({self.min_val!r}, {self.max_val!r})"
+
+
+@dataclass(frozen=True)
+class GradientStop:
+    """A single color stop in a gradient."""
+    color: str
+    position: Optional[float] = None  # 0.0–1.0, None = auto-distribute
+
+
+@dataclass(frozen=True)
+class LinearGradientValue:
+    """Parsed ``linear-gradient(...)`` value."""
+    angle: float = 180.0  # CSS degrees (180 = to bottom, default)
+    stops: Tuple[GradientStop, ...] = ()
+
+    def __repr__(self) -> str:
+        return f"LinearGradientValue(angle={self.angle}, stops={self.stops})"
+
+
+@dataclass(frozen=True)
+class RadialGradientValue:
+    """Parsed ``radial-gradient(...)`` value."""
+    shape: str = "ellipse"  # "circle" | "ellipse"
+    cx: float = 0.5  # 0–1 (fraction of element width)
+    cy: float = 0.5  # 0–1 (fraction of element height)
+    stops: Tuple[GradientStop, ...] = ()
+
+    def __repr__(self) -> str:
+        return f"RadialGradientValue(shape={self.shape!r}, stops={self.stops})"
+
+
 # ---------------------------------------------------------------------------
 # Named CSS colors (subset — the most common ones)
 # ---------------------------------------------------------------------------
@@ -359,6 +398,12 @@ def expand_shorthand(prop: str, value: Any) -> Dict[str, Any]:
             "border-bottom-left-radius": bl,
         }
 
+    # --- background shorthand (P2-4) ---
+    if prop == "background":
+        if isinstance(value, str) and "gradient(" in value:
+            return {"background-image": value}
+        return {"background-color": value}
+
     # --- Not a shorthand ---
     return {prop: value}
 
@@ -588,8 +633,53 @@ def _parse_clip_inset(args: str) -> ClipInset:
 
 
 # ---------------------------------------------------------------------------
-# Track template parsing
+# Track template parsing  (with repeat() / minmax() support — P2-3)
 # ---------------------------------------------------------------------------
+
+_RE_REPEAT = re.compile(
+    r"^repeat\(\s*(\d+)\s*,\s*(.+)\s*\)$", re.IGNORECASE
+)
+_RE_MINMAX = re.compile(
+    r"^minmax\(\s*(.+?)\s*,\s*([^,]+?)\s*\)$", re.IGNORECASE
+)
+
+
+def _tokenize_track_list(s: str) -> List[str]:
+    """Split a track-list string by top-level whitespace.
+
+    Parenthesised groups (e.g. ``repeat(...)``, ``minmax(...)``) are kept
+    as single tokens.
+    """
+    tokens: List[str] = []
+    depth = 0
+    current: List[str] = []
+    for ch in s:
+        if ch == "(":
+            depth += 1
+            current.append(ch)
+        elif ch == ")":
+            depth -= 1
+            current.append(ch)
+        elif ch == " " and depth == 0:
+            if current:
+                tokens.append("".join(current))
+                current = []
+        else:
+            current.append(ch)
+    if current:
+        tokens.append("".join(current))
+    return tokens
+
+
+def _parse_single_track_token(token: str, reference_length: Optional[float] = None) -> Any:
+    """Parse a single track token that may be ``minmax(...)`` or a plain value."""
+    token = token.strip()
+    m = _RE_MINMAX.match(token)
+    if m:
+        min_val = parse_value(m.group(1).strip(), reference_length=reference_length)
+        max_val = parse_value(m.group(2).strip(), reference_length=reference_length)
+        return MinMaxValue(min_val, max_val)
+    return parse_value(token, reference_length=reference_length)
 
 
 def parse_track_template(raw: Any, reference_length: Optional[float] = None) -> list:
@@ -597,15 +687,229 @@ def parse_track_template(raw: Any, reference_length: Optional[float] = None) -> 
 
     Accepts a list of strings (``["200px", "1fr"]``) or a single
     space-separated string (``"200px 1fr"``).
+
+    Supports ``repeat(count, track_expr)`` and ``minmax(min, max)``
+    function syntax.
     """
     if isinstance(raw, str):
-        parts = raw.split()
+        tokens = _tokenize_track_list(raw)
     elif isinstance(raw, (list, tuple)):
-        parts = list(raw)
+        tokens = [str(v) if not isinstance(v, str) else v for v in raw]
     else:
-        return [parse_value(raw, reference_length=reference_length)]
+        return [_parse_single_track_token(str(raw), reference_length)]
 
-    return [parse_value(p, reference_length=reference_length) for p in parts]
+    result: List[Any] = []
+    for tok in tokens:
+        tok = tok.strip()
+        m = _RE_REPEAT.match(tok)
+        if m:
+            count = int(m.group(1))
+            inner = m.group(2).strip()
+            inner_tokens = parse_track_template(inner, reference_length=reference_length)
+            result.extend(inner_tokens * count)
+        else:
+            result.append(_parse_single_track_token(tok, reference_length))
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Gradient parsing  (P2-4)
+# ---------------------------------------------------------------------------
+
+_CSS_DIRECTION_MAP: Dict[str, float] = {
+    "to top": 0,
+    "to right": 90,
+    "to bottom": 180,
+    "to left": 270,
+    "to top right": 45,
+    "to right top": 45,
+    "to bottom right": 135,
+    "to right bottom": 135,
+    "to bottom left": 225,
+    "to left bottom": 225,
+    "to top left": 315,
+    "to left top": 315,
+}
+
+_RE_LINEAR_GRADIENT = re.compile(
+    r"^\s*linear-gradient\s*\((.+)\)\s*$", re.IGNORECASE | re.DOTALL
+)
+_RE_RADIAL_GRADIENT = re.compile(
+    r"^\s*radial-gradient\s*\((.+)\)\s*$", re.IGNORECASE | re.DOTALL
+)
+_RE_ANGLE = re.compile(r"^\s*(-?\d+(?:\.\d+)?)\s*deg\s*$", re.IGNORECASE)
+
+
+def _split_gradient_args(args: str) -> List[str]:
+    """Split gradient arguments by commas, respecting parentheses (for ``rgb()``)."""
+    parts: List[str] = []
+    depth = 0
+    current: List[str] = []
+    for ch in args:
+        if ch == "(":
+            depth += 1
+            current.append(ch)
+        elif ch == ")":
+            depth -= 1
+            current.append(ch)
+        elif ch == "," and depth == 0:
+            parts.append("".join(current).strip())
+            current = []
+        else:
+            current.append(ch)
+    if current:
+        parts.append("".join(current).strip())
+    return parts
+
+
+def _parse_color_stop(token: str) -> GradientStop:
+    """Parse a single color-stop token like ``red``, ``#abc 50%``, ``rgb(1,2,3) 0.5``."""
+    token = token.strip()
+    # Try to separate trailing percentage / number from color
+    # e.g. "#ff0000 50%" or "red 30%"
+    m = re.match(r'^(.+?)\s+(\d+(?:\.\d+)?)\s*%\s*$', token)
+    if m:
+        color_part = m.group(1).strip()
+        position = float(m.group(2)) / 100.0
+        color = _parse_color(color_part) or color_part
+        return GradientStop(color=color, position=position)
+    # No explicit position
+    color = _parse_color(token) or token
+    return GradientStop(color=color, position=None)
+
+
+def _distribute_stop_positions(stops: List[GradientStop]) -> Tuple[GradientStop, ...]:
+    """Fill in ``None`` positions with evenly distributed values."""
+    if not stops:
+        return ()
+    n = len(stops)
+    resolved: List[GradientStop] = list(stops)
+    # Force first = 0 and last = 1 if not set
+    if resolved[0].position is None:
+        resolved[0] = GradientStop(resolved[0].color, 0.0)
+    if resolved[-1].position is None:
+        resolved[-1] = GradientStop(resolved[-1].color, 1.0)
+    # Fill gaps: find runs of None and interpolate
+    i = 0
+    while i < n:
+        if resolved[i].position is None:
+            # find the next non-None
+            j = i
+            while j < n and resolved[j].position is None:
+                j += 1
+            # interpolate between i-1 and j
+            start_pos = resolved[i - 1].position  # type: ignore
+            end_pos = resolved[j].position  # type: ignore
+            span = j - i + 1
+            for k in range(i, j):
+                frac = (k - i + 1) / span
+                resolved[k] = GradientStop(resolved[k].color, start_pos + frac * (end_pos - start_pos))  # type: ignore
+            i = j
+        else:
+            i += 1
+    return tuple(resolved)
+
+
+def parse_gradient(raw: Any) -> Any:
+    """Parse a CSS gradient value.
+
+    Supports ``linear-gradient(...)`` and ``radial-gradient(...)`` with:
+    - Direction angle (``45deg``) or keyword (``to right``)
+    - Multiple color stops with optional percentage positions
+    - ``rgb()`` / ``rgba()`` color functions inside stops
+
+    Returns a :class:`LinearGradientValue` or :class:`RadialGradientValue`,
+    or ``"none"`` if the value cannot be parsed.
+    """
+    if raw is None or raw == "none":
+        return "none"
+    if not isinstance(raw, str):
+        return "none"
+
+    s = raw.strip()
+
+    # --- linear-gradient ---
+    m = _RE_LINEAR_GRADIENT.match(s)
+    if m:
+        args = _split_gradient_args(m.group(1))
+        if not args:
+            return "none"
+
+        angle = 180.0  # default: to bottom
+        start_idx = 0
+
+        first = args[0].strip().lower()
+        # Check for direction keyword
+        for kw, deg in _CSS_DIRECTION_MAP.items():
+            if first == kw:
+                angle = deg
+                start_idx = 1
+                break
+        else:
+            # Check for angle
+            am = _RE_ANGLE.match(args[0])
+            if am:
+                angle = float(am.group(1))
+                start_idx = 1
+
+        stops = [_parse_color_stop(a) for a in args[start_idx:]]
+        stops_final = _distribute_stop_positions(stops)
+        return LinearGradientValue(angle=angle, stops=stops_final)
+
+    # --- radial-gradient ---
+    m = _RE_RADIAL_GRADIENT.match(s)
+    if m:
+        args = _split_gradient_args(m.group(1))
+        if not args:
+            return "none"
+
+        shape = "ellipse"
+        cx, cy = 0.5, 0.5
+        start_idx = 0
+
+        first = args[0].strip().lower()
+        # Check for shape / position spec
+        if "at" in first or first in ("circle", "ellipse"):
+            start_idx = 1
+            if "at" in first:
+                parts = first.split("at", 1)
+                shape_part = parts[0].strip()
+                pos_part = parts[1].strip()
+                if shape_part in ("circle", "ellipse"):
+                    shape = shape_part
+                elif shape_part == "":
+                    shape = "ellipse"
+                pos_tokens = pos_part.split()
+                if len(pos_tokens) >= 1:
+                    cx = _parse_position_pct(pos_tokens[0])
+                if len(pos_tokens) >= 2:
+                    cy = _parse_position_pct(pos_tokens[1])
+            else:
+                shape = first
+
+        stops = [_parse_color_stop(a) for a in args[start_idx:]]
+        stops_final = _distribute_stop_positions(stops)
+        return RadialGradientValue(shape=shape, cx=cx, cy=cy, stops=stops_final)
+
+    return "none"
+
+
+def _parse_position_pct(token: str) -> float:
+    """Parse a position token as a fraction (0-1).  ``50%`` → 0.5."""
+    token = token.strip()
+    if token.endswith("%"):
+        return float(token[:-1]) / 100.0
+    # Named positions
+    if token in ("center",):
+        return 0.5
+    if token in ("left", "top"):
+        return 0.0
+    if token in ("right", "bottom"):
+        return 1.0
+    try:
+        return float(token)
+    except ValueError:
+        return 0.5
 
 
 # ---------------------------------------------------------------------------

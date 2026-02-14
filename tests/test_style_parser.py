@@ -7,8 +7,13 @@ from latticesvg.style.parser import (
     FrValue,
     MIN_CONTENT,
     MAX_CONTENT,
+    MinMaxValue,
+    GradientStop,
+    LinearGradientValue,
+    RadialGradientValue,
     _Percentage,
     expand_shorthand,
+    parse_gradient,
     parse_grid_template_areas,
     parse_track_template,
     parse_value,
@@ -168,6 +173,71 @@ class TestTrackTemplate:
     def test_single_value(self):
         result = parse_track_template("300px")
         assert result == [300.0]
+
+    # --- repeat() ---
+
+    def test_repeat_basic(self):
+        result = parse_track_template("repeat(3, 1fr)")
+        assert len(result) == 3
+        assert all(isinstance(v, FrValue) and v.value == 1.0 for v in result)
+
+    def test_repeat_multiple_values(self):
+        result = parse_track_template("repeat(2, 100px 1fr)")
+        assert len(result) == 4
+        assert result[0] == 100.0
+        assert isinstance(result[1], FrValue)
+        assert result[2] == 100.0
+        assert isinstance(result[3], FrValue)
+
+    def test_repeat_mixed(self):
+        result = parse_track_template("200px repeat(2, 1fr) 100px")
+        assert len(result) == 4
+        assert result[0] == 200.0
+        assert isinstance(result[1], FrValue)
+        assert isinstance(result[2], FrValue)
+        assert result[3] == 100.0
+
+    # --- minmax() ---
+
+    def test_minmax_basic(self):
+        result = parse_track_template("minmax(100px, 1fr)")
+        assert len(result) == 1
+        v = result[0]
+        assert isinstance(v, MinMaxValue)
+        assert v.min_val == 100.0
+        assert isinstance(v.max_val, FrValue) and v.max_val.value == 1.0
+
+    def test_minmax_fixed_range(self):
+        result = parse_track_template("minmax(100px, 300px)")
+        assert len(result) == 1
+        v = result[0]
+        assert isinstance(v, MinMaxValue)
+        assert v.min_val == 100.0
+        assert v.max_val == 300.0
+
+    def test_minmax_auto_max(self):
+        result = parse_track_template("minmax(100px, auto)")
+        assert len(result) == 1
+        v = result[0]
+        assert isinstance(v, MinMaxValue)
+        assert v.min_val == 100.0
+        assert v.max_val is AUTO
+
+    def test_repeat_with_minmax(self):
+        result = parse_track_template("repeat(3, minmax(100px, 1fr))")
+        assert len(result) == 3
+        for v in result:
+            assert isinstance(v, MinMaxValue)
+            assert v.min_val == 100.0
+            assert isinstance(v.max_val, FrValue)
+
+    def test_mixed_with_functions(self):
+        result = parse_track_template("200px repeat(2, 1fr) minmax(100px, auto)")
+        assert len(result) == 4
+        assert result[0] == 200.0
+        assert isinstance(result[1], FrValue)
+        assert isinstance(result[2], FrValue)
+        assert isinstance(result[3], MinMaxValue)
 
 
 # ------------------------------------------------------------------
@@ -385,3 +455,100 @@ class TestClipPathParsing:
     def test_invalid_returns_none_string(self):
         assert parse_clip_path("url(#clip)") == "none"
         assert parse_clip_path("invalid") == "none"
+
+
+# ------------------------------------------------------------------
+# Gradient parsing (P2-4)
+# ------------------------------------------------------------------
+
+class TestGradientParsing:
+    def test_linear_gradient_basic(self):
+        result = parse_gradient("linear-gradient(#e66465, #9198e5)")
+        assert isinstance(result, LinearGradientValue)
+        assert result.angle == 180.0  # default: to bottom
+        assert len(result.stops) == 2
+        assert result.stops[0].position == 0.0
+        assert result.stops[1].position == 1.0
+
+    def test_linear_gradient_angle(self):
+        result = parse_gradient("linear-gradient(45deg, red, blue)")
+        assert isinstance(result, LinearGradientValue)
+        assert result.angle == 45.0
+        assert len(result.stops) == 2
+
+    def test_linear_gradient_to_right(self):
+        result = parse_gradient("linear-gradient(to right, red, blue)")
+        assert isinstance(result, LinearGradientValue)
+        assert result.angle == 90.0
+
+    def test_linear_gradient_to_top(self):
+        result = parse_gradient("linear-gradient(to top, red, blue)")
+        assert isinstance(result, LinearGradientValue)
+        assert result.angle == 0.0
+
+    def test_linear_gradient_stops_with_position(self):
+        result = parse_gradient("linear-gradient(red 0%, yellow 50%, blue 100%)")
+        assert isinstance(result, LinearGradientValue)
+        assert len(result.stops) == 3
+        assert result.stops[0].position == pytest.approx(0.0)
+        assert result.stops[1].position == pytest.approx(0.5)
+        assert result.stops[2].position == pytest.approx(1.0)
+
+    def test_linear_gradient_auto_positions(self):
+        result = parse_gradient("linear-gradient(red, green, blue)")
+        assert isinstance(result, LinearGradientValue)
+        assert len(result.stops) == 3
+        assert result.stops[0].position == pytest.approx(0.0)
+        assert result.stops[1].position == pytest.approx(0.5)
+        assert result.stops[2].position == pytest.approx(1.0)
+
+    def test_radial_gradient_basic(self):
+        result = parse_gradient("radial-gradient(circle, red, blue)")
+        assert isinstance(result, RadialGradientValue)
+        assert result.shape == "circle"
+        assert len(result.stops) == 2
+
+    def test_radial_gradient_default_ellipse(self):
+        result = parse_gradient("radial-gradient(red, blue)")
+        assert isinstance(result, RadialGradientValue)
+        assert result.shape == "ellipse"
+        assert len(result.stops) == 2
+
+    def test_radial_gradient_with_position(self):
+        result = parse_gradient("radial-gradient(circle at 30% 70%, red, blue)")
+        assert isinstance(result, RadialGradientValue)
+        assert result.shape == "circle"
+        assert result.cx == pytest.approx(0.3)
+        assert result.cy == pytest.approx(0.7)
+
+    def test_gradient_none(self):
+        assert parse_gradient("none") == "none"
+        assert parse_gradient(None) == "none"
+        assert parse_gradient("invalid-text") == "none"
+
+    def test_linear_gradient_with_rgb(self):
+        result = parse_gradient("linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))")
+        assert isinstance(result, LinearGradientValue)
+        assert len(result.stops) == 2
+
+
+# ------------------------------------------------------------------
+# background shorthand expansion (P2-4)
+# ------------------------------------------------------------------
+
+class TestBackgroundShorthand:
+    def test_background_color_passthrough(self):
+        result = expand_shorthand("background", "red")
+        assert result == {"background-color": "red"}
+
+    def test_background_hex(self):
+        result = expand_shorthand("background", "#ff0000")
+        assert result == {"background-color": "#ff0000"}
+
+    def test_background_gradient(self):
+        result = expand_shorthand("background", "linear-gradient(red, blue)")
+        assert result == {"background-image": "linear-gradient(red, blue)"}
+
+    def test_background_radial_gradient(self):
+        result = expand_shorthand("background", "radial-gradient(circle, red, blue)")
+        assert result == {"background-image": "radial-gradient(circle, red, blue)"}

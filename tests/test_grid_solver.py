@@ -482,3 +482,122 @@ class TestGridAutoTracks:
         # auto rows: each row sized to content
         assert a.border_box.height == pytest.approx(40.0)
         assert b.border_box.height == pytest.approx(60.0)
+
+
+# ------------------------------------------------------------------
+# repeat() / minmax() track functions (P2-3)
+# ------------------------------------------------------------------
+
+class TestRepeatMinmax:
+    """Tests for repeat() and minmax() track sizing functions."""
+
+    def test_repeat_basic(self):
+        """repeat(3, 1fr) should create 3 equal columns."""
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": "repeat(3, 1fr)",
+        })
+        items = [MockNode() for _ in range(3)]
+        for i, item in enumerate(items):
+            grid.add(item, row=1, col=i + 1)
+        grid.layout(available_width=300)
+
+        for item in items:
+            assert item.border_box.width == pytest.approx(100.0)
+
+    def test_repeat_mixed(self):
+        """200px repeat(2, 1fr) should give 200px + two equal fr columns."""
+        grid = GridContainer(style={
+            "width": "500px",
+            "grid-template-columns": "200px repeat(2, 1fr)",
+        })
+        a = MockNode()
+        b = MockNode()
+        c = MockNode()
+        grid.add(a, row=1, col=1)
+        grid.add(b, row=1, col=2)
+        grid.add(c, row=1, col=3)
+        grid.layout(available_width=500)
+
+        assert a.border_box.width == pytest.approx(200.0)
+        assert b.border_box.width == pytest.approx(150.0)
+        assert c.border_box.width == pytest.approx(150.0)
+
+    def test_minmax_fixed_range(self):
+        """minmax(100px, 300px) should respect the max when space is available."""
+        grid = GridContainer(style={
+            "width": "500px",
+            "grid-template-columns": "minmax(100px, 300px) 1fr",
+        })
+        a = MockNode()
+        b = MockNode()
+        grid.add(a, row=1, col=1)
+        grid.add(b, row=1, col=2)
+        grid.layout(available_width=500)
+
+        # minmax(100,300) gets 300 (its growth_limit), 1fr gets remaining 200
+        assert a.border_box.width == pytest.approx(300.0)
+        assert b.border_box.width == pytest.approx(200.0)
+
+    def test_minmax_with_fr(self):
+        """minmax(100px, 1fr) should participate in fr distribution."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": "minmax(100px, 1fr) 1fr",
+        })
+        a = MockNode()
+        b = MockNode()
+        grid.add(a, row=1, col=1)
+        grid.add(b, row=1, col=2)
+        grid.layout(available_width=400)
+
+        # Both participate as 1fr each → 200px each, both ≥ 100px ✓
+        assert a.border_box.width == pytest.approx(200.0)
+        assert b.border_box.width == pytest.approx(200.0)
+
+    def test_minmax_fr_respects_minimum(self):
+        """minmax(150px, 1fr) with 1fr in 200px: min should be respected."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": "minmax(150px, 1fr) 1fr",
+        })
+        a = MockNode()
+        b = MockNode()
+        grid.add(a, row=1, col=1)
+        grid.add(b, row=1, col=2)
+        grid.layout(available_width=200)
+
+        # minmax(150, 1fr) min is 150; fr distribution gives 100 each,
+        # but max(150, 100) = 150
+        assert a.border_box.width >= 150.0
+        assert a.border_box.width == pytest.approx(150.0)
+
+    def test_repeat_with_minmax(self):
+        """repeat(3, minmax(80px, 1fr)) in 300px container → 100px each."""
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": "repeat(3, minmax(80px, 1fr))",
+        })
+        items = [MockNode() for _ in range(3)]
+        for i, item in enumerate(items):
+            grid.add(item, row=1, col=i + 1)
+        grid.layout(available_width=300)
+
+        for item in items:
+            assert item.border_box.width == pytest.approx(100.0)
+
+    def test_minmax_auto_max(self):
+        """minmax(100px, auto) should use content size for growth_limit."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": "minmax(100px, auto) 1fr",
+        })
+        a = MockNode(min_w=80, max_w=120)
+        b = MockNode()
+        grid.add(a, row=1, col=1)
+        grid.add(b, row=1, col=2)
+        grid.layout(available_width=400)
+
+        # minmax(100, auto): base_size=100, growth_limit=max_content(120)
+        # The track should be at least 100px
+        assert a.border_box.width >= 100.0

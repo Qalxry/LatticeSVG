@@ -135,6 +135,7 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
 
     # ── Visual ────────────────────────────────────────────────────────
     "background-color": PropertyDef(default="none", parser_hint="color"),
+    "background-image": PropertyDef(default="none", parser_hint="gradient"),
     "opacity": PropertyDef(default="1", parser_hint="length"),
     "overflow": PropertyDef(default="visible", parser_hint="keyword"),
     "clip-path": PropertyDef(default="none", parser_hint="clip-path"),

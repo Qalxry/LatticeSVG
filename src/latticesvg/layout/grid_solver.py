@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from enum import Enum, auto
 from typing import Any, Dict, List, Optional, Set, Tuple, TYPE_CHECKING
 
-from ..style.parser import AUTO, AutoValue, FrValue, MinContent, MaxContent, _Percentage, AreaMapping
+from ..style.parser import AUTO, AutoValue, FrValue, MinContent, MaxContent, MinMaxValue, _Percentage, AreaMapping
 
 if TYPE_CHECKING:
     from ..nodes.base import LayoutConstraints, Node, Rect
@@ -28,6 +28,7 @@ class SizeType(Enum):
     AUTO = auto()
     MIN_CONTENT = auto()
     MAX_CONTENT = auto()
+    MINMAX = auto()
 
 
 @dataclass
@@ -35,9 +36,17 @@ class TrackDef:
     """Parsed definition for one grid track (column or row)."""
     size_type: SizeType
     value: float = 0.0  # px for FIXED, fraction for FR, percent for PERCENT
+    min_track: Optional["TrackDef"] = None  # for MINMAX
+    max_track: Optional["TrackDef"] = None  # for MINMAX
 
     @classmethod
     def from_parsed(cls, val: Any) -> "TrackDef":
+        if isinstance(val, MinMaxValue):
+            return cls(
+                SizeType.MINMAX,
+                min_track=cls.from_parsed(val.min_val),
+                max_track=cls.from_parsed(val.max_val),
+            )
         if isinstance(val, FrValue):
             return cls(SizeType.FR, val.value)
         if isinstance(val, (int, float)):
@@ -552,7 +561,17 @@ class GridSolver:
 
         total_gap = gap * max(0, len(tracks) - 1)
 
-        # Pass 1: Fixed / percent tracks
+        # Helper: resolve a fixed-ish TrackDef to a px value
+        def _resolve_definite(td: Optional[TrackDef], ref: Optional[float]) -> Optional[float]:
+            if td is None:
+                return None
+            if td.size_type == SizeType.FIXED:
+                return td.value
+            if td.size_type == SizeType.PERCENT:
+                return td.value / 100.0 * (ref or 0.0)
+            return None
+
+        # Pass 1: Fixed / percent tracks (including minmax definite parts)
         for t in tracks:
             d = t.definition
             if d.size_type == SizeType.FIXED:
@@ -562,6 +581,43 @@ class GridSolver:
                 ref = available if available else 0.0
                 t.base_size = d.value / 100.0 * ref
                 t.growth_limit = t.base_size
+            elif d.size_type == SizeType.MINMAX:
+                # Set base_size from min (if definite)
+                min_px = _resolve_definite(d.min_track, available)
+                if min_px is not None:
+                    t.base_size = min_px
+                # Set growth_limit from max (if definite and not fr)
+                if d.max_track and d.max_track.size_type == SizeType.FR:
+                    t.growth_limit = float("inf")  # handled in Pass 4
+                else:
+                    max_px = _resolve_definite(d.max_track, available)
+                    if max_px is not None:
+                        t.growth_limit = max_px
+                    # else stays inf for intrinsic max, resolved in Pass 2
+
+        # Collect size types that need intrinsic sizing (Pass 2)
+        _INTRINSIC = (SizeType.AUTO, SizeType.MIN_CONTENT, SizeType.MAX_CONTENT)
+
+        def _needs_intrinsic(d: TrackDef) -> bool:
+            if d.size_type in _INTRINSIC:
+                return True
+            if d.size_type == SizeType.MINMAX:
+                min_intr = d.min_track and d.min_track.size_type in _INTRINSIC
+                max_intr = d.max_track and d.max_track.size_type in (*_INTRINSIC, SizeType.FR)
+                return bool(min_intr or max_intr)
+            return False
+
+        def _intrinsic_base_type(d: TrackDef) -> SizeType:
+            """Return the effective intrinsic sizing mode for base_size."""
+            if d.size_type == SizeType.MINMAX and d.min_track:
+                return d.min_track.size_type
+            return d.size_type
+
+        def _intrinsic_limit_type(d: TrackDef) -> SizeType:
+            """Return the effective intrinsic sizing mode for growth_limit."""
+            if d.size_type == SizeType.MINMAX and d.max_track:
+                return d.max_track.size_type
+            return d.size_type
 
         # Pass 2: Intrinsic tracks (auto/min-content/max-content) —
         #          use non-spanning items to set base_size and growth_limit
@@ -570,23 +626,33 @@ class GridSolver:
                 idx = item.col_start
                 if idx < len(tracks):
                     t = tracks[idx]
-                    if t.definition.size_type in (SizeType.AUTO, SizeType.MIN_CONTENT, SizeType.MAX_CONTENT):
+                    if _needs_intrinsic(t.definition):
                         c = LayoutConstraints(available_width=available)
                         min_w, max_w, min_h = item.node.measure(c)
-                        if t.definition.size_type == SizeType.MIN_CONTENT:
-                            t.base_size = max(t.base_size, min_w)
-                            t.growth_limit = max(t.growth_limit if t.growth_limit != float("inf") else 0, min_w)
-                        elif t.definition.size_type == SizeType.MAX_CONTENT:
-                            t.base_size = max(t.base_size, max_w)
-                            t.growth_limit = max(t.growth_limit if t.growth_limit != float("inf") else 0, max_w)
-                        else:  # AUTO
-                            t.base_size = max(t.base_size, min_w)
-                            t.growth_limit = max(t.growth_limit if t.growth_limit != float("inf") else 0, max_w)
+                        bt = _intrinsic_base_type(t.definition)
+                        lt = _intrinsic_limit_type(t.definition)
+                        # base_size (only update if min side is intrinsic)
+                        if bt in _INTRINSIC:
+                            if bt == SizeType.MIN_CONTENT:
+                                t.base_size = max(t.base_size, min_w)
+                            elif bt == SizeType.MAX_CONTENT:
+                                t.base_size = max(t.base_size, max_w)
+                            else:  # AUTO
+                                t.base_size = max(t.base_size, min_w)
+                        # growth_limit (only update if max side is intrinsic, not fr)
+                        if lt in _INTRINSIC:
+                            gl = t.growth_limit if t.growth_limit != float("inf") else 0
+                            if lt == SizeType.MIN_CONTENT:
+                                t.growth_limit = max(gl, min_w)
+                            elif lt == SizeType.MAX_CONTENT:
+                                t.growth_limit = max(gl, max_w)
+                            else:  # AUTO
+                                t.growth_limit = max(gl, max_w)
             elif axis == "row" and item.row_span == 1:
                 idx = item.row_start
                 if idx < len(tracks):
                     t = tracks[idx]
-                    if t.definition.size_type in (SizeType.AUTO, SizeType.MIN_CONTENT, SizeType.MAX_CONTENT):
+                    if _needs_intrinsic(t.definition):
                         # For rows, we need to know the column widths to reflow text
                         item_w = self._item_column_width(item)
                         c = LayoutConstraints(available_width=item_w)
@@ -614,17 +680,56 @@ class GridSolver:
             elif axis == "row" and item.row_span > 1:
                 self._distribute_spanning(tracks, item.row_start, item.row_end, gap, item, axis)
 
+        # Helper functions for fr track identification
+        def _is_fr_track(t: Track) -> bool:
+            d = t.definition
+            if d.size_type == SizeType.FR:
+                return True
+            if d.size_type == SizeType.MINMAX and d.max_track and d.max_track.size_type == SizeType.FR:
+                return True
+            return False
+
+        def _fr_value(t: Track) -> float:
+            d = t.definition
+            if d.size_type == SizeType.FR:
+                return d.value
+            if d.size_type == SizeType.MINMAX and d.max_track and d.max_track.size_type == SizeType.FR:
+                return d.max_track.value
+            return 0.0
+
+        # Pass 3.5: Maximize non-fr tracks — grow base_size towards
+        #           growth_limit using any remaining free space.
+        #           This implements the CSS Grid "maximize tracks" step
+        #           so that e.g. minmax(100px, 300px) can grow beyond its min.
+        if available is not None:
+            for _ in range(20):  # iterate to convergence
+                current_sum = sum(t.base_size for t in tracks) + total_gap
+                free = available - current_sum
+                if free <= 0:
+                    break
+                growable = [t for t in tracks
+                            if not _is_fr_track(t) and t.growth_limit > t.base_size]
+                if not growable:
+                    break
+                share = free / len(growable)
+                for t in growable:
+                    room = t.growth_limit - t.base_size
+                    t.base_size += min(share, room)
+
         # Pass 4: Distribute remaining space to fr tracks
+        #         (includes minmax tracks whose max is fr)
+
         non_fr_sum = sum(
-            t.base_size for t in tracks if t.definition.size_type != SizeType.FR
+            t.base_size for t in tracks if not _is_fr_track(t)
         )
-        fr_tracks = [t for t in tracks if t.definition.size_type == SizeType.FR]
+        fr_tracks = [t for t in tracks if _is_fr_track(t)]
         if fr_tracks and available is not None:
             remaining = available - non_fr_sum - total_gap
-            total_fr = sum(t.definition.value for t in fr_tracks)
+            total_fr = sum(_fr_value(t) for t in fr_tracks)
             if total_fr > 0 and remaining > 0:
                 for t in fr_tracks:
-                    t.base_size = max(t.base_size, (t.definition.value / total_fr) * remaining)
+                    fr_size = (_fr_value(t) / total_fr) * remaining
+                    t.base_size = max(t.base_size, fr_size)
                     t.growth_limit = t.base_size
 
         # Finalise
