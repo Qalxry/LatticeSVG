@@ -33,7 +33,7 @@ def save(node: Node, filename: str, width: float = None, embed_fonts: bool = Fal
     node.layout(available_width=width) if hasattr(node, 'layout') else None
     renderer = Renderer()
     path = OUTPUT_DIR / filename
-    renderer.render(node, str(path))
+    renderer.render(node, str(path), embed_fonts=embed_fonts)
     print(f"  ✓ {path.absolute()}")
     return path
 

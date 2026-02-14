@@ -135,9 +135,9 @@ class GridSolver:
         area_mapping = s.get("grid-template-areas")
         if isinstance(area_mapping, AreaMapping):
             while len(col_defs) < area_mapping.num_cols:
-                col_defs.append(TrackDef(SizeType.AUTO))
+                col_defs.append(self._implicit_track_def("col"))
             while len(row_defs) < area_mapping.num_rows:
-                row_defs.append(TrackDef(SizeType.AUTO))
+                row_defs.append(self._implicit_track_def("row"))
 
         # ---- Place items --------------------------------------------
         self.items = self._place_items(col_defs, row_defs, area_mapping)
@@ -146,9 +146,9 @@ class GridSolver:
         max_col = max((it.col_end for it in self.items), default=len(col_defs))
         max_row = max((it.row_end for it in self.items), default=len(row_defs))
         while len(col_defs) < max_col:
-            col_defs.append(TrackDef(SizeType.AUTO))
+            col_defs.append(self._implicit_track_def("col"))
         while len(row_defs) < max_row:
-            row_defs.append(TrackDef(SizeType.AUTO))
+            row_defs.append(self._implicit_track_def("row"))
 
         self.col_tracks = [Track(d) for d in col_defs]
         self.row_tracks = [Track(d) for d in row_defs]
@@ -295,18 +295,18 @@ class GridSolver:
         area_mapping = s.get("grid-template-areas")
         if isinstance(area_mapping, AreaMapping):
             while len(col_defs) < area_mapping.num_cols:
-                col_defs.append(TrackDef(SizeType.AUTO))
+                col_defs.append(self._implicit_track_def("col"))
             while len(row_defs) < area_mapping.num_rows:
-                row_defs.append(TrackDef(SizeType.AUTO))
+                row_defs.append(self._implicit_track_def("row"))
 
         self.items = self._place_items(col_defs, row_defs, area_mapping)
 
         max_col = max((it.col_end for it in self.items), default=len(col_defs))
         max_row = max((it.row_end for it in self.items), default=len(row_defs))
         while len(col_defs) < max_col:
-            col_defs.append(TrackDef(SizeType.AUTO))
+            col_defs.append(self._implicit_track_def("col"))
         while len(row_defs) < max_row:
-            row_defs.append(TrackDef(SizeType.AUTO))
+            row_defs.append(self._implicit_track_def("row"))
 
         self.col_tracks = [Track(d) for d in col_defs]
         self.row_tracks = [Track(d) for d in row_defs]
@@ -347,6 +347,14 @@ class GridSolver:
         if isinstance(raw, list):
             return [TrackDef.from_parsed(v) for v in raw]
         return [TrackDef.from_parsed(raw)]
+
+    def _implicit_track_def(self, axis: str) -> TrackDef:
+        """Return the *TrackDef* for implicit tracks on *axis* (``'col'``/``'row'``)."""
+        prop = "grid-auto-columns" if axis == "col" else "grid-auto-rows"
+        raw = self.container.style.get(prop)
+        if isinstance(raw, list) and raw:
+            return TrackDef.from_parsed(raw[0])
+        return TrackDef(SizeType.AUTO)
 
     # =================================================================
     # Item placement
@@ -506,8 +514,9 @@ class GridSolver:
         dense: bool,
     ) -> Tuple[int, int]:
         r, c = (0, 0) if dense else (start_r, start_c)
+        max_r = num_rows if num_rows > 0 else 200
         for _ in range(10000):
-            if r + rs > max(num_rows, 200):
+            if r + rs > max_r:
                 c += 1
                 r = 0
                 continue

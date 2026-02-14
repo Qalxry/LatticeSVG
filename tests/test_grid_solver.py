@@ -425,3 +425,60 @@ class TestGridTemplateAreas:
         assert left.border_box.x == pytest.approx(0.0)
         assert left.border_box.y == pytest.approx(30.0)
         assert right.border_box.x == pytest.approx(200.0)
+
+
+class TestGridAutoTracks:
+    """Tests for grid-auto-rows / grid-auto-columns (P1-3)."""
+
+    def test_auto_rows_fixed(self):
+        """Implicit rows should use grid-auto-rows size instead of auto."""
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": ["100px", "100px", "100px"],
+            "grid-auto-rows": "150px",
+        })
+        items = [MockNode(height=20) for _ in range(6)]
+        for item in items:
+            grid.add(item)
+        grid.layout(available_width=300)
+
+        # All items should have 150px row height (stretch by default)
+        for item in items:
+            assert item.border_box.height == pytest.approx(150.0)
+
+        # Row 2 items should start at y=150
+        assert items[3].border_box.y == pytest.approx(150.0)
+
+    def test_auto_columns_fixed(self):
+        """Implicit columns should use grid-auto-columns size."""
+        grid = GridContainer(style={
+            "width": "600px",
+            "grid-template-rows": ["50px"],
+            "grid-auto-flow": "column",
+            "grid-auto-columns": "200px",
+        })
+        a = MockNode()
+        b = MockNode()
+        grid.add(a)
+        grid.add(b)
+        grid.layout(available_width=600)
+
+        # Both items placed in implicit columns of 200px width
+        assert a.border_box.width == pytest.approx(200.0)
+        assert b.border_box.width == pytest.approx(200.0)
+
+    def test_auto_rows_default_is_auto(self):
+        """Without grid-auto-rows, implicit rows should still be auto-sized."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+        })
+        a = MockNode(height=40)
+        b = MockNode(height=60)
+        grid.add(a)
+        grid.add(b)
+        grid.layout(available_width=200)
+
+        # auto rows: each row sized to content
+        assert a.border_box.height == pytest.approx(40.0)
+        assert b.border_box.height == pytest.approx(60.0)

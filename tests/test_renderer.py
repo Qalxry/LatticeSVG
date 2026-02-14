@@ -489,3 +489,212 @@ class TestFontEmbedding:
         with open(out) as f:
             content = f.read()
         assert "@font-face" in content
+
+
+# ------------------------------------------------------------------
+# Independent border-radius (P2-1)
+# ------------------------------------------------------------------
+
+class TestIndependentBorderRadius:
+    """P2-1: four-corner independent border-radius."""
+
+    def test_uniform_radius_still_uses_rect(self):
+        """When all four corners are equal, background should use <rect rx=...>."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+            "background-color": "#ff0000",
+            "border-radius": "10px",
+        })
+        box = BoxNode()
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=200)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        root = _parse_svg(svg)
+        rects = root.findall('.//rect')
+        rx_values = [r.attrib.get('rx') for r in rects if r.attrib.get('rx')]
+        assert any(float(v) == 10.0 for v in rx_values)
+
+    def test_independent_corners_use_path(self):
+        """When corners differ, background should use <path> instead of <rect>."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+            "background-color": "#ff0000",
+            "border-radius": "10px 20px 0 5px",
+        })
+        box = BoxNode()
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=200)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        root = _parse_svg(svg)
+        # Should have a <path> with fill (background rendered as path)
+        paths = root.findall('.//path')
+        fill_paths = [p for p in paths if p.attrib.get('fill', 'none') != 'none']
+        assert len(fill_paths) >= 1, "Expected path element for non-uniform border-radius background"
+
+    def test_independent_corners_border_path(self):
+        """Border with non-uniform radius should render as <path>."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+            "border": "2px solid #0000ff",
+            "border-radius": "10px 0 10px 0",
+        })
+        box = BoxNode()
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=200)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        root = _parse_svg(svg)
+        # Border path should have stroke and no fill
+        paths = root.findall('.//path')
+        border_paths = [p for p in paths
+                        if p.attrib.get('stroke') and p.attrib.get('fill') == 'none']
+        assert len(border_paths) >= 1
+
+    def test_individual_longhand_properties(self):
+        """Setting individual corner radii via longhand properties."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+            "background-color": "#ff0000",
+            "border-top-left-radius": "20px",
+            "border-top-right-radius": "0",
+            "border-bottom-right-radius": "20px",
+            "border-bottom-left-radius": "0",
+        })
+        box = BoxNode()
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=200)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        root = _parse_svg(svg)
+        # Non-uniform → should use <path>
+        paths = root.findall('.//path')
+        fill_paths = [p for p in paths if p.attrib.get('fill', 'none') != 'none']
+        assert len(fill_paths) >= 1
+
+    def test_zero_radius_no_path(self):
+        """All-zero radius should produce neither rx nor path arcs."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+            "background-color": "#ff0000",
+            "border-radius": "0",
+        })
+        box = BoxNode()
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=200)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        root = _parse_svg(svg)
+        rects = root.findall('.//rect')
+        for r in rects:
+            rx = r.attrib.get('rx')
+            assert rx is None or float(rx) == 0
+
+
+# ------------------------------------------------------------------
+# clip-path rendering (P2-2)
+# ------------------------------------------------------------------
+
+class TestClipPathRendering:
+    """P2-2: CSS clip-path property."""
+
+    def test_circle_clip(self):
+        """clip-path: circle() should create a <clipPath> with <circle>."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+            "background-color": "#ff0000",
+            "clip-path": "circle(50% at 50% 50%)",
+        })
+        box = BoxNode()
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=200)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "clipPath" in svg or "clip-path" in svg
+        root = _parse_svg(svg)
+        circles = root.findall('.//{http://www.w3.org/2000/svg}circle')
+        if not circles:
+            circles = root.findall('.//circle')
+        assert len(circles) >= 1
+
+    def test_polygon_clip(self):
+        """clip-path: polygon() should produce a path in clipPath."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+            "background-color": "#ff0000",
+            "clip-path": "polygon(50% 0%, 100% 100%, 0% 100%)",
+        })
+        box = BoxNode()
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=200)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "clipPath" in svg or "clip-path" in svg
+
+    def test_ellipse_clip(self):
+        """clip-path: ellipse() should create an ellipse element."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+            "background-color": "#ff0000",
+            "clip-path": "ellipse(40% 30% at 50% 50%)",
+        })
+        box = BoxNode()
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=200)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "clipPath" in svg or "clip-path" in svg
+        root = _parse_svg(svg)
+        ellipses = root.findall('.//{http://www.w3.org/2000/svg}ellipse')
+        if not ellipses:
+            ellipses = root.findall('.//ellipse')
+        assert len(ellipses) >= 1
+
+    def test_inset_clip(self):
+        """clip-path: inset() should create a rect in clipPath."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+            "background-color": "#ff0000",
+            "clip-path": "inset(10px)",
+        })
+        box = BoxNode()
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=200)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "clipPath" in svg or "clip-path" in svg
+
+    def test_clip_path_none(self):
+        """clip-path: none should not add any clipPath."""
+        grid = GridContainer(style={
+            "width": "200px",
+            "grid-template-columns": ["200px"],
+            "background-color": "#ff0000",
+            "clip-path": "none",
+        })
+        box = BoxNode()
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=200)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "clipPath" not in svg

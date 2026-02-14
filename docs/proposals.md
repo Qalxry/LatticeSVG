@@ -117,7 +117,7 @@ MathBackend (Protocol)          # 抽象接口
   └── (用户可自定义后端)
 ```
 
-### P1-3. `grid-auto-rows` / `grid-auto-columns`
+### ~~P1-3. `grid-auto-rows` / `grid-auto-columns`~~（已完成）
 
 **场景**：大量自动放置项目时，隐式轨道尺寸不可控（当前硬编码为 `auto`），无法指定统一行高。
 

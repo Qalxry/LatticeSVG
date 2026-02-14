@@ -234,3 +234,154 @@ class TestGridTemplateAreas:
     def test_inconsistent_columns_raises(self):
         with pytest.raises(ValueError, match="columns"):
             parse_grid_template_areas('"a b" "c d e"')
+
+
+# ------------------------------------------------------------------
+# border-radius shorthand expansion (P2-1)
+# ------------------------------------------------------------------
+
+class TestBorderRadiusShorthand:
+    """Expand ``border-radius`` into four corner longhands."""
+
+    def test_single_value(self):
+        result = expand_shorthand("border-radius", "10px")
+        assert result == {
+            "border-top-left-radius": "10px",
+            "border-top-right-radius": "10px",
+            "border-bottom-right-radius": "10px",
+            "border-bottom-left-radius": "10px",
+        }
+
+    def test_two_values(self):
+        result = expand_shorthand("border-radius", "10px 20px")
+        assert result == {
+            "border-top-left-radius": "10px",
+            "border-top-right-radius": "20px",
+            "border-bottom-right-radius": "10px",
+            "border-bottom-left-radius": "20px",
+        }
+
+    def test_three_values(self):
+        result = expand_shorthand("border-radius", "10px 20px 30px")
+        assert result == {
+            "border-top-left-radius": "10px",
+            "border-top-right-radius": "20px",
+            "border-bottom-right-radius": "30px",
+            "border-bottom-left-radius": "20px",
+        }
+
+    def test_four_values(self):
+        result = expand_shorthand("border-radius", "10px 20px 0 5px")
+        assert result == {
+            "border-top-left-radius": "10px",
+            "border-top-right-radius": "20px",
+            "border-bottom-right-radius": "0",
+            "border-bottom-left-radius": "5px",
+        }
+
+
+# ------------------------------------------------------------------
+# clip-path parsing (P2-2)
+# ------------------------------------------------------------------
+
+from latticesvg.style.parser import (
+    parse_clip_path,
+    ClipCircle,
+    ClipEllipse,
+    ClipPolygon,
+    ClipInset,
+)
+
+
+class TestClipPathParsing:
+    def test_none(self):
+        assert parse_clip_path("none") == "none"
+        assert parse_clip_path(None) == "none"
+
+    def test_circle_defaults(self):
+        result = parse_clip_path("circle(50%)")
+        assert isinstance(result, ClipCircle)
+        assert isinstance(result.radius, _Percentage)
+        assert result.radius.value == 50
+
+    def test_circle_at_position(self):
+        result = parse_clip_path("circle(40px at 100px 80px)")
+        assert isinstance(result, ClipCircle)
+        assert result.radius == 40.0
+        assert result.cx == 100.0
+        assert result.cy == 80.0
+
+    def test_circle_percent_position(self):
+        result = parse_clip_path("circle(50% at 50% 50%)")
+        assert isinstance(result, ClipCircle)
+        assert isinstance(result.cx, _Percentage)
+        assert result.cx.value == 50
+
+    def test_ellipse(self):
+        result = parse_clip_path("ellipse(50% 40% at 50% 50%)")
+        assert isinstance(result, ClipEllipse)
+        assert isinstance(result.rx, _Percentage)
+        assert result.rx.value == 50
+        assert isinstance(result.ry, _Percentage)
+        assert result.ry.value == 40
+
+    def test_ellipse_px(self):
+        result = parse_clip_path("ellipse(100px 60px at 150px 100px)")
+        assert isinstance(result, ClipEllipse)
+        assert result.rx == 100.0
+        assert result.ry == 60.0
+        assert result.cx == 150.0
+        assert result.cy == 100.0
+
+    def test_polygon(self):
+        result = parse_clip_path("polygon(0% 0%, 100% 0%, 50% 100%)")
+        assert isinstance(result, ClipPolygon)
+        assert len(result.points) == 3
+        # First point
+        assert isinstance(result.points[0][0], _Percentage)
+        assert result.points[0][0].value == 0
+
+    def test_polygon_px(self):
+        result = parse_clip_path("polygon(0px 0px, 200px 0px, 100px 200px)")
+        assert isinstance(result, ClipPolygon)
+        assert len(result.points) == 3
+        assert result.points[0] == (0.0, 0.0)
+        assert result.points[1] == (200.0, 0.0)
+        assert result.points[2] == (100.0, 200.0)
+
+    def test_inset_single(self):
+        result = parse_clip_path("inset(10px)")
+        assert isinstance(result, ClipInset)
+        assert result.top == 10.0
+        assert result.right == 10.0
+        assert result.bottom == 10.0
+        assert result.left == 10.0
+        assert result.round_radii is None
+
+    def test_inset_four_values(self):
+        result = parse_clip_path("inset(10px 20px 30px 40px)")
+        assert isinstance(result, ClipInset)
+        assert result.top == 10.0
+        assert result.right == 20.0
+        assert result.bottom == 30.0
+        assert result.left == 40.0
+
+    def test_inset_with_round(self):
+        result = parse_clip_path("inset(10px round 5px)")
+        assert isinstance(result, ClipInset)
+        assert result.top == 10.0
+        assert result.round_radii is not None
+        assert result.round_radii == (5.0, 5.0, 5.0, 5.0)
+
+    def test_inset_with_round_four(self):
+        result = parse_clip_path("inset(10px 20px round 5px 10px 15px 20px)")
+        assert isinstance(result, ClipInset)
+        assert result.top == 10.0
+        assert result.right == 20.0
+        assert result.bottom == 10.0
+        assert result.left == 20.0
+        assert result.round_radii == (5.0, 10.0, 15.0, 20.0)
+
+    def test_invalid_returns_none_string(self):
+        assert parse_clip_path("url(#clip)") == "none"
+        assert parse_clip_path("invalid") == "none"

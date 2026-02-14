@@ -63,8 +63,12 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
     "border-bottom-style": PropertyDef(default="none", parser_hint="keyword"),
     "border-left-style": PropertyDef(default="none", parser_hint="keyword"),
 
-    # Border radius (unified, single value)
+    # Border radius (shorthand is expanded into four longhands)
     "border-radius": PropertyDef(default="0px", parser_hint="length"),
+    "border-top-left-radius": PropertyDef(default="0px", parser_hint="length"),
+    "border-top-right-radius": PropertyDef(default="0px", parser_hint="length"),
+    "border-bottom-right-radius": PropertyDef(default="0px", parser_hint="length"),
+    "border-bottom-left-radius": PropertyDef(default="0px", parser_hint="length"),
 
     # Box sizing
     "box-sizing": PropertyDef(default="border-box", parser_hint="keyword"),
@@ -87,6 +91,8 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
     "align-self": PropertyDef(default="auto", parser_hint="keyword"),
     "grid-template-areas": PropertyDef(default=None, parser_hint="grid-areas"),
     "grid-auto-flow": PropertyDef(default="row", parser_hint="keyword"),
+    "grid-auto-rows": PropertyDef(default="auto", parser_hint="track-list"),
+    "grid-auto-columns": PropertyDef(default="auto", parser_hint="track-list"),
     "grid-row": PropertyDef(default=None, parser_hint="grid-line"),
     "grid-column": PropertyDef(default=None, parser_hint="grid-line"),
     "grid-area": PropertyDef(default=None, parser_hint="keyword"),
@@ -131,6 +137,7 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
     "background-color": PropertyDef(default="none", parser_hint="color"),
     "opacity": PropertyDef(default="1", parser_hint="length"),
     "overflow": PropertyDef(default="visible", parser_hint="keyword"),
+    "clip-path": PropertyDef(default="none", parser_hint="clip-path"),
 
     # ── Image ─────────────────────────────────────────────────────────
     "object-fit": PropertyDef(default="fill", parser_hint="keyword"),

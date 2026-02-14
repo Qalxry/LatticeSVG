@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import math
 import os
 import tempfile
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, Tuple, TYPE_CHECKING
 
 import drawsvg as dw
+
+from ..style.parser import (
+    ClipCircle, ClipEllipse, ClipPolygon, ClipInset, _Percentage,
+)
 
 if TYPE_CHECKING:
     from ..nodes.base import Node
@@ -150,30 +155,52 @@ class Renderer:
         x = bb.x + offset_x
         y = bb.y + offset_y
 
+        # --- Resolve four-corner border-radius ---
+        radii = self._clamp_radii(
+            *node.style.border_radii, bb.width, bb.height
+        )
+        any_radius = any(r > 0 for r in radii)
+        uniform_radius = radii[0] == radii[1] == radii[2] == radii[3]
+
         # --- Clip path for overflow: hidden ---
         clip = None
         overflow = node.style.get("overflow")
-        raw_radius = node.style.get("border-radius")
-        radius = float(raw_radius) if isinstance(raw_radius, (int, float)) else 0.0
-        # Clamp to half the shorter side so rx == ry (circular arcs, CSS behaviour).
-        if radius > 0:
-            radius = min(radius, bb.width / 2, bb.height / 2)
 
         if overflow == "hidden":
             clip = dw.ClipPath()
-            clip_kwargs: dict = {}
-            if radius > 0:
-                clip_kwargs["rx"] = radius
-                clip_kwargs["ry"] = radius
-            clip.append(dw.Rectangle(x, y, bb.width, bb.height, **clip_kwargs))
+            if any_radius and not uniform_radius:
+                clip.append(self._rounded_rect_path(
+                    x, y, bb.width, bb.height, *radii))
+            elif any_radius:
+                clip.append(dw.Rectangle(
+                    x, y, bb.width, bb.height,
+                    rx=radii[0], ry=radii[0]))
+            else:
+                clip.append(dw.Rectangle(x, y, bb.width, bb.height))
             self.drawing.append(clip)
 
-        # Create a group for this node
-        group = dw.Group()
-        if clip:
-            group = dw.Group(clip_path=clip)
+        # --- CSS clip-path property ---
+        css_clip = None
+        clip_path_val = node.style.get("clip-path")
+        if clip_path_val and clip_path_val != "none" and not isinstance(clip_path_val, str):
+            css_clip = self._make_clip_path(clip_path_val, x, y, bb.width, bb.height)
+            if css_clip is not None:
+                self.drawing.append(css_clip)
 
-        # --- Border radius (already resolved above) ---
+        # Create a group for this node
+        # If both overflow clip and CSS clip-path exist, nest groups.
+        if clip and css_clip:
+            outer = dw.Group(clip_path=clip)
+            group = dw.Group(clip_path=css_clip)
+        elif clip:
+            outer = None
+            group = dw.Group(clip_path=clip)
+        elif css_clip:
+            outer = None
+            group = dw.Group(clip_path=css_clip)
+        else:
+            outer = None
+            group = dw.Group()
 
         # --- Background ---
         bg = node.style.get("background-color")
@@ -181,24 +208,29 @@ class Renderer:
             opacity = node.style.get("opacity")
             op = float(opacity) if isinstance(opacity, (int, float)) else 1.0
             bg_kwargs: dict = dict(fill=bg, opacity=op)
-            if radius > 0:
-                bg_kwargs["rx"] = radius
-                bg_kwargs["ry"] = radius
-            rect = dw.Rectangle(x, y, bb.width, bb.height, **bg_kwargs)
-            group.append(rect)
+            if any_radius and not uniform_radius:
+                group.append(self._rounded_rect_path(
+                    x, y, bb.width, bb.height, *radii, **bg_kwargs))
+            elif any_radius:
+                bg_kwargs["rx"] = radii[0]
+                bg_kwargs["ry"] = radii[0]
+                group.append(dw.Rectangle(x, y, bb.width, bb.height, **bg_kwargs))
+            else:
+                group.append(dw.Rectangle(x, y, bb.width, bb.height, **bg_kwargs))
 
         # --- Border ---
-        self._draw_borders(group, node, x, y, bb.width, bb.height, radius)
+        self._draw_borders(group, node, x, y, bb.width, bb.height, radii)
 
         # --- Content ---
         if isinstance(node, GridContainer):
-            # Grid container: render children *into this group*
-            # so that the background is painted first, then children on top.
             for child in node.children:
                 self._render_node(child, offset_x=offset_x, offset_y=offset_y, target=group)
-            target.append(group)
-            # Outline is drawn outside the (possibly clipped) group
-            self._draw_outline(target, node, x, y, bb.width, bb.height, radius)
+            if outer:
+                outer.append(group)
+                target.append(outer)
+            else:
+                target.append(group)
+            self._draw_outline(target, node, x, y, bb.width, bb.height, radii)
             return
 
         if isinstance(node, TextNode):
@@ -212,9 +244,169 @@ class Renderer:
         elif isinstance(node, MathNode):
             self._render_math(group, node, offset_x, offset_y)
 
-        target.append(group)
-        # Outline is drawn outside the (possibly clipped) group
-        self._draw_outline(target, node, x, y, bb.width, bb.height, radius)
+        if outer:
+            outer.append(group)
+            target.append(outer)
+        else:
+            target.append(group)
+        self._draw_outline(target, node, x, y, bb.width, bb.height, radii)
+
+    # -----------------------------------------------------------------
+    # Geometry helpers
+    # -----------------------------------------------------------------
+
+    @staticmethod
+    def _clamp_radii(
+        r_tl: float, r_tr: float, r_br: float, r_bl: float,
+        w: float, h: float,
+    ) -> Tuple[float, float, float, float]:
+        """Clamp four corner radii so adjacent pairs don't exceed side length.
+
+        Implements the CSS *corner overlap* algorithm (§5.3 of CSS
+        Backgrounds and Borders Level 3).
+        """
+        if w <= 0 or h <= 0:
+            return (0.0, 0.0, 0.0, 0.0)
+        f = 1.0
+        for sum_r, side in [
+            (r_tl + r_tr, w),   # top edge
+            (r_br + r_bl, w),   # bottom edge
+            (r_tl + r_bl, h),   # left edge
+            (r_tr + r_br, h),   # right edge
+        ]:
+            if sum_r > 0:
+                f = min(f, side / sum_r)
+        if f < 1.0:
+            return (r_tl * f, r_tr * f, r_br * f, r_bl * f)
+        return (r_tl, r_tr, r_br, r_bl)
+
+    @staticmethod
+    def _rounded_rect_path(
+        x: float, y: float, w: float, h: float,
+        r_tl: float, r_tr: float, r_br: float, r_bl: float,
+        **kwargs,
+    ) -> dw.Path:
+        """Return a ``dw.Path`` drawing a rectangle with independent corner radii.
+
+        Parameters are the four corner radii (top-left, top-right,
+        bottom-right, bottom-left).  Extra *kwargs* (fill, stroke, …)
+        are forwarded to ``dw.Path``.
+        """
+        p = dw.Path(**kwargs)
+        # Start at top-left corner, after the TL arc
+        p.M(x + r_tl, y)
+        # Top edge → TR arc
+        p.L(x + w - r_tr, y)
+        if r_tr > 0:
+            p.A(r_tr, r_tr, 0, 0, 1, x + w, y + r_tr)
+        else:
+            p.L(x + w, y)
+        # Right edge → BR arc
+        p.L(x + w, y + h - r_br)
+        if r_br > 0:
+            p.A(r_br, r_br, 0, 0, 1, x + w - r_br, y + h)
+        else:
+            p.L(x + w, y + h)
+        # Bottom edge → BL arc
+        p.L(x + r_bl, y + h)
+        if r_bl > 0:
+            p.A(r_bl, r_bl, 0, 0, 1, x, y + h - r_bl)
+        else:
+            p.L(x, y + h)
+        # Left edge → TL arc
+        p.L(x, y + r_tl)
+        if r_tl > 0:
+            p.A(r_tl, r_tl, 0, 0, 1, x + r_tl, y)
+        p.Z()
+        return p
+
+    # -----------------------------------------------------------------
+    # clip-path helpers
+    # -----------------------------------------------------------------
+
+    @staticmethod
+    def _resolve_clip_value(val, ref: float) -> float:
+        """Resolve a clip-path value (float or _Percentage) against *ref*."""
+        if isinstance(val, _Percentage):
+            return val.resolve(ref)
+        if isinstance(val, (int, float)):
+            return float(val)
+        return 0.0
+
+    def _make_clip_path(
+        self,
+        clip_val,
+        x: float,
+        y: float,
+        w: float,
+        h: float,
+    ) -> Optional[dw.ClipPath]:
+        """Create a ``dw.ClipPath`` element from a parsed clip-path value."""
+        rv = self._resolve_clip_value  # shorthand
+
+        if isinstance(clip_val, ClipCircle):
+            # CSS spec: circle percentage resolves against
+            # sqrt(w² + h²) / sqrt(2)
+            ref_r = math.hypot(w, h) / math.sqrt(2)
+            r = rv(clip_val.radius, ref_r)
+            cx = x + rv(clip_val.cx, w)
+            cy = y + rv(clip_val.cy, h)
+            cp = dw.ClipPath()
+            cp.append(dw.Circle(cx, cy, r))
+            return cp
+
+        if isinstance(clip_val, ClipEllipse):
+            rx = rv(clip_val.rx, w)
+            ry = rv(clip_val.ry, h)
+            cx = x + rv(clip_val.cx, w)
+            cy = y + rv(clip_val.cy, h)
+            cp = dw.ClipPath()
+            cp.append(dw.Ellipse(cx, cy, rx, ry))
+            return cp
+
+        if isinstance(clip_val, ClipPolygon):
+            if len(clip_val.points) < 3:
+                return None
+            p = dw.Path()
+            for i, (px, py) in enumerate(clip_val.points):
+                abs_x = x + rv(px, w)
+                abs_y = y + rv(py, h)
+                if i == 0:
+                    p.M(abs_x, abs_y)
+                else:
+                    p.L(abs_x, abs_y)
+            p.Z()
+            cp = dw.ClipPath()
+            cp.append(p)
+            return cp
+
+        if isinstance(clip_val, ClipInset):
+            it = rv(clip_val.top, h)
+            ir = rv(clip_val.right, w)
+            ib = rv(clip_val.bottom, h)
+            il = rv(clip_val.left, w)
+            ix = x + il
+            iy = y + it
+            iw = w - il - ir
+            ih = h - it - ib
+            if iw <= 0 or ih <= 0:
+                return None
+            cp = dw.ClipPath()
+            if clip_val.round_radii:
+                rr = tuple(
+                    rv(r, min(iw, ih)) for r in clip_val.round_radii
+                )
+                rr = self._clamp_radii(*rr, iw, ih)
+                if any(r > 0 for r in rr):
+                    cp.append(self._rounded_rect_path(
+                        ix, iy, iw, ih, *rr))
+                else:
+                    cp.append(dw.Rectangle(ix, iy, iw, ih))
+            else:
+                cp.append(dw.Rectangle(ix, iy, iw, ih))
+            return cp
+
+        return None
 
     # -----------------------------------------------------------------
     # Border drawing
@@ -240,18 +432,17 @@ class Renderer:
         y: float,
         w: float,
         h: float,
-        radius: float = 0.0,
+        radii: Tuple[float, float, float, float] = (0.0, 0.0, 0.0, 0.0),
     ) -> None:
-        """Draw borders — as a rounded rect when *radius* > 0, else as lines."""
+        """Draw borders — as a rounded path/rect when radii > 0, else as lines."""
         s = node.style
 
-        # Clamp to half the shorter side so rx == ry (circular arcs).
-        if radius > 0:
-            radius = min(radius, w / 2, h / 2)
+        radii = self._clamp_radii(*radii, w, h)
+        any_radius = any(r > 0 for r in radii)
+        uniform = radii[0] == radii[1] == radii[2] == radii[3]
 
-        if radius > 0:
-            # Unified rounded-rect border.
-            # Pick the first available border side's properties.
+        if any_radius:
+            # Rounded border — pick the first available border side's properties.
             for side in ("top", "right", "bottom", "left"):
                 bw = s._float(f"border-{side}-width")
                 bc = s.get(f"border-{side}-color")
@@ -261,13 +452,17 @@ class Renderer:
                         fill="none",
                         stroke=bc,
                         stroke_width=bw,
-                        rx=radius,
-                        ry=radius,
                     )
                     da = self._dash_array(bs, bw)
                     if da:
                         kwargs["stroke_dasharray"] = da
-                    group.append(dw.Rectangle(x, y, w, h, **kwargs))
+                    if uniform:
+                        kwargs["rx"] = radii[0]
+                        kwargs["ry"] = radii[0]
+                        group.append(dw.Rectangle(x, y, w, h, **kwargs))
+                    else:
+                        group.append(self._rounded_rect_path(
+                            x, y, w, h, *radii, **kwargs))
                     break
             return
 
@@ -306,7 +501,7 @@ class Renderer:
         y: float,
         w: float,
         h: float,
-        radius: float = 0.0,
+        radii: Tuple[float, float, float, float] = (0.0, 0.0, 0.0, 0.0),
     ) -> None:
         """Draw CSS outline (outside the border-box, doesn't affect layout)."""
         s = node.style
@@ -318,28 +513,38 @@ class Renderer:
         if ow <= 0 or os_ == "none" or oc == "none":
             return
 
-        # Outline sits outside the border-box, offset outward by
-        # outline-offset + half the outline-width (SVG stroke is centered).
         total_offset = offset + ow / 2.0
         ox = x - total_offset
         oy = y - total_offset
         ow_rect = w + 2 * total_offset
         oh_rect = h + 2 * total_offset
 
-        outline_radius = max(0.0, radius + offset + ow / 2.0) if radius > 0 else 0.0
+        any_radius = any(r > 0 for r in radii)
+        outline_radii = tuple(
+            max(0.0, r + offset + ow / 2.0) if r > 0 else 0.0
+            for r in radii
+        )
+        any_outline_r = any(r > 0 for r in outline_radii)
+        uniform_outline = outline_radii[0] == outline_radii[1] == outline_radii[2] == outline_radii[3]
 
         kwargs: dict = dict(
             fill="none",
             stroke=oc,
             stroke_width=ow,
         )
-        if outline_radius > 0:
-            kwargs["rx"] = outline_radius
-            kwargs["ry"] = outline_radius
         da = self._dash_array(os_, ow)
         if da:
             kwargs["stroke_dasharray"] = da
-        group.append(dw.Rectangle(ox, oy, ow_rect, oh_rect, **kwargs))
+
+        if any_outline_r and not uniform_outline:
+            group.append(self._rounded_rect_path(
+                ox, oy, ow_rect, oh_rect, *outline_radii, **kwargs))
+        elif any_outline_r:
+            kwargs["rx"] = outline_radii[0]
+            kwargs["ry"] = outline_radii[0]
+            group.append(dw.Rectangle(ox, oy, ow_rect, oh_rect, **kwargs))
+        else:
+            group.append(dw.Rectangle(ox, oy, ow_rect, oh_rect, **kwargs))
 
     # -----------------------------------------------------------------
     # Text rendering

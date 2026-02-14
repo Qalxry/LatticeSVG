@@ -348,6 +348,17 @@ def expand_shorthand(prop: str, value: Any) -> Dict[str, Any]:
                 result2["outline-style"] = p
         return result2 if result2 else {prop: value}
 
+    # --- border-radius → four corner longhands ---
+    if prop == "border-radius":
+        parts = _split_shorthand_parts(value)
+        tl, tr, br, bl = _expand_four(parts)
+        return {
+            "border-top-left-radius": tl,
+            "border-top-right-radius": tr,
+            "border-bottom-right-radius": br,
+            "border-bottom-left-radius": bl,
+        }
+
     # --- Not a shorthand ---
     return {prop: value}
 
@@ -371,6 +382,209 @@ def _expand_four(parts: List[str]) -> Tuple[str, str, str, str]:
     if n == 3:
         return (parts[0], parts[1], parts[2], parts[1])
     return (parts[0], parts[1], parts[2], parts[3])
+
+
+# ---------------------------------------------------------------------------
+# clip-path parsing
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class ClipCircle:
+    """Parsed ``circle(radius at cx cy)``."""
+    radius: Any   # float (px) or _Percentage
+    cx: Any       # float (px) or _Percentage
+    cy: Any       # float (px) or _Percentage
+
+
+@dataclass(frozen=True)
+class ClipEllipse:
+    """Parsed ``ellipse(rx ry at cx cy)``."""
+    rx: Any
+    ry: Any
+    cx: Any
+    cy: Any
+
+
+@dataclass(frozen=True)
+class ClipPolygon:
+    """Parsed ``polygon(x1 y1, x2 y2, …)``."""
+    points: tuple  # tuple of (x, y) pairs — each x/y is float or _Percentage
+
+
+@dataclass(frozen=True)
+class ClipInset:
+    """Parsed ``inset(top right bottom left round r)``."""
+    top: Any
+    right: Any
+    bottom: Any
+    left: Any
+    round_radii: Optional[tuple] = None  # (tl, tr, br, bl) or None
+
+
+_RE_CLIP_FN = re.compile(
+    r"^\s*(circle|ellipse|polygon|inset)\s*\((.+)\)\s*$",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def _parse_len_or_pct(token: str) -> Any:
+    """Parse a single length/percentage token for clip-path arguments."""
+    token = token.strip()
+    if token.endswith("%"):
+        return _Percentage(float(token[:-1]))
+    return parse_value(token)
+
+
+def parse_clip_path(raw: Any) -> Any:
+    """Parse a CSS ``clip-path`` value.
+
+    Supports ``circle()``, ``ellipse()``, ``polygon()``, ``inset()``
+    function syntax.  Returns the corresponding dataclass instance,
+    or the string ``"none"`` for no clipping.
+    """
+    if raw is None or raw == "none":
+        return "none"
+    if not isinstance(raw, str):
+        return "none"
+
+    s = raw.strip()
+    if s.lower() == "none":
+        return "none"
+
+    m = _RE_CLIP_FN.match(s)
+    if not m:
+        return "none"
+
+    fn = m.group(1).lower()
+    args = m.group(2).strip()
+
+    if fn == "circle":
+        return _parse_clip_circle(args)
+    if fn == "ellipse":
+        return _parse_clip_ellipse(args)
+    if fn == "polygon":
+        return _parse_clip_polygon(args)
+    if fn == "inset":
+        return _parse_clip_inset(args)
+
+    return "none"
+
+
+def _parse_clip_circle(args: str) -> ClipCircle:
+    """Parse ``circle()`` arguments: ``radius at cx cy``."""
+    # Default: 50% radius, 50% 50% center
+    radius: Any = _Percentage(50)
+    cx: Any = _Percentage(50)
+    cy: Any = _Percentage(50)
+
+    if "at" in args:
+        parts = args.split("at", 1)
+        r_part = parts[0].strip()
+        pos_part = parts[1].strip()
+    else:
+        r_part = args.strip()
+        pos_part = ""
+
+    if r_part:
+        radius = _parse_len_or_pct(r_part)
+
+    if pos_part:
+        pos_tokens = pos_part.split()
+        if len(pos_tokens) >= 1:
+            cx = _parse_len_or_pct(pos_tokens[0])
+        if len(pos_tokens) >= 2:
+            cy = _parse_len_or_pct(pos_tokens[1])
+
+    return ClipCircle(radius=radius, cx=cx, cy=cy)
+
+
+def _parse_clip_ellipse(args: str) -> ClipEllipse:
+    """Parse ``ellipse()`` arguments: ``rx ry at cx cy``."""
+    rx: Any = _Percentage(50)
+    ry: Any = _Percentage(50)
+    cx: Any = _Percentage(50)
+    cy: Any = _Percentage(50)
+
+    if "at" in args:
+        parts = args.split("at", 1)
+        radii_part = parts[0].strip()
+        pos_part = parts[1].strip()
+    else:
+        radii_part = args.strip()
+        pos_part = ""
+
+    if radii_part:
+        tokens = radii_part.split()
+        if len(tokens) >= 1:
+            rx = _parse_len_or_pct(tokens[0])
+        if len(tokens) >= 2:
+            ry = _parse_len_or_pct(tokens[1])
+
+    if pos_part:
+        pos_tokens = pos_part.split()
+        if len(pos_tokens) >= 1:
+            cx = _parse_len_or_pct(pos_tokens[0])
+        if len(pos_tokens) >= 2:
+            cy = _parse_len_or_pct(pos_tokens[1])
+
+    return ClipEllipse(rx=rx, ry=ry, cx=cx, cy=cy)
+
+
+def _parse_clip_polygon(args: str) -> ClipPolygon:
+    """Parse ``polygon()`` arguments: ``x1 y1, x2 y2, …``."""
+    pairs = args.split(",")
+    points = []
+    for pair in pairs:
+        tokens = pair.strip().split()
+        if len(tokens) >= 2:
+            px = _parse_len_or_pct(tokens[0])
+            py = _parse_len_or_pct(tokens[1])
+            points.append((px, py))
+    return ClipPolygon(points=tuple(points))
+
+
+def _parse_clip_inset(args: str) -> ClipInset:
+    """Parse ``inset()`` arguments: ``top right bottom left [round r …]``."""
+    round_radii = None
+
+    if "round" in args:
+        parts = args.split("round", 1)
+        inset_part = parts[0].strip()
+        round_part = parts[1].strip()
+        # Parse round radii (1-4 values)
+        r_tokens = round_part.split()
+        r_vals = [_parse_len_or_pct(t) for t in r_tokens if t.strip()]
+        if r_vals:
+            # Expand 1-4 values to (tl, tr, br, bl) using CSS shorthand logic
+            n = len(r_vals)
+            if n == 1:
+                round_radii = (r_vals[0], r_vals[0], r_vals[0], r_vals[0])
+            elif n == 2:
+                round_radii = (r_vals[0], r_vals[1], r_vals[0], r_vals[1])
+            elif n == 3:
+                round_radii = (r_vals[0], r_vals[1], r_vals[2], r_vals[1])
+            else:
+                round_radii = (r_vals[0], r_vals[1], r_vals[2], r_vals[3])
+    else:
+        inset_part = args.strip()
+
+    # Parse inset values (1-4 values like margin/padding)
+    tokens = inset_part.split()
+    vals = [_parse_len_or_pct(t) for t in tokens if t.strip()]
+    if not vals:
+        vals = [0.0]
+    n = len(vals)
+    if n == 1:
+        top, right, bottom, left = vals[0], vals[0], vals[0], vals[0]
+    elif n == 2:
+        top, right, bottom, left = vals[0], vals[1], vals[0], vals[1]
+    elif n == 3:
+        top, right, bottom, left = vals[0], vals[1], vals[2], vals[1]
+    else:
+        top, right, bottom, left = vals[0], vals[1], vals[2], vals[3]
+
+    return ClipInset(top=top, right=right, bottom=bottom, left=left,
+                     round_radii=round_radii)
 
 
 # ---------------------------------------------------------------------------

@@ -71,13 +71,13 @@ def demo_37_font_embed():
     renderer = Renderer()
 
     # --- 不嵌入字体（参考） ---
-    path_no_embed = OUTPUT_DIR / "37_font_embed_off.svg"
+    path_no_embed = OUTPUT_DIR / "37a_font_embed_off.svg"
     renderer.render(root, str(path_no_embed))
     svg_no = path_no_embed.stat().st_size
     print(f"  ✓ 未嵌入: {path_no_embed}  ({svg_no:,} bytes)")
 
     # --- 嵌入字体 ---
-    path_embed = OUTPUT_DIR / "37_font_embed_on.svg"
+    path_embed = OUTPUT_DIR / "37b_font_embed_on.svg"
     renderer.render(root, str(path_embed), embed_fonts=True)
     svg_yes = path_embed.stat().st_size
     print(f"  ✓ 已嵌入: {path_embed}  ({svg_yes:,} bytes)")

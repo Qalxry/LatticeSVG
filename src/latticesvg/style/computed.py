@@ -9,6 +9,7 @@ from .parser import (
     FrValue,
     _Percentage,
     expand_shorthand,
+    parse_clip_path,
     parse_grid_template_areas,
     parse_track_template,
     parse_value,
@@ -74,6 +75,8 @@ class ComputedStyle:
                             self._values[long_prop] = parse_track_template(long_val)
                         elif hint == "grid-areas":
                             self._values[long_prop] = parse_grid_template_areas(long_val)
+                        elif hint == "clip-path":
+                            self._values[long_prop] = parse_clip_path(long_val)
                         else:
                             self._values[long_prop] = parse_value(
                                 long_val, font_size=font_size
@@ -206,3 +209,39 @@ class ComputedStyle:
     @property
     def margin_vertical(self) -> float:
         return self.margin_top + self.margin_bottom
+
+    # -----------------------------------------------------------------
+    # Border-radius corner accessors
+    # -----------------------------------------------------------------
+
+    @property
+    def border_top_left_radius(self) -> float:
+        return self._float("border-top-left-radius")
+
+    @property
+    def border_top_right_radius(self) -> float:
+        return self._float("border-top-right-radius")
+
+    @property
+    def border_bottom_right_radius(self) -> float:
+        return self._float("border-bottom-right-radius")
+
+    @property
+    def border_bottom_left_radius(self) -> float:
+        return self._float("border-bottom-left-radius")
+
+    @property
+    def border_radii(self) -> tuple:
+        """Return ``(top-left, top-right, bottom-right, bottom-left)`` radii."""
+        return (
+            self.border_top_left_radius,
+            self.border_top_right_radius,
+            self.border_bottom_right_radius,
+            self.border_bottom_left_radius,
+        )
+
+    @property
+    def has_uniform_radius(self) -> bool:
+        """True when all four corner radii are equal."""
+        r = self.border_radii
+        return r[0] == r[1] == r[2] == r[3]
