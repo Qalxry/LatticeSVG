@@ -212,3 +212,75 @@ class TestPaddingAndBorder:
         # Content area = 400 - 40 = 360
         assert a.border_box.width == pytest.approx(360.0)
         assert a.border_box.x == pytest.approx(20.0)
+
+
+# ------------------------------------------------------------------
+# min-width / max-width / min-height / max-height
+# ------------------------------------------------------------------
+
+class TestMinMaxSize:
+    def test_max_width_clamps_child(self):
+        """A child with max-width should not exceed it."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": ["400px"],
+        })
+        # Node wants 400px wide but max-width says 200
+        a = MockNode(min_w=50, max_w=400, height=30,
+                     style={"max-width": "200px"})
+        grid.add(a, row=1, col=1)
+        grid.layout(available_width=400)
+
+        assert a.border_box.width == pytest.approx(200.0)
+
+    def test_min_width_expands_child(self):
+        """A child with min-width should not shrink below it."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": ["100px"],
+        })
+        # Node allocated 100px but min-width says 150
+        a = MockNode(min_w=50, max_w=100, height=30,
+                     style={"min-width": "150px", "justify-self": "start"})
+        grid.add(a, row=1, col=1)
+        grid.layout(available_width=400)
+
+        assert a.border_box.width == pytest.approx(150.0)
+
+    def test_max_height_clamps_child(self):
+        """A child with max-height should not exceed it."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": ["400px"],
+            "grid-template-rows": ["200px"],
+        })
+        a = MockNode(height=200, style={"max-height": "80px"})
+        grid.add(a, row=1, col=1)
+        grid.layout(available_width=400)
+
+        assert a.border_box.height == pytest.approx(80.0)
+
+    def test_min_height_expands_child(self):
+        """A child with min-height should not shrink below it."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": ["400px"],
+        })
+        a = MockNode(height=20, style={"min-height": "60px", "align-self": "start"})
+        grid.add(a, row=1, col=1)
+        grid.layout(available_width=400)
+
+        assert a.border_box.height == pytest.approx(60.0)
+
+    def test_no_constraints_leaves_size_unchanged(self):
+        """Without min/max, normal sizing should be unaffected."""
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": ["300px"],
+        })
+        a = MockNode(height=50)
+        grid.add(a, row=1, col=1)
+        grid.layout(available_width=300)
+
+        assert a.border_box.width == pytest.approx(300.0)
+        assert a.border_box.height == pytest.approx(50.0)

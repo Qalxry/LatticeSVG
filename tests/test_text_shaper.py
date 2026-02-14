@@ -193,3 +193,43 @@ class TestContentWidth:
         # Single line: "Hello World" = 11 chars * 10 = 110
         result = get_max_content_width("Hello World", FAKE_FONT, 16, fm=mock_fm)
         assert result == pytest.approx(110.0)
+
+
+# ------------------------------------------------------------------
+# white-space: pre-line
+# ------------------------------------------------------------------
+
+class TestPreLine:
+    def test_pre_line_preserves_newlines(self, mock_fm):
+        """pre-line should preserve explicit \n breaks."""
+        text = "Hello\nWorld"
+        lines = break_lines(text, 200, FAKE_FONT, 16, "pre-line", fm=mock_fm)
+        assert len(lines) == 2
+        assert lines[0].text == "Hello"
+        assert lines[1].text == "World"
+
+    def test_pre_line_collapses_spaces(self, mock_fm):
+        """pre-line should collapse consecutive spaces like normal mode."""
+        text = "Hello   World"
+        lines = break_lines(text, 200, FAKE_FONT, 16, "pre-line", fm=mock_fm)
+        assert len(lines) == 1
+        assert lines[0].text == "Hello World"
+
+    def test_pre_line_wraps_long_segments(self, mock_fm):
+        """pre-line should word-wrap within each segment."""
+        # "Hello World" = 110px, avail = 80px => wraps
+        text = "Hello World"
+        lines = break_lines(text, 80, FAKE_FONT, 16, "pre-line", fm=mock_fm)
+        assert len(lines) == 2
+        assert lines[0].text == "Hello"
+        assert lines[1].text == "World"
+
+    def test_pre_line_newline_plus_wrap(self, mock_fm):
+        """pre-line combines newline preservation and wrapping."""
+        # segment1 fits, segment2 needs wrapping
+        text = "Hi\nHello World"
+        lines = break_lines(text, 80, FAKE_FONT, 16, "pre-line", fm=mock_fm)
+        assert len(lines) == 3
+        assert lines[0].text == "Hi"
+        assert lines[1].text == "Hello"
+        assert lines[2].text == "World"

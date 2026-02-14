@@ -1003,7 +1003,487 @@ def demo_22_image_gallery():
         }), row=11, col=j + 2)
 
     save(grid, "22_image_gallery.svg", total_w)
-    print(f"  \u2192 9 \u4e2a\u6a21\u578b \u00d7 10 \u5f20\u56fe\u7247\u5bf9\u6bd4\uff0c\u5bbd {total_w:.0f}px")
+    print(f"  → 9 个模型 × 10 张图片对比，宽 {total_w:.0f}px")
+
+
+# =========================================================================
+# Demo 23：min/max-width/height
+# =========================================================================
+
+def demo_23_min_max_size():
+    heading("Demo 23: min/max-width/height 约束")
+
+    grid = GridContainer(style={
+        "width": "800px",
+        "padding": "20px",
+        "gap": "12px",
+        "background-color": "#f5f5f5",
+        "grid-template-columns": ["1fr"],
+    })
+
+    grid.add(TextNode("Demo 23: min-width / max-width / min-height / max-height", style={
+        "font-size": "18px", "font-weight": "bold", "color": "#333",
+    }), row=1, col=1)
+
+    # --- max-width 测试 ---
+    row_mw = GridContainer(style={
+        "grid-template-columns": ["1fr", "1fr", "1fr"],
+        "gap": "10px",
+    })
+
+    # 无约束：占满列宽
+    row_mw.add(ColorBox(240, 60, **{
+        "background-color": "#3498db",
+    }), row=1, col=1)
+    row_mw.add(TextNode("无约束\n占满列宽", style={
+        "font-size": "11px", "color": "#666", "white-space": "pre",
+    }), row=2, col=1)
+
+    # max-width: 150px
+    row_mw.add(ColorBox(240, 60, **{
+        "background-color": "#e74c3c",
+        "max-width": "150px",
+    }), row=1, col=2)
+    row_mw.add(TextNode("max-width: 150px\n红色块应≤150px", style={
+        "font-size": "11px", "color": "#666", "white-space": "pre",
+    }), row=2, col=2)
+
+    # min-width: 300px
+    row_mw.add(ColorBox(100, 60, **{
+        "background-color": "#2ecc71",
+        "min-width": "300px",
+    }), row=1, col=3)
+    row_mw.add(TextNode("min-width: 300px\n绿色块应≥300px", style={
+        "font-size": "11px", "color": "#666", "white-space": "pre",
+    }), row=2, col=3)
+
+    grid.add(row_mw, row=2, col=1)
+
+    # --- min/max-height 测试 ---
+    row_mh = GridContainer(style={
+        "grid-template-columns": ["1fr", "1fr", "1fr"],
+        "grid-template-rows": ["120px"],
+        "gap": "10px",
+    })
+
+    row_mh.add(ColorBox(200, 120, **{
+        "background-color": "#9b59b6",
+    }), row=1, col=1)
+    row_mh.add(TextNode("无约束\n占满行高 120px", style={
+        "font-size": "11px", "color": "#666", "white-space": "pre",
+    }), row=2, col=1)
+
+    row_mh.add(ColorBox(200, 120, **{
+        "background-color": "#e67e22",
+        "max-height": "60px",
+    }), row=1, col=2)
+    row_mh.add(TextNode("max-height: 60px\n橙色块应≤60px高", style={
+        "font-size": "11px", "color": "#666", "white-space": "pre",
+    }), row=2, col=2)
+
+    row_mh.add(ColorBox(200, 30, **{
+        "background-color": "#1abc9c",
+        "min-height": "80px",
+        "align-self": "start",
+    }), row=1, col=3)
+    row_mh.add(TextNode("min-height: 80px\n青色块应≥80px高", style={
+        "font-size": "11px", "color": "#666", "white-space": "pre",
+    }), row=2, col=3)
+
+    grid.add(row_mh, row=3, col=1)
+
+    save(grid, "23_min_max_size.svg")
+
+
+# =========================================================================
+# Demo 24：text-overflow: ellipsis 精度
+# =========================================================================
+
+def demo_24_ellipsis_precision():
+    heading("Demo 24: text-overflow: ellipsis 精确截断")
+
+    grid = GridContainer(style={
+        "width": "800px",
+        "padding": "20px",
+        "gap": "16px",
+        "background-color": "#ffffff",
+        "grid-template-columns": ["1fr"],
+    })
+
+    grid.add(TextNode("Demo 24: text-overflow: ellipsis 精确截断", style={
+        "font-size": "18px", "font-weight": "bold", "color": "#333",
+    }), row=1, col=1)
+
+    # 对比行 — 使用固定窄列 (300px) 确保文本必须溢出
+    row = GridContainer(style={
+        "grid-template-columns": ["80px", "300px"],
+        "gap": "8px",
+    })
+
+    cases = [
+        ("英文窄盒", "The quick brown fox jumps over the lazy dog and keeps running forever and ever"),
+        ("中文窄盒", "这是一段很长的中文测试文本，用于验证省略号截断在中日韩字符下的精确度和边界表现如何"),
+        ("中英混合", "Hello世界！This is a mixed中英文text for ellipsis精度测试，看看效果如何呢"),
+        ("数字密集", "3.141592653589793238462643383279502884197169399375105820974944592307816"),
+    ]
+
+    for i, (label, text) in enumerate(cases):
+        r = i * 2 + 1
+        row.add(TextNode(label, style={
+            "font-size": "12px", "font-weight": "bold", "color": "#555",
+            "display": "flex", "align-items": "center",
+        }), row=r, col=1)
+
+        row.add(TextNode(text, style={
+            "font-size": "14px", "color": "#333",
+            "overflow": "hidden",
+            "text-overflow": "ellipsis",
+            "white-space": "nowrap",
+            "background-color": "#f0f4f8",
+            "padding": "6px 8px",
+            "border": "1px solid #d0d8e0",
+        }), row=r, col=2)
+
+        # 无截断对照
+        row.add(TextNode("", style={"font-size": "4px"}), row=r+1, col=1)
+        row.add(TextNode(f"原文：{text}", style={
+            "font-size": "10px", "color": "#999",
+            "padding": "0 8px", "white-space": "nowrap",
+        }), row=r+1, col=2)
+
+    grid.add(row, row=2, col=1)
+
+    grid.add(TextNode("✓ 预期：文本应在 300px 框内被截断并以「…」结尾，截断位置紧贴右边界", style={
+        "font-size": "12px", "color": "#27ae60",
+    }), row=3, col=1)
+
+    save(grid, "24_ellipsis_precision.svg")
+
+
+# =========================================================================
+# Demo 25：white-space: pre-line
+# =========================================================================
+
+def demo_25_pre_line():
+    heading("Demo 25: white-space: pre-line")
+
+    grid = GridContainer(style={
+        "width": "800px",
+        "padding": "20px",
+        "gap": "16px",
+        "background-color": "#fafafa",
+        "grid-template-columns": ["1fr"],
+    })
+
+    grid.add(TextNode("Demo 25: white-space: pre-line", style={
+        "font-size": "18px", "font-weight": "bold", "color": "#333",
+    }), row=1, col=1)
+
+    compare = GridContainer(style={
+        "grid-template-columns": ["1fr", "1fr", "1fr"],
+        "gap": "12px",
+    })
+
+    sample_text = "第一行内容\n第二行内容   带多个空格\n第三行是一段比较长的文本用于测试自动折行是否在保留换行符的同时正常工作"
+
+    # normal
+    compare.add(TextNode("white-space: normal", style={
+        "font-size": "12px", "font-weight": "bold", "color": "#e74c3c",
+        "margin": "0 0 4px 0",
+    }), row=1, col=1)
+    compare.add(TextNode(sample_text, style={
+        "font-size": "13px", "color": "#333",
+        "white-space": "normal",
+        "background-color": "#fff3f3",
+        "padding": "10px",
+        "border": "1px solid #e74c3c",
+    }), row=2, col=1)
+    compare.add(TextNode("折叠空白 + 折叠换行\n→ 全部连成一段", style={
+        "font-size": "10px", "color": "#999", "white-space": "pre",
+    }), row=3, col=1)
+
+    # pre-line
+    compare.add(TextNode("white-space: pre-line", style={
+        "font-size": "12px", "font-weight": "bold", "color": "#27ae60",
+        "margin": "0 0 4px 0",
+    }), row=1, col=2)
+    compare.add(TextNode(sample_text, style={
+        "font-size": "13px", "color": "#333",
+        "white-space": "pre-line",
+        "background-color": "#f0fff0",
+        "padding": "10px",
+        "border": "1px solid #27ae60",
+    }), row=2, col=2)
+    compare.add(TextNode("折叠空白 + 保留换行\n→ \\n 处断行，空格折叠", style={
+        "font-size": "10px", "color": "#999", "white-space": "pre",
+    }), row=3, col=2)
+
+    # pre
+    compare.add(TextNode("white-space: pre", style={
+        "font-size": "12px", "font-weight": "bold", "color": "#3498db",
+        "margin": "0 0 4px 0",
+    }), row=1, col=3)
+    compare.add(TextNode(sample_text, style={
+        "font-size": "13px", "color": "#333",
+        "white-space": "pre",
+        "background-color": "#f0f4ff",
+        "padding": "10px",
+        "border": "1px solid #3498db",
+    }), row=2, col=3)
+    compare.add(TextNode("保留空白 + 保留换行\n→ 完全保留原始格式", style={
+        "font-size": "10px", "color": "#999", "white-space": "pre",
+    }), row=3, col=3)
+
+    grid.add(compare, row=2, col=1)
+
+    grid.add(TextNode("✓ 预期：pre-line 列应在 \\n 处断行，但多余空格被折叠为一个；长行自动折行", style={
+        "font-size": "12px", "color": "#27ae60",
+    }), row=3, col=1)
+
+    save(grid, "25_pre_line.svg")
+
+
+# =========================================================================
+# Demo 26：opacity 渲染
+# =========================================================================
+
+def demo_26_opacity():
+    heading("Demo 26: opacity 渲染")
+
+    grid = GridContainer(style={
+        "width": "800px",
+        "padding": "20px",
+        "gap": "12px",
+        "background-color": "#1a1a2e",
+        "grid-template-columns": ["1fr"],
+    })
+
+    grid.add(TextNode("Demo 26: opacity 渲染", style={
+        "font-size": "18px", "font-weight": "bold", "color": "#ffffff",
+    }), row=1, col=1)
+
+    # 背景 opacity 渐变
+    bg_row = GridContainer(style={
+        "grid-template-columns": ["1fr"] * 5,
+        "gap": "8px",
+    })
+
+    for i, op in enumerate([1.0, 0.8, 0.6, 0.4, 0.2]):
+        bg_row.add(ColorBox(140, 60, **{
+            "background-color": "#3498db",
+            "opacity": str(op),
+        }), row=1, col=i+1)
+        bg_row.add(TextNode(f"opacity: {op}", style={
+            "font-size": "11px", "color": "#aaaaaa", "text-align": "center",
+        }), row=2, col=i+1)
+
+    grid.add(bg_row, row=2, col=1)
+
+    # 文字 opacity 渐变
+    text_row = GridContainer(style={
+        "grid-template-columns": ["1fr"] * 5,
+        "gap": "8px",
+    })
+
+    for i, op in enumerate([1.0, 0.8, 0.6, 0.4, 0.2]):
+        text_row.add(TextNode("LatticeSVG", style={
+            "font-size": "16px", "font-weight": "bold",
+            "color": "#e74c3c",
+            "opacity": str(op),
+            "text-align": "center",
+            "padding": "10px",
+            "background-color": "#2a2a4e",
+        }), row=1, col=i+1)
+        text_row.add(TextNode(f"text opacity: {op}", style={
+            "font-size": "11px", "color": "#aaaaaa", "text-align": "center",
+        }), row=2, col=i+1)
+
+    grid.add(text_row, row=3, col=1)
+
+    grid.add(TextNode("✓ 预期：从左到右透明度递增，背景和文字均应逐渐变淡", style={
+        "font-size": "12px", "color": "#2ecc71",
+    }), row=4, col=1)
+
+    save(grid, "26_opacity.svg")
+
+
+# =========================================================================
+# Demo 27：P1-1 border-radius 圆角
+# =========================================================================
+
+def demo_27_border_radius():
+    heading("Demo 27: border-radius 圆角")
+
+    grid = GridContainer(style={
+        "width": "700px",
+        "padding": "20px",
+        "background-color": "#f8f9fa",
+        "grid-template-columns": ["1fr", "1fr", "1fr"],
+        "grid-template-rows": ["auto", "auto", "auto"],
+        "gap": "16px",
+    })
+
+    # Row 1: 不同圆角大小
+    for i, (r, label) in enumerate([
+        ("0px", "radius: 0"),
+        ("8px", "radius: 8px"),
+        ("20px", "radius: 20px"),
+    ]):
+        box = GridContainer(style={
+            "background-color": "#3498db",
+            "border-radius": r,
+            "padding": "16px",
+            "grid-template-columns": ["1fr"],
+        })
+        box.add(TextNode(label, style={
+            "font-size": "14px", "color": "#ffffff", "text-align": "center",
+        }), row=1, col=1)
+        grid.add(box, row=1, col=i + 1)
+
+    # Row 2: 圆角 + 边框
+    for i, (r, bs, label) in enumerate([
+        ("12px", "solid", "圆角 + solid"),
+        ("12px", "dashed", "圆角 + dashed"),
+        ("12px", "dotted", "圆角 + dotted"),
+    ]):
+        box = GridContainer(style={
+            "background-color": "#eaf6ff",
+            "border": f"3px {bs} #2980b9",
+            "border-radius": r,
+            "padding": "16px",
+            "grid-template-columns": ["1fr"],
+        })
+        box.add(TextNode(label, style={
+            "font-size": "14px", "color": "#2c3e50", "text-align": "center",
+        }), row=1, col=1)
+        grid.add(box, row=2, col=i + 1)
+
+    # Row 3: 大圆角（药丸/胶囊按钮）
+    pill = GridContainer(style={
+        "background-color": "#2ecc71",
+        "border-radius": "50px",
+        "padding": "12px 24px",
+        "grid-template-columns": ["1fr"],
+        "align-self": "center",
+    })
+    pill.add(TextNode("药丸按钮 (r=50px)", style={
+        "font-size": "14px", "color": "#ffffff", "text-align": "center",
+    }), row=1, col=1)
+    grid.add(pill, row=3, col=1, col_span=2)
+
+    card = GridContainer(style={
+        "background-color": "#ffffff",
+        "border": "1px solid #dee2e6",
+        "border-radius": "12px",
+        "padding": "16px",
+        "grid-template-columns": ["1fr"],
+    })
+    card.add(TextNode("卡片样式", style={
+        "font-size": "14px", "color": "#495057", "text-align": "center",
+    }), row=1, col=1)
+    grid.add(card, row=3, col=3)
+
+    grid.add(TextNode("✓ 预期：第一行圆角递增；第二行圆角+不同边框样式；第三行药丸按钮和卡片", style={
+        "font-size": "12px", "color": "#2ecc71",
+    }), row=4, col=1, col_span=3)
+
+    save(grid, "27_border_radius.svg")
+
+
+# =========================================================================
+# Demo 28：P1-2 border-style dashed/dotted
+# =========================================================================
+
+def demo_28_border_style():
+    heading("Demo 28: border-style dashed / dotted")
+
+    grid = GridContainer(style={
+        "width": "700px",
+        "padding": "20px",
+        "background-color": "#f8f9fa",
+        "grid-template-columns": ["1fr", "1fr", "1fr"],
+        "grid-template-rows": ["auto", "auto"],
+        "gap": "16px",
+    })
+
+    # Row 1: solid / dashed / dotted（无圆角，独立边线渲染）
+    for i, (bs, label) in enumerate([
+        ("solid", "solid 边框"),
+        ("dashed", "dashed 虚线"),
+        ("dotted", "dotted 点线"),
+    ]):
+        box = GridContainer(style={
+            "background-color": "#ffffff",
+            "border": f"2px {bs} #e74c3c",
+            "padding": "20px",
+            "grid-template-columns": ["1fr"],
+        })
+        box.add(TextNode(label, style={
+            "font-size": "14px", "color": "#2c3e50", "text-align": "center",
+        }), row=1, col=1)
+        grid.add(box, row=1, col=i + 1)
+
+    # Row 2: 不同粗细的虚线
+    for i, (bw, label) in enumerate([
+        ("1px", "dashed 1px"),
+        ("3px", "dashed 3px"),
+        ("5px", "dashed 5px"),
+    ]):
+        box = GridContainer(style={
+            "background-color": "#fff9e6",
+            "border": f"{bw} dashed #f39c12",
+            "padding": "20px",
+            "grid-template-columns": ["1fr"],
+        })
+        box.add(TextNode(label, style={
+            "font-size": "14px", "color": "#2c3e50", "text-align": "center",
+        }), row=1, col=1)
+        grid.add(box, row=2, col=i + 1)
+
+    grid.add(TextNode("✓ 预期：第一行三种边框样式对比；第二行虚线粗细递增", style={
+        "font-size": "12px", "color": "#2ecc71",
+    }), row=3, col=1, col_span=3)
+
+    save(grid, "28_border_style.svg")
+
+
+# =========================================================================
+# Demo 29：P1-3 render_to_drawing()
+# =========================================================================
+
+def demo_29_render_to_drawing():
+    heading("Demo 29: render_to_drawing() 无文件渲染")
+
+    import drawsvg as dw
+
+    grid = GridContainer(style={
+        "width": "400px",
+        "padding": "20px",
+        "background-color": "#ecf0f1",
+        "grid-template-columns": ["1fr"],
+    })
+    grid.add(TextNode("由 render_to_drawing() 生成", style={
+        "font-size": "18px", "color": "#2c3e50", "text-align": "center",
+    }), row=1, col=1)
+
+    grid.layout(available_width=400)
+
+    renderer = Renderer()
+    drawing = renderer.render_to_drawing(grid)
+
+    # 在 Drawing 上叠加水印 — 证明返回的 Drawing 可继续操作
+    drawing.append(dw.Text(
+        "WATERMARK", 24,
+        200, 40,
+        fill="#e74c3c",
+        opacity=0.3,
+        text_anchor="middle",
+        font_weight="bold",
+    ))
+
+    path = OUTPUT_DIR / "29_render_to_drawing.svg"
+    drawing.save_svg(str(path))
+    print(f"  ✓ 29_render_to_drawing.svg (含水印叠加)")
 
 
 # =========================================================================
@@ -1044,6 +1524,17 @@ def main():
     demo_20_mixed_fonts()
     demo_21_overflow_wrap()
     demo_22_image_gallery()
+
+    # P0 验收演示
+    demo_23_min_max_size()
+    demo_24_ellipsis_precision()
+    demo_25_pre_line()
+    demo_26_opacity()
+
+    # P1 验收演示
+    demo_27_border_radius()
+    demo_28_border_style()
+    demo_29_render_to_drawing()
 
     # 汇总
     svg_count = len(list(OUTPUT_DIR.glob("*.svg")))

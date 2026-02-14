@@ -150,6 +150,8 @@ def break_lines(
         return _break_pre(text, font_path, size, fm, wrap=False)
     if white_space == "pre-wrap":
         return _break_pre(text, font_path, size, fm, wrap=True, available_width=available_width)
+    if white_space == "pre-line":
+        return _break_pre_line(text, available_width, font_path, size, fm, break_word=break_word)
     if white_space == "nowrap":
         # Collapse whitespace, single line
         collapsed = " ".join(text.split())
@@ -366,6 +368,28 @@ def _wrap_pre_line(
     lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
 
     return lines
+
+
+def _break_pre_line(
+    text: str,
+    available_width: float,
+    font_path: str,
+    size: int,
+    fm: FontManager,
+    break_word: bool = False,
+) -> List[Line]:
+    """Line-breaking for 'pre-line' white-space mode.
+
+    Pre-line collapses consecutive spaces (like ``normal``) but preserves
+    explicit ``\\n`` line breaks.  Each segment between ``\\n`` is then
+    word-wrapped independently using the ``normal`` algorithm.
+    """
+    segments = text.split("\n")
+    result: List[Line] = []
+    for segment in segments:
+        sub = _break_normal(segment, available_width, font_path, size, fm, break_word=break_word)
+        result.extend(sub)
+    return result if result else [Line(text="", width=0.0, char_count=0)]
 
 
 # ---------------------------------------------------------------------------

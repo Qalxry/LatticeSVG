@@ -216,8 +216,45 @@ class GridSolver:
                 available_height=layout_h,
             )
             item.node.layout(child_constraints)
+
             # Apply alignment to position within the cell
             self._apply_alignment(item)
+
+            # Apply min/max width/height constraints (after alignment,
+            # so that stretch doesn't override the clamp).
+            self._clamp_min_max(item.node)
+
+    @staticmethod
+    def _clamp_min_max(node: "Node") -> None:
+        """Apply min-width/max-width/min-height/max-height constraints.
+
+        Adjusts the node's border_box, padding_box, and content_box
+        according to the CSS min/max sizing properties.
+        """
+        s = node.style
+
+        min_w_raw = s.get("min-width")
+        max_w_raw = s.get("max-width")
+        min_h_raw = s.get("min-height")
+        max_h_raw = s.get("max-height")
+
+        min_w = float(min_w_raw) if isinstance(min_w_raw, (int, float)) else 0.0
+        max_w = float(max_w_raw) if isinstance(max_w_raw, (int, float)) else float("inf")
+        min_h = float(min_h_raw) if isinstance(min_h_raw, (int, float)) else 0.0
+        max_h = float(max_h_raw) if isinstance(max_h_raw, (int, float)) else float("inf")
+
+        # Skip if no effective constraints
+        if min_w <= 0 and max_w == float("inf") and min_h <= 0 and max_h == float("inf"):
+            return
+
+        bb = node.border_box
+        new_w = max(min_w, min(bb.width, max_w))
+        new_h = max(min_h, min(bb.height, max_h))
+
+        if new_w != bb.width or new_h != bb.height:
+            content_w = max(0.0, new_w - s.padding_horizontal - s.border_horizontal)
+            content_h = max(0.0, new_h - s.padding_vertical - s.border_vertical)
+            node._resolve_box_model(content_w, content_h, x=bb.x, y=bb.y)
 
     def measure(self, constraints: "LayoutConstraints") -> Tuple[float, float, float]:
         """Measure the grid container's intrinsic sizes."""

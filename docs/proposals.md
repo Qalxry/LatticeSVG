@@ -12,11 +12,11 @@ LatticeSVG v0.1.0 已经是一个**完整度较高的首版**：CSS Grid Level 1
 
 ---
 
-## P0 — 修补已声明但未完成的功能
+## ~~P0 — 修补已声明但未完成的功能~~（已完成）
 
 这些属性已在代码中注册/标注，但未实际接线。不修则形成"文档说支持但实际不工作"的落差。
 
-### P0-1. `min-width` / `max-width` / `min-height` / `max-height` 接线
+### ~~P0-1. `min-width` / `max-width` / `min-height` / `max-height` 接线~~（已完成）
 
 **现状**：`properties.py` 中已注册这四个属性并有默认值，`ComputedStyle` 可正常读取，但 `GridSolver` 完全未使用它们。
 
@@ -30,7 +30,7 @@ resolved_w = max(min_width, min(resolved_w, max_width))
 
 **改动范围**：`grid_solver.py` 的 `_resolve_tracks_axis` 和子节点布局阶段。
 
-### P0-2. `text-overflow: ellipsis` 精度修正
+### ~~P0-2. `text-overflow: ellipsis` 精度修正~~（已完成）
 
 **现状**：`renderer.py` 中截断判断使用 `font_size * 0.6` 近似每个字符宽度，导致在 CJK 或非等宽字体下偏差明显。
 
@@ -38,7 +38,7 @@ resolved_w = max(min_width, min(resolved_w, max_width))
 
 **改动范围**：`renderer.py` 的 `_render_text` 方法，约 10-20 行改动。
 
-### P0-3. `white-space: pre-line` 实现
+### ~~P0-3. `white-space: pre-line` 实现~~（已完成）
 
 **现状**：`parser.py` 接受 `pre-line` 关键字且不报错，但 `shaper.py` 的 `break_lines()` 无对应分支，会 fallback 到默认行为。
 
@@ -46,7 +46,7 @@ resolved_w = max(min_width, min(resolved_w, max_width))
 
 **改动范围**：`shaper.py` 增加 `_break_pre_line()` 函数，约 15-20 行。
 
-### P0-4. `opacity` 渲染
+### ~~P0-4. `opacity` 渲染~~（已完成）
 
 **现状**：`properties.py` 注册了 `opacity` 属性（默认 `1`），但渲染器未读取。
 
@@ -56,11 +56,11 @@ resolved_w = max(min_width, min(resolved_w, max_width))
 
 ---
 
-## P1 — 高频场景补强
+## ~~P1 — 高频场景补强~~（已完成）
 
 投入小、收益大的增量功能，面向实际报告生成场景中的高频需求。
 
-### P1-1. `border-radius` 支持
+### ~~P1-1. `border-radius` 支持~~（已完成）
 
 **场景**：卡片、提示框、按钮样式在报告中极其常见，圆角是最基础的视觉修饰。
 
@@ -70,7 +70,7 @@ resolved_w = max(min_width, min(resolved_w, max_width))
 
 **改动范围**：两个文件，约 20-30 行。支持统一圆角即可，不需要四角独立值。
 
-### P1-2. `border-style: dashed | dotted` 支持
+### ~~P1-2. `border-style: dashed | dotted` 支持~~（已完成）
 
 **场景**：表格分隔线、辅助参考线常用虚线。
 
@@ -78,7 +78,7 @@ resolved_w = max(min_width, min(resolved_w, max_width))
 
 **改动范围**：`renderer.py` 边框渲染部分，约 10 行。
 
-### P1-3. 便捷的 `render_to_drawing()` 语义
+### ~~P1-3. 便捷的 `render_to_drawing()` 语义~~（已完成）
 
 **场景**：用户想在 LatticeSVG 渲染后继续操作 Drawing——比如添加水印、手动叠加标注、合并多个布局结果。
 
@@ -109,6 +109,18 @@ resolved_w = max(min_width, min(resolved_w, max_width))
 
 **价值**：控制隐式轨道尺寸（当前硬编码为 `auto`）。
 **评估**：仅在大量自动放置项场景下有用，优先级低。
+
+### P2-4. 四角独立 `border-radius`
+
+**价值**：支持 `border-radius: 10px 20px 0 5px` 四角独立值及 `10px 20px` 对角缩写，可实现 Tab 标签、对话气泡等仅部分圆角的场景。
+**代价**：SVG `<rect>` 的 `rx/ry` 仅支持统一值，四角独立需改用 `<path>` 绘制圆角矩形，渲染器改动较大。百分比（`50%`）和斜杠语法（`10px / 20px`）收益过低，不纳入。
+**评估**：当前统一单值已覆盖卡片/按钮等主流场景，四角独立按需再做。
+
+### P2-5. `clip-path` 支持
+
+**价值**：CSS `clip-path` 可实现圆形裁剪、多边形蒙版、不规则形状容器等高级视觉效果。在头像裁圆、斜切 Banner、装饰性形状等场景中有用。
+**代价**：需要在属性注册表中新增 `clip-path` 属性，解析器需支持 `circle()`、`ellipse()`、`polygon()`、`inset()` 等函数语法，渲染器中映射到 SVG `<clipPath>` 元素。解析复杂度中等偏高。
+**评估**：SVG 原生支持 `<clipPath>`，映射路径清晰；但函数语法解析需较多代码，且在报告生成场景中并非刚需。按需评估。
 
 ---
 

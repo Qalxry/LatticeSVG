@@ -63,6 +63,9 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
     "border-bottom-style": PropertyDef(default="none", parser_hint="keyword"),
     "border-left-style": PropertyDef(default="none", parser_hint="keyword"),
 
+    # Border radius (unified, single value)
+    "border-radius": PropertyDef(default="0px", parser_hint="length"),
+
     # ── Grid layout ───────────────────────────────────────────────────
     "display": PropertyDef(default="block", parser_hint="keyword"),
     "grid-template-columns": PropertyDef(default=None, parser_hint="track-list"),
