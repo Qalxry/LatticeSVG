@@ -24,3 +24,4 @@ htmlcov/
 demo_output/
 .vscode/
 .idea/
+examples/demo_output/
