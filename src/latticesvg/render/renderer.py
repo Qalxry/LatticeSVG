@@ -155,6 +155,9 @@ class Renderer:
         overflow = node.style.get("overflow")
         raw_radius = node.style.get("border-radius")
         radius = float(raw_radius) if isinstance(raw_radius, (int, float)) else 0.0
+        # Clamp to half the shorter side so rx == ry (circular arcs, CSS behaviour).
+        if radius > 0:
+            radius = min(radius, bb.width / 2, bb.height / 2)
 
         if overflow == "hidden":
             clip = dw.ClipPath()
@@ -241,6 +244,10 @@ class Renderer:
     ) -> None:
         """Draw borders — as a rounded rect when *radius* > 0, else as lines."""
         s = node.style
+
+        # Clamp to half the shorter side so rx == ry (circular arcs).
+        if radius > 0:
+            radius = min(radius, w / 2, h / 2)
 
         if radius > 0:
             # Unified rounded-rect border.
