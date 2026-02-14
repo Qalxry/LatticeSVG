@@ -214,7 +214,8 @@ class TestMathNode:
         node = MathNode(r"E=mc^2", style={"font-size": "16px"})
         with patch.object(node, "_get_backend", return_value=mock_backend):
             node.layout(LayoutConstraints(available_width=200))
-        assert node.content_box.width == pytest.approx(100.0, abs=1.0)
+        # Content box uses full available width; formula is positioned inside
+        assert node.content_box.width == pytest.approx(200.0, abs=1.0)
         assert node.content_box.height == pytest.approx(30.0, abs=1.0)
 
     def test_layout_aspect_ratio(self, mock_backend):
@@ -223,6 +224,7 @@ class TestMathNode:
             node.layout(LayoutConstraints(available_width=50))
         # Shrunk to 50px wide, height should scale proportionally
         assert node.content_box.width == pytest.approx(50.0, abs=1.0)
+        assert node.content_box.height == pytest.approx(15.0, abs=1.0)
         assert node.content_box.height == pytest.approx(15.0, abs=1.0)
 
     def test_get_svg_fragment(self, mock_backend):

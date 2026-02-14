@@ -44,7 +44,12 @@ class _FreeTypeBackend:
 
     def glyph_metrics(self, font_path: str, size: int, char: str) -> GlyphMetrics:
         face = self._get_face(font_path, size)
-        face.load_char(char, self._freetype.FT_LOAD_DEFAULT)  # type: ignore
+        # Use NO_HINTING to get floating-point advance widths that
+        # match SVG renderers (Chrome, Firefox, librsvg) which render
+        # <text> without pixel grid alignment.  FT_LOAD_DEFAULT rounds
+        # advances to integers, causing cumulative drift for long runs,
+        # especially noticeable when mixing bold and normal spans.
+        face.load_char(char, self._freetype.FT_LOAD_NO_HINTING)  # type: ignore
         glyph = face.glyph
         m = glyph.metrics
         # FreeType metrics are in 26.6 fixed point (1/64 px)
@@ -239,7 +244,13 @@ class FontManager:
         return index
 
     def _index_by_family_name(self, index: Dict[str, str], font_path: str) -> None:
-        """Read font's embedded family name via FreeType and add to index."""
+        """Read font's embedded family name via FreeType and add to index.
+
+        For TTC/OTF fonts that share the same family name across weights
+        (e.g. "Noto Sans CJK JP" for Regular, Bold, Medium …), we also
+        index ``{family}{style}`` so that ``_name_candidates`` can locate
+        the correct weight variant (e.g. "notosanscjkjpbold").
+        """
         if not isinstance(self._backend, _FreeTypeBackend):
             return
         try:
@@ -247,9 +258,19 @@ class FontManager:
             name = face.family_name
             if isinstance(name, bytes):
                 name = name.decode('utf-8', errors='replace')
+            style = face.style_name
+            if isinstance(style, bytes):
+                style = style.decode('utf-8', errors='replace')
             if name:
                 key = name.lower().replace(' ', '').replace('-', '').replace('_', '')
                 index.setdefault(key, font_path)
+                # Also index {family}{style} so bold/italic lookup works
+                # for fonts where all weights share the same family name.
+                if style:
+                    style_lower = style.lower().replace(' ', '').replace('-', '').replace('_', '')
+                    if style_lower and style_lower not in ('', ):
+                        style_key = key + style_lower
+                        index.setdefault(style_key, font_path)
         except Exception:
             pass
 
@@ -315,19 +336,41 @@ class FontManager:
         method resolves *every* distinct family in *family_list* so that
         characters missing in the primary font can be measured with a
         fallback font.
+
+        When a generic family (e.g. ``"sans-serif"``) is given, **all**
+        concrete fonts reachable through the alias list are included in
+        the chain, giving a wide Unicode coverage.
         """
         if family_list is None:
             family_list = ["sans-serif"]
         if isinstance(family_list, str):
             family_list = [family_list]
 
+        idx = self._get_font_index()
+        weight_suffix = "bold" if weight == "bold" else ""
+        style_suffix = "italic" if style in ("italic", "oblique") else ""
+
         chain: List[str] = []
         seen: set = set()
+
         for fam in family_list:
-            path = self._resolve_single_family(fam, weight, style)
-            if path and path not in seen:
-                chain.append(path)
-                seen.add(path)
+            # Expand generic families into their full alias list so
+            # that *every* available concrete font is added — not
+            # just the first hit.
+            if fam.lower() in _FAMILY_ALIASES:
+                names = _FAMILY_ALIASES[fam.lower()]
+            else:
+                names = [fam]
+
+            for name in names:
+                candidates = self._name_candidates(name, weight_suffix, style_suffix)
+                for c in candidates:
+                    if c in idx:
+                        path = idx[c]
+                        if path not in seen:
+                            chain.append(path)
+                            seen.add(path)
+                        break  # found this name, move to next
 
         if not chain:
             fallback = self.find_font(family_list, weight, style)
@@ -370,9 +413,12 @@ class FontManager:
         if style_suffix:
             candidates.append(f"{base}{style_suffix}")
             candidates.append(f"{base}-{style_suffix}")
-        candidates.append(base)
+        # Prefer explicit "regular" over bare base name so that
+        # the bare name (which may point to any weight/style) is
+        # only used as a last resort.
         candidates.append(f"{base}regular")
         candidates.append(f"{base}-regular")
+        candidates.append(base)
         return candidates
 
     # -----------------------------------------------------------------

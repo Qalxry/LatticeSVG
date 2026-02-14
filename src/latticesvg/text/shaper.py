@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re as _re
 from dataclasses import dataclass, field
 from typing import List, Optional, Tuple
 
@@ -621,6 +622,11 @@ def break_lines_rich(
         chain, sz = _resolve_span_font(span, base_font_chain, base_size, fm)
         fp = chain[0] if isinstance(chain, list) and chain else chain
 
+        # Sub/super: if no explicit font-size override, measure at the
+        # same shrunk size that the renderer will use (0.7×).
+        if span.baseline_shift in ("super", "sub") and span.font_size is None:
+            sz = max(1, int(base_size * 0.7))
+
         if span.is_math and math_backend is not None:
             # Render math and use its metrics as a single "token"
             svg_frag = math_backend.render(span.text, float(sz))
@@ -639,7 +645,10 @@ def break_lines_rich(
 
         text = span.text
         if collapse_ws:
-            text = " ".join(text.split()) if text.strip() else (" " if text else "")
+            # Collapse internal whitespace runs to single space but
+            # keep a single leading/trailing space so that inter-span
+            # spacing is preserved (CSS inline whitespace behaviour).
+            text = _re.sub(r'\s+', ' ', text) if text else ""
 
         segments.append({
             "br": False,
@@ -652,6 +661,34 @@ def break_lines_rich(
             "svg_frag": None,
             "width": None,  # calculated per-token
         })
+
+    # ---- Cross-span whitespace dedup ----
+    # CSS collapses whitespace across element boundaries: if span A
+    # ends with a space and span B starts with a space, only one
+    # space should appear.  Also strip leading space on the very
+    # first text segment (line-start behaviour).
+    if collapse_ws:
+        first_text_seen = False
+        prev_ended_space = False
+        for seg in segments:
+            if seg.get("br"):
+                prev_ended_space = False
+                first_text_seen = False
+                continue
+            if seg.get("is_math"):
+                prev_ended_space = False
+                first_text_seen = True
+                continue
+            txt = seg["text"]
+            if not txt:
+                continue
+            # Strip leading space if previous segment ended with one,
+            # or if this is the very first text on the line.
+            if (prev_ended_space or not first_text_seen) and txt.startswith(" "):
+                txt = txt.lstrip(" ")
+            seg["text"] = txt
+            prev_ended_space = txt.endswith(" ") if txt else False
+            first_text_seen = True
 
     # ---- tokenize and break lines ----
     lines: List[RichLine] = []
@@ -859,12 +896,15 @@ def get_min_content_width_rich(
             continue
         chain, sz = _resolve_span_font(span, base_font_chain, base_size, fm)
 
+        if span.baseline_shift in ("super", "sub") and span.font_size is None:
+            sz = max(1, int(base_size * 0.7))
+
         if span.is_math and math_backend is not None:
             svg_frag = math_backend.render(span.text, float(sz))
             max_w = max(max_w, svg_frag.width)
             continue
 
-        text = " ".join(span.text.split()) if span.text.strip() else ""
+        text = _re.sub(r'\s+', ' ', span.text).strip() if span.text.strip() else ""
         if not text:
             continue
         tokens = _tokenize_breakable(text)
@@ -896,6 +936,9 @@ def get_max_content_width_rich(
             continue
         chain, sz = _resolve_span_font(span, base_font_chain, base_size, fm)
 
+        if span.baseline_shift in ("super", "sub") and span.font_size is None:
+            sz = max(1, int(base_size * 0.7))
+
         if span.is_math and math_backend is not None:
             svg_frag = math_backend.render(span.text, float(sz))
             total += svg_frag.width
@@ -903,6 +946,7 @@ def get_max_content_width_rich(
 
         text = span.text
         if white_space not in ("pre", "pre-wrap"):
-            text = " ".join(text.split()) if text.strip() else (" " if text else "")
-        total += _measure_span_text(text, chain, sz, fm)
+            text = _re.sub(r'\s+', ' ', text) if text else ""
+        w = _measure_span_text(text, chain, sz, fm)
+        total += w
     return total

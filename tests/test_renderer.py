@@ -386,3 +386,106 @@ class TestRenderToDrawing:
 
         import os
         assert os.path.exists(out)
+
+
+# ------------------------------------------------------------------
+# Font embedding (P2-6)
+# ------------------------------------------------------------------
+
+class TestFontEmbedding:
+    """Tests for ``embed_fonts=True``."""
+
+    def test_embed_fonts_injects_font_face(self, tmp_path):
+        """embedded SVG should contain @font-face with WOFF2 data URIs."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": ["1fr"],
+        })
+        grid.add(TextNode("Hello world", style={"font-size": 16}))
+        grid.layout(available_width=400)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid, embed_fonts=True)
+
+        assert "@font-face" in svg
+        assert "font/woff2" in svg
+        assert "base64," in svg
+
+    def test_embed_fonts_no_duplicates(self, tmp_path):
+        """Each (font-family, weight, style) triplet should appear once."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": ["1fr"],
+        })
+        # Two TextNodes using the same font → single @font-face
+        grid.add(TextNode("Hello", style={"font-size": 14}))
+        grid.add(TextNode("World", style={"font-size": 14}))
+        grid.layout(available_width=400)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid, embed_fonts=True)
+
+        # Count occurrences — there should be exactly one per font used
+        import re
+        faces = re.findall(r"@font-face", svg)
+        families = re.findall(r'font-family:\s*"([^"]+)"', svg)
+        # Should have no duplicate (family, weight) pairs in @font-face
+        weight_re = re.findall(r"font-weight:\s*(\w+)", svg)
+        pairs = list(zip(families, weight_re))
+        assert len(pairs) == len(set(pairs)), f"Duplicate @font-face: {pairs}"
+
+    def test_embed_fonts_false_no_font_face(self, tmp_path):
+        """Without embed_fonts the SVG must NOT contain @font-face."""
+        grid = GridContainer(style={
+            "width": "400px",
+            "grid-template-columns": ["1fr"],
+        })
+        grid.add(TextNode("Hello", style={"font-size": 14}))
+        grid.layout(available_width=400)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "@font-face" not in svg
+
+    def test_embed_fonts_rich_text(self, tmp_path):
+        """Rich text with bold/italic/code → multiple @font-face rules."""
+        grid = GridContainer(style={
+            "width": "500px",
+            "grid-template-columns": ["1fr"],
+        })
+        grid.add(TextNode(
+            '<b>Bold</b> and <code>code</code>',
+            style={"font-size": 14},
+            markup="html",
+        ))
+        grid.layout(available_width=500)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid, embed_fonts=True)
+
+        import re
+        faces = re.findall(r"@font-face", svg)
+        # At least 2: normal + bold (code may add a third for monospace)
+        assert len(faces) >= 2, f"Expected >=2 @font-face rules, got {len(faces)}"
+
+    def test_render_to_file_with_embed(self, tmp_path):
+        """render() with embed_fonts=True should produce a valid file."""
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": ["1fr"],
+        })
+        grid.add(TextNode("Test", style={"font-size": 14}))
+        grid.layout(available_width=300)
+
+        out = str(tmp_path / "embedded.svg")
+        renderer = Renderer()
+        d = renderer.render(grid, out, embed_fonts=True)
+
+        import drawsvg as dw
+        assert isinstance(d, dw.Drawing)
+
+        import os
+        assert os.path.exists(out)
+        with open(out) as f:
+            content = f.read()
+        assert "@font-face" in content

@@ -10,7 +10,7 @@ def demo_33_rich_text():
     heading("Demo 33: Rich Text (HTML 标记)")
 
     grid = GridContainer(style={
-        "width": "600px",
+        "width": "700px",
         "padding": "24px",
         "background-color": "#ffffff",
         "grid-template-columns": ["1fr"],
@@ -25,7 +25,7 @@ def demo_33_rich_text():
         "text-align": "center",
     }))
 
-    # Bold + Italic
+    # Bold + Italic c t f ✅
     grid.add(TextNode(
         "This sentence has <b>bold text</b>, <i>italic text</i>, "
         "and <b><i>bold italic</i></b> combined.",

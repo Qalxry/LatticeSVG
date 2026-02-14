@@ -25,7 +25,7 @@ class ColorBox(Node):
         self._resolve_box_model(self._w, self._h)
 
 
-def save(node: Node, filename: str, width: float = None):
+def save(node: Node, filename: str, width: float = None, embed_fonts: bool = False) -> Path:
     """布局 → 渲染 → 保存 SVG。"""
     if width is None:
         w = node.style.get("width")

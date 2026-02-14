@@ -30,7 +30,7 @@ def demo_35_math_formula():
     }))
     grid.add(MathNode(
         r"e^{i\pi} + 1 = 0",
-        style={"font-size": "24px", "padding": "8px"},
+        style={"font-size": "24px", "padding": "8px", "text-align": "center"},
     ))
 
     # Integral
@@ -39,7 +39,7 @@ def demo_35_math_formula():
     }))
     grid.add(MathNode(
         r"\int_{-\infty}^{\infty} e^{-x^2} \, dx = \sqrt{\pi}",
-        style={"font-size": "22px", "padding": "8px"},
+        style={"font-size": "22px", "padding": "8px", "text-align": "center"},
     ))
 
     # Matrix
@@ -50,13 +50,16 @@ def demo_35_math_formula():
         r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}"
         r"\begin{pmatrix} x \\ y \end{pmatrix} = "
         r"\begin{pmatrix} ax+by \\ cx+dy \end{pmatrix}",
-        style={"font-size": "20px", "padding": "8px"},
+        style={"font-size": "20px", "padding": "8px", "text-align": "center"},
     ))
 
     # Sum
+    grid.add(TextNode("二项式定理：", style={
+        "font-size": "14px", "color": "#666",
+    }))
     grid.add(MathNode(
         r"\sum_{k=0}^{n} \binom{n}{k} x^k y^{n-k} = (x+y)^n",
-        style={"font-size": "22px", "padding": "8px"},
+        style={"font-size": "22px", "padding": "8px", "text-align": "center"},
     ))
 
     save(grid, "35_math_formula.svg", 700)

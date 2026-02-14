@@ -237,7 +237,7 @@ def demo_32_waterfall_cards():
     page.add(footer, row=3, col=1)
 
     # ==================== 布局和渲染 ====================
-    save(page, "demo_32_waterfall_cards.svg")
+    save(page, "32_waterfall_cards.svg")
     print("  ✓ 完成！包含 9 个精美卡片，三列瀑布流布局")
 
 

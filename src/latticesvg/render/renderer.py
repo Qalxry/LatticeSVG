@@ -29,37 +29,79 @@ class Renderer:
     # Public API
     # =================================================================
 
-    def render(self, node: "Node", output_path: str) -> dw.Drawing:
+    def render(
+        self,
+        node: "Node",
+        output_path: str,
+        *,
+        embed_fonts: bool = False,
+    ) -> dw.Drawing:
         """Render *node* and its descendants to an SVG file.
+
+        Parameters
+        ----------
+        embed_fonts:
+            If *True*, subset and embed all used fonts as WOFF2
+            ``@font-face`` rules inside the SVG, making it fully
+            self-contained.  Requires the ``fonttools`` package.
 
         Returns the ``drawsvg.Drawing`` instance for further use.
         """
-        d = self.render_to_drawing(node)
+        d = self.render_to_drawing(node, embed_fonts=embed_fonts)
         d.save_svg(output_path)
         return d
 
-    def render_to_drawing(self, node: "Node") -> dw.Drawing:
+    def render_to_drawing(
+        self,
+        node: "Node",
+        *,
+        embed_fonts: bool = False,
+    ) -> dw.Drawing:
         """Render *node* to a ``drawsvg.Drawing`` without writing any file.
 
         Useful when you want to further manipulate the drawing — add
         watermarks, merge multiple layouts, etc.
+
+        Parameters
+        ----------
+        embed_fonts:
+            If *True*, subset and embed all used fonts as WOFF2
+            ``@font-face`` rules.
         """
         bb = node.border_box
         self.drawing = dw.Drawing(bb.width, bb.height)
         self._render_node(node, offset_x=-bb.x, offset_y=-bb.y)
+        if embed_fonts:
+            from ..text.embed import embed_fonts as _embed
+            _embed(self.drawing, node)
         return self.drawing
 
-    def render_to_string(self, node: "Node") -> str:
+    def render_to_string(
+        self,
+        node: "Node",
+        *,
+        embed_fonts: bool = False,
+    ) -> str:
         """Render *node* to an SVG string (no file I/O)."""
-        return self.render_to_drawing(node).as_svg()
+        return self.render_to_drawing(node, embed_fonts=embed_fonts).as_svg()
 
     def render_png(
         self,
         node: "Node",
         output_path: str,
         scale: float = 1.0,
+        *,
+        embed_fonts: bool = False,
     ) -> None:
-        """Render to SVG, then convert to PNG via *cairosvg*."""
+        """Render to SVG, then convert to PNG via *cairosvg*.
+
+        Parameters
+        ----------
+        embed_fonts:
+            If *True*, embed subsetted fonts into the intermediate SVG
+            before rasterising.  This ensures *cairosvg* uses the exact
+            same glyphs that were measured during layout.
+        """
         try:
             import cairosvg  # type: ignore
         except ImportError:
@@ -68,7 +110,7 @@ class Renderer:
                 "Install it with: pip install cairosvg"
             )
 
-        svg_string = self.render_to_string(node)
+        svg_string = self.render_to_string(node, embed_fonts=embed_fonts)
         bb = node.border_box
         cairosvg.svg2png(
             bytestring=svg_string.encode("utf-8"),
@@ -456,92 +498,121 @@ class Renderer:
             lx = x0 + rline.x_offset
             ly = y0 + i * line_h + baseline_offset
 
-            # Separate math fragments from text fragments
-            text_frags = []
-            math_frags = []
+            # Phase 1 — Merge consecutive text fragments that share the
+            # same span_index into unified runs.  This keeps spaces
+            # inside a single <text> element so that text-decoration
+            # (e.g. strikethrough) and background-color (e.g. <code>)
+            # span continuously across word boundaries.
+            # Math fragments remain as individual items.
+            runs: list = []  # list of dicts
             cur_x = lx
             for frag in rline.fragments:
                 if frag.svg_fragment is not None:
-                    math_frags.append((cur_x, frag))
+                    runs.append({
+                        "kind": "math", "x": cur_x, "frag": frag,
+                    })
+                    cur_x += frag.width
+                    continue
+                # Text fragment — try to merge with the previous run
+                if (runs
+                        and runs[-1]["kind"] == "text"
+                        and runs[-1]["span_index"] == frag.span_index):
+                    runs[-1]["text"] += frag.text
+                    runs[-1]["width"] += frag.width
                 else:
-                    text_frags.append((cur_x, frag))
+                    runs.append({
+                        "kind": "text",
+                        "x": cur_x,
+                        "text": frag.text,
+                        "width": frag.width,
+                        "span_index": frag.span_index,
+                        "font_size": frag.font_size,
+                    })
                 cur_x += frag.width
 
-            # Render text fragments as <text> + <tspan>s
-            if text_frags:
-                text_kwargs: dict = dict(font_family=base_family)
-                if op < 1.0:
-                    text_kwargs["opacity"] = op
-                t = dw.Text("", font_size, lx, ly, **text_kwargs)
+            # Phase 2 — Render each run with absolute positioning.
+            for run in runs:
+                if run["kind"] == "math":
+                    frag = run["frag"]
+                    svg_frag = frag.svg_fragment
+                    math_y = ly - svg_frag.height + getattr(svg_frag, "depth", 0.0)
+                    raw = dw.Raw(
+                        f'<g transform="translate({run["x"]},{math_y})">'
+                        f"{svg_frag.svg_content}"
+                        f"</g>"
+                    )
+                    group.append(raw)
+                    continue
 
-                frag_x = lx
-                for fx, frag in text_frags:
-                    span_src = spans[frag.span_index] if frag.span_index < len(spans) else None
-                    tspan_kw: dict = {}
+                text = run["text"]
+                # Whitespace-only runs between *different* spans:
+                # skip rendering — their width is already baked into
+                # the absolute x positions.
+                if not text.strip():
+                    continue
 
-                    # Position: use dx to advance to correct x
-                    if fx != frag_x:
-                        tspan_kw["dx"] = fx - frag_x
+                span_src = (spans[run["span_index"]]
+                            if run["span_index"] < len(spans) else None)
 
-                    # Style overrides
-                    if span_src:
-                        color = span_src.color or base_color
-                        tspan_kw["fill"] = color
+                # Resolve styling for this run
+                color = base_color
+                family = base_family
+                weight = base_weight
+                f_style = base_style
+                fsize: float = font_size
+                text_y = ly
+                td = "none"
 
-                        fw = span_src.font_weight or base_weight
-                        if fw != base_weight:
-                            tspan_kw["font_weight"] = fw
-
-                        fs = span_src.font_style or base_style
-                        if fs != base_style:
-                            tspan_kw["font_style"] = fs
-
-                        if span_src.font_family:
-                            tspan_kw["font_family"] = span_src.font_family
-
-                        if span_src.font_size is not None and int(span_src.font_size) != font_size:
-                            tspan_kw["font_size"] = span_src.font_size
-
-                        if span_src.baseline_shift:
-                            tspan_kw["baseline_shift"] = span_src.baseline_shift
-                            # Shrink font for sub/super
+                if span_src:
+                    color = span_src.color or base_color
+                    if span_src.font_weight:
+                        weight = span_src.font_weight
+                    if span_src.font_style:
+                        f_style = span_src.font_style
+                    if span_src.font_family:
+                        family = span_src.font_family
+                    if span_src.font_size is not None:
+                        fsize = span_src.font_size
+                    if span_src.baseline_shift:
+                        if span_src.baseline_shift == "super":
+                            text_y = ly - font_size * 0.35
                             if span_src.font_size is None:
-                                tspan_kw["font_size"] = font_size * 0.7
-
-                        if span_src.text_decoration and span_src.text_decoration != "none":
-                            tspan_kw["text_decoration"] = span_src.text_decoration
-                    else:
-                        tspan_kw["fill"] = base_color
-
-                    ts = dw.TSpan(frag.text, **tspan_kw)
-                    t.append(ts)
-                    frag_x = fx + frag.width
+                                fsize = font_size * 0.7
+                        elif span_src.baseline_shift == "sub":
+                            text_y = ly + font_size * 0.2
+                            if span_src.font_size is None:
+                                fsize = font_size * 0.7
+                    if span_src.text_decoration and span_src.text_decoration != "none":
+                        td = span_src.text_decoration
 
                     # Background highlight (e.g. <code>)
-                    if span_src and span_src.background_color:
+                    if span_src.background_color:
                         bg_y = ly - baseline_offset + (line_h - font_size) / 2.0
                         bg_h = font_size * 1.2
                         bg_rect = dw.Rectangle(
-                            fx, bg_y, frag.width, bg_h,
+                            run["x"], bg_y, run["width"], bg_h,
                             fill=span_src.background_color,
                             rx=2, ry=2,
                         )
-                        # Insert background before text
                         group.append(bg_rect)
 
-                group.append(t)
-
-            # Render math fragments as inline SVG
-            for fx, frag in math_frags:
-                svg_frag = frag.svg_fragment
-                # Position: baseline-aligned
-                math_y = ly - svg_frag.height + getattr(svg_frag, 'depth', 0.0)
-                raw = dw.Raw(
-                    f'<g transform="translate({fx},{math_y})">'
-                    f'{svg_frag.svg_content}'
-                    f'</g>'
+                text_kw: dict = dict(
+                    fill=color,
+                    font_family=family,
+                    font_weight=weight,
+                    font_style=f_style,
                 )
-                group.append(raw)
+                if td != "none":
+                    text_kw["text_decoration"] = td
+                if op < 1.0:
+                    text_kw["opacity"] = op
+
+                t = dw.Text(text, fsize, run["x"], text_y, **text_kw)
+                # Preserve whitespace so that librsvg/Inkscape do not
+                # strip spaces inside the text run (SVG 1.1 default
+                # behaviour strips leading/trailing spaces from <text>).
+                t.args["xml:space"] = "preserve"
+                group.append(t)
 
     @staticmethod
     def _truncate_with_ellipsis(
@@ -658,7 +729,7 @@ class Renderer:
     ) -> None:
         """Embed a LaTeX math formula as an SVG fragment."""
         cb = node.content_box
-        x = cb.x + offset_x
+        x = cb.x + offset_x + getattr(node, "_formula_x_offset", 0.0)
         y = cb.y + offset_y
 
         sx = getattr(node, "scale_x", 1.0)

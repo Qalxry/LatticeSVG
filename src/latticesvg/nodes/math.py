@@ -82,18 +82,21 @@ class MathNode(Node):
     def layout(self, constraints: LayoutConstraints) -> None:
         frag = self._get_fragment()
 
-        content_w = self._content_available_width(constraints)
-        if content_w is None:
-            content_w = frag.width
-        else:
-            # Don't stretch beyond natural size; only shrink if constrained
-            content_w = min(content_w, frag.width)
+        avail_w = self._content_available_width(constraints)
+        if avail_w is None:
+            avail_w = frag.width
 
         explicit_w = self._resolve_width(constraints)
         if explicit_w is not None:
             content_w = max(0.0, explicit_w
                            - self.style.padding_horizontal
                            - self.style.border_horizontal)
+        else:
+            # Use available width for layout (so grid cell is full-width)
+            content_w = avail_w
+
+        # The actual formula width for scaling purposes
+        formula_w = min(frag.width, content_w)
 
         explicit_h = self._resolve_height(constraints)
         if explicit_h is not None:
@@ -101,15 +104,25 @@ class MathNode(Node):
                            - self.style.padding_vertical
                            - self.style.border_vertical)
         else:
-            # Maintain aspect ratio
+            # Maintain aspect ratio based on formula size
             if frag.width > 0:
-                content_h = frag.height * (content_w / frag.width)
+                content_h = frag.height * (formula_w / frag.width)
             else:
                 content_h = frag.height
 
         # Compute scale factors for the SVG fragment
-        self.scale_x = content_w / frag.width if frag.width > 0 else 1.0
+        self.scale_x = formula_w / frag.width if frag.width > 0 else 1.0
         self.scale_y = content_h / frag.height if frag.height > 0 else 1.0
+
+        # Compute horizontal offset for alignment within content box
+        text_align = self.style.get("text-align") or "left"
+        justify = self.style.get("justify-self")
+        if justify == "center" or text_align == "center":
+            self._formula_x_offset = (content_w - formula_w) / 2.0
+        elif justify == "end" or text_align == "right":
+            self._formula_x_offset = content_w - formula_w
+        else:
+            self._formula_x_offset = 0.0
 
         # Invalidate cache if size changed (re-render at new size)
         self._svg_cache = None
