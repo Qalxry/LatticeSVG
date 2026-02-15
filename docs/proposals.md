@@ -25,7 +25,7 @@ LatticeSVG v0.1.0 已是一个**功能完备的版本**：
 
 ## P1 — 高价值增量功能
 
-### P1-1. `text-align: justify` 渲染完成
+### ~~P1-1. `text-align: justify` 渲染完成~~（已完成）
 
 **场景**：学术报告、论文排版中两端对齐（justify）是最常见的段落对齐方式。当前 shaper 已识别 `justify` 关键字并为非末行设置 `offset = 0`，但渲染器未实现逐词间距分散，实际效果等同于左对齐。
 
@@ -147,7 +147,7 @@ badge = TextNode("NEW", style={
 
 **评估**：当前行为在主流场景下已正确，优化边缘情况可按实际反馈进行。
 
-### P2-4. `letter-spacing` / `word-spacing`
+### ~~P2-4. `letter-spacing` / `word-spacing`~~（已完成）
 
 **价值**：字间距和词间距是排版精细调整的常用属性。对中文排版（`letter-spacing`）和英文排版（`word-spacing`）都有价值。
 

@@ -238,7 +238,7 @@ def _break_normal(
         # first char of this token are adjacent — letter-spacing
         # applies between them but isn't included in either token's
         # individual width.
-        bridge = _ls if (current_parts and _ls and not is_space) else 0.0
+        bridge = _ls if (current_parts and _ls) else 0.0
 
         fits_current = (not current_parts) or (current_width + bridge + token_w <= available_width)
 
