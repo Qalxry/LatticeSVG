@@ -125,7 +125,7 @@ def demo_39_independent_border_radius():
     }), row=1, col=1)
     grid.add(pill, row=3, col=3)
 
-    save(grid, "demo_39_independent_border_radius.svg")
+    save(grid, "39_independent_border_radius.svg")
 
 
 if __name__ == "__main__":

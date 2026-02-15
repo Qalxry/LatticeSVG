@@ -680,12 +680,20 @@ class Renderer:
             half_leading = (line_h - em_height) / 2.0
             baseline_offset = half_leading + _ascender
         else:
+            fp0 = ""
+            fm = None
             baseline_offset = font_size * 0.85
 
         # Handle text-overflow: ellipsis
         text_overflow = node.style.get("text-overflow")
         overflow = node.style.get("overflow")
         ws = node.style.get("white-space") or "normal"
+
+        # letter-spacing / word-spacing SVG attributes
+        ls_raw = node.style.get("letter-spacing")
+        ws_raw = node.style.get("word-spacing")
+        ls_px = 0.0 if (ls_raw is None or ls_raw == "normal") else float(ls_raw)
+        ws_px = 0.0 if (ws_raw is None or ws_raw == "normal") else float(ws_raw)
 
         for i, line in enumerate(node.lines):
             text = line.text
@@ -697,13 +705,13 @@ class Renderer:
                     break
                 if i == len(node.lines) - 1 or (i + 1) * line_h >= cb.height:
                     if line.width > cb.width:
-                        fp = ""
+                        _fp = ""
                         chain = getattr(node, '_resolved_font_chain', None)
                         if chain:
-                            fp = chain[0] if isinstance(chain, list) else chain
-                        text = self._truncate_with_ellipsis(text, cb.width, font_size, font_path=fp)
+                            _fp = chain[0] if isinstance(chain, list) else chain
+                        text = self._truncate_with_ellipsis(text, cb.width, font_size, font_path=_fp)
 
-            extra_attrs = {}
+            extra_attrs: dict = {}
             if ws in ("pre", "pre-wrap"):
                 extra_attrs["xml:space"] = "preserve"
 
@@ -715,12 +723,54 @@ class Renderer:
             )
             if text_decoration and text_decoration != "none":
                 text_kwargs["text_decoration"] = text_decoration
+            if ls_px:
+                extra_attrs["letter-spacing"] = f"{ls_px}"
+            if ws_px:
+                extra_attrs["word-spacing"] = f"{ws_px}"
 
             opacity = node.style.get("opacity")
             op = float(opacity) if isinstance(opacity, (int, float)) else 1.0
             if op < 1.0:
                 text_kwargs["opacity"] = op
 
+            # --- Justify rendering ---
+            if getattr(line, 'justified', False) and line.word_spacing_justify > 0:
+                if ' ' in text:
+                    # Western text: use SVG word-spacing attribute.
+                    # word_spacing_justify is the *extra* gap per space;
+                    # SVG word-spacing adds to the glyph advance of U+0020,
+                    # so the total matches the shaper's computation exactly.
+                    justify_ws = ws_px + line.word_spacing_justify
+                    j_attrs = dict(extra_attrs)
+                    j_attrs["word-spacing"] = f"{justify_ws}"
+                    t = dw.Text(text, font_size, lx, ly, **text_kwargs)
+                    t.args.update(j_attrs)
+                    group.append(t)
+                elif text:
+                    # CJK text (no spaces): per-character <text> elements.
+                    # Each <text> has one char so SVG letter-spacing has
+                    # no effect — add it manually to the advance.
+                    cur_x = lx
+                    n_chars = len(text)
+                    for ci, ch in enumerate(text):
+                        t = dw.Text(ch, font_size, cur_x, ly, **text_kwargs)
+                        if extra_attrs:
+                            t.args.update(extra_attrs)
+                        group.append(t)
+                        if ci < n_chars - 1:
+                            if fm and fp0:
+                                ch_w = fm.glyph_metrics(fp0, font_size, ch).advance_x
+                            else:
+                                ch_w = font_size * 0.6
+                            cur_x += ch_w + line.word_spacing_justify + ls_px
+                else:
+                    t = dw.Text(text, font_size, lx, ly, **text_kwargs)
+                    if extra_attrs:
+                        t.args.update(extra_attrs)
+                    group.append(t)
+                continue
+
+            # --- Normal rendering: single <text> per line ---
             t = dw.Text(
                 text,
                 font_size,
@@ -776,6 +826,12 @@ class Renderer:
         spans = node._spans or []
         rich_lines = node._rich_lines or []
 
+        # letter-spacing / word-spacing SVG attributes
+        ls_raw = node.style.get("letter-spacing")
+        ws_raw = node.style.get("word-spacing")
+        ls_px = 0.0 if (ls_raw is None or ls_raw == "normal") else float(ls_raw)
+        ws_px = 0.0 if (ws_raw is None or ws_raw == "normal") else float(ws_raw)
+
         opacity = node.style.get("opacity")
         op = float(opacity) if isinstance(opacity, (int, float)) else 1.0
 
@@ -791,7 +847,9 @@ class Renderer:
             # Math fragments remain as individual items.
             runs: list = []  # list of dicts
             cur_x = lx
-            for frag in rline.fragments:
+            is_cjk_j = getattr(rline, 'justified', False) and getattr(rline, '_cjk_justify', False)
+            n_frags = len(rline.fragments)
+            for fi, frag in enumerate(rline.fragments):
                 if frag.svg_fragment is not None:
                     runs.append({
                         "kind": "math", "x": cur_x, "frag": frag,
@@ -799,9 +857,11 @@ class Renderer:
                     cur_x += frag.width
                     continue
                 # Text fragment — try to merge with the previous run
+                # (skip merging for CJK justify so each char keeps its own x)
                 if (runs
                         and runs[-1]["kind"] == "text"
-                        and runs[-1]["span_index"] == frag.span_index):
+                        and runs[-1]["span_index"] == frag.span_index
+                        and not is_cjk_j):
                     runs[-1]["text"] += frag.text
                     runs[-1]["width"] += frag.width
                 else:
@@ -814,6 +874,17 @@ class Renderer:
                         "font_size": frag.font_size,
                     })
                 cur_x += frag.width
+                # Justify: add extra gap at word boundaries
+                if (getattr(rline, 'justified', False)
+                        and rline.word_spacing_justify > 0
+                        and frag.svg_fragment is None):
+                    if not frag.text.strip():
+                        # Western text: space fragment = word boundary
+                        cur_x += rline.word_spacing_justify
+                    elif is_cjk_j and fi < n_frags - 1:
+                        # CJK text: distribute gap after every
+                        # non-last text fragment
+                        cur_x += rline.word_spacing_justify
 
             # Phase 2 — Render each run with absolute positioning.
             for run in runs:
@@ -925,6 +996,10 @@ class Renderer:
                 # strip spaces inside the text run (SVG 1.1 default
                 # behaviour strips leading/trailing spaces from <text>).
                 t.args["xml:space"] = "preserve"
+                if ls_px:
+                    t.args["letter-spacing"] = f"{ls_px}"
+                if ws_px:
+                    t.args["word-spacing"] = f"{ws_px}"
                 group.append(t)
 
     @staticmethod

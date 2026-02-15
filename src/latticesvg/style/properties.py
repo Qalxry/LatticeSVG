@@ -128,6 +128,12 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
     "color": PropertyDef(
         default="#000000", inheritable=True, parser_hint="color"
     ),
+    "letter-spacing": PropertyDef(
+        default="normal", inheritable=True, parser_hint="length"
+    ),
+    "word-spacing": PropertyDef(
+        default="normal", inheritable=True, parser_hint="length"
+    ),
     "text-decoration": PropertyDef(
         default="none", inheritable=False, parser_hint="keyword"
     ),

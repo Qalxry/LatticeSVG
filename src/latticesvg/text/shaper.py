@@ -20,6 +20,8 @@ class Line:
     width: float          # measured width in px
     x_offset: float = 0.0 # horizontal offset after alignment
     char_count: int = 0
+    justified: bool = False            # True when text-align: justify applies
+    word_spacing_justify: float = 0.0  # extra gap per word boundary for justify
 
 
 # ---------------------------------------------------------------------------
@@ -90,14 +92,23 @@ def measure_text(
     size: int,
     *,
     fm: Optional[FontManager] = None,
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> float:
     """Return the total advance width of *text* in pixels."""
     if fm is None:
         fm = FontManager.instance()
     total = 0.0
-    for ch in text:
+    n = len(text)
+    for i, ch in enumerate(text):
         gm = fm.glyph_metrics(font_path, size, ch)
         total += gm.advance_x
+        # letter-spacing: extra space between characters (not after last)
+        if letter_spacing and i < n - 1:
+            total += letter_spacing
+        # word-spacing: extra space on space characters
+        if word_spacing and ch == ' ':
+            total += word_spacing
     return total
 
 
@@ -107,9 +118,13 @@ def measure_word(
     size: int,
     *,
     fm: Optional[FontManager] = None,
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> float:
     """Measure a single word's advance width."""
-    return measure_text(word, font_path, size, fm=fm)
+    return measure_text(word, font_path, size, fm=fm,
+                        letter_spacing=letter_spacing,
+                        word_spacing=word_spacing)
 
 
 # ---------------------------------------------------------------------------
@@ -126,6 +141,8 @@ def break_lines(
     overflow_wrap: str = "normal",
     *,
     fm: Optional[FontManager] = None,
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> List[Line]:
     """Break *text* into lines that fit within *available_width*.
 
@@ -146,21 +163,27 @@ def break_lines(
         fm = FontManager.instance()
 
     break_word = overflow_wrap in ("break-word", "anywhere")
+    _ls, _ws = letter_spacing, word_spacing
 
     if white_space == "pre":
-        return _break_pre(text, font_path, size, fm, wrap=False)
+        return _break_pre(text, font_path, size, fm, wrap=False,
+                          letter_spacing=_ls, word_spacing=_ws)
     if white_space == "pre-wrap":
-        return _break_pre(text, font_path, size, fm, wrap=True, available_width=available_width)
+        return _break_pre(text, font_path, size, fm, wrap=True, available_width=available_width,
+                          letter_spacing=_ls, word_spacing=_ws)
     if white_space == "pre-line":
-        return _break_pre_line(text, available_width, font_path, size, fm, break_word=break_word)
+        return _break_pre_line(text, available_width, font_path, size, fm, break_word=break_word,
+                               letter_spacing=_ls, word_spacing=_ws)
     if white_space == "nowrap":
         # Collapse whitespace, single line
         collapsed = " ".join(text.split())
-        w = measure_text(collapsed, font_path, size, fm=fm)
+        w = measure_text(collapsed, font_path, size, fm=fm,
+                         letter_spacing=_ls, word_spacing=_ws)
         return [Line(text=collapsed, width=w, char_count=len(collapsed))]
 
     # white_space == "normal" — default
-    return _break_normal(text, available_width, font_path, size, fm, break_word=break_word)
+    return _break_normal(text, available_width, font_path, size, fm, break_word=break_word,
+                         letter_spacing=_ls, word_spacing=_ws)
 
 
 def _break_normal(
@@ -170,6 +193,8 @@ def _break_normal(
     size: int,
     fm: FontManager,
     break_word: bool = False,
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> List[Line]:
     """Greedy line-breaking for 'normal' white-space mode.
 
@@ -181,6 +206,8 @@ def _break_normal(
     If a token overflows the remaining space on the current line but would
     fit on a fresh line, it simply moves to the next line (no breaking).
     """
+    _ls, _ws = letter_spacing, word_spacing
+
     # Collapse whitespace
     collapsed = " ".join(text.split())
     if not collapsed:
@@ -196,15 +223,24 @@ def _break_normal(
         nonlocal current_parts, current_width
         line_text = "".join(current_parts).rstrip()
         if line_text:
-            line_w = measure_text(line_text, font_path, size, fm=fm)
+            line_w = measure_text(line_text, font_path, size, fm=fm,
+                                  letter_spacing=_ls, word_spacing=_ws)
             lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
         current_parts = []
         current_width = 0.0
 
     for token_text, is_space in tokens:
-        token_w = measure_text(token_text, font_path, size, fm=fm)
+        token_w = measure_text(token_text, font_path, size, fm=fm,
+                               letter_spacing=_ls, word_spacing=_ws)
 
-        fits_current = (not current_parts) or (current_width + token_w <= available_width)
+        # letter-spacing bridge: when appending a new token to an
+        # existing line, the last char of the previous token and the
+        # first char of this token are adjacent — letter-spacing
+        # applies between them but isn't included in either token's
+        # individual width.
+        bridge = _ls if (current_parts and _ls and not is_space) else 0.0
+
+        fits_current = (not current_parts) or (current_width + bridge + token_w <= available_width)
 
         if not fits_current:
             if is_space:
@@ -220,9 +256,11 @@ def _break_normal(
                     token_text, available_width,
                     font_path, size, fm,
                     current_parts, lines,
+                    letter_spacing=_ls,
                 )
                 current_width = measure_text(
-                    "".join(current_parts), font_path, size, fm=fm
+                    "".join(current_parts), font_path, size, fm=fm,
+                    letter_spacing=_ls, word_spacing=_ws,
                 )
             else:
                 # Normal overflow — flush and start new line with this token
@@ -236,13 +274,15 @@ def _break_normal(
                     token_text, available_width,
                     font_path, size, fm,
                     current_parts, lines,
+                    letter_spacing=_ls,
                 )
                 current_width = measure_text(
-                    "".join(current_parts), font_path, size, fm=fm
+                    "".join(current_parts), font_path, size, fm=fm,
+                    letter_spacing=_ls, word_spacing=_ws,
                 )
             else:
                 current_parts.append(token_text)
-                current_width += token_w
+                current_width += bridge + token_w
 
     # Flush remainder
     if current_parts:
@@ -259,6 +299,7 @@ def _split_token_into_lines(
     fm: FontManager,
     current_parts: List[str],
     lines: List[Line],
+    letter_spacing: float = 0.0,
 ) -> None:
     """Split *token* character-by-character into lines of up to *available_width*.
 
@@ -270,12 +311,15 @@ def _split_token_into_lines(
 
     for ch in token:
         cw = fm.glyph_metrics(font_path, size, ch).advance_x
-        if buf and buf_w + cw > available_width:
+        effective_w = cw + letter_spacing if buf else cw  # no spacing before first
+        if buf and buf_w + effective_w > available_width:
             # Flush completed line
             lines.append(Line(text=buf, width=buf_w, char_count=len(buf)))
             buf = ch
             buf_w = cw
         else:
+            if buf:
+                buf_w += letter_spacing  # spacing between previous and this char
             buf += ch
             buf_w += cw
 
@@ -292,17 +336,21 @@ def _break_pre(
     fm: FontManager,
     wrap: bool = False,
     available_width: float = float("inf"),
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> List[Line]:
     """Line-breaking for 'pre'/'pre-wrap' white-space mode."""
     raw_lines = text.split("\n")
     result: List[Line] = []
     for raw in raw_lines:
         if not wrap or available_width == float("inf"):
-            w = measure_text(raw, font_path, size, fm=fm)
+            w = measure_text(raw, font_path, size, fm=fm,
+                             letter_spacing=letter_spacing, word_spacing=word_spacing)
             result.append(Line(text=raw, width=w, char_count=len(raw)))
         else:
             # Word-boundary wrapping for pre-wrap (preserves spaces)
-            sub_lines = _wrap_pre_line(raw, available_width, font_path, size, fm)
+            sub_lines = _wrap_pre_line(raw, available_width, font_path, size, fm,
+                                       letter_spacing=letter_spacing, word_spacing=word_spacing)
             result.extend(sub_lines)
     return result if result else [Line(text="", width=0.0, char_count=0)]
 
@@ -313,6 +361,8 @@ def _wrap_pre_line(
     font_path: str,
     size: int,
     fm: FontManager,
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> List[Line]:
     """Wrap a single physical line at word boundaries for pre-wrap.
 
@@ -322,6 +372,7 @@ def _wrap_pre_line(
     if not text:
         return [Line(text="", width=0.0, char_count=0)]
 
+    _ls, _ws = letter_spacing, word_spacing
     tokens = _tokenize_breakable(text)
     lines: List[Line] = []
     current_parts: List[str] = []
@@ -331,13 +382,15 @@ def _wrap_pre_line(
         nonlocal current_parts, current_width
         line_text = "".join(current_parts)
         if line_text or not lines:  # allow empty first line
-            line_w = measure_text(line_text, font_path, size, fm=fm) if line_text else 0.0
+            line_w = measure_text(line_text, font_path, size, fm=fm,
+                                  letter_spacing=_ls, word_spacing=_ws) if line_text else 0.0
             lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
         current_parts = []
         current_width = 0.0
 
     for token_text, is_space in tokens:
-        token_w = measure_text(token_text, font_path, size, fm=fm)
+        token_w = measure_text(token_text, font_path, size, fm=fm,
+                               letter_spacing=_ls, word_spacing=_ws)
 
         if current_parts and current_width + token_w > available_width:
             if is_space:
@@ -352,9 +405,11 @@ def _wrap_pre_line(
                     token_text, available_width,
                     font_path, size, fm,
                     current_parts, lines,
+                    letter_spacing=_ls,
                 )
                 current_width = measure_text(
-                    "".join(current_parts), font_path, size, fm=fm
+                    "".join(current_parts), font_path, size, fm=fm,
+                    letter_spacing=_ls, word_spacing=_ws,
                 )
             else:
                 current_parts = [token_text]
@@ -365,7 +420,8 @@ def _wrap_pre_line(
 
     # Flush remainder (always, even if empty — preserves trailing newlines)
     line_text = "".join(current_parts)
-    line_w = measure_text(line_text, font_path, size, fm=fm) if line_text else 0.0
+    line_w = measure_text(line_text, font_path, size, fm=fm,
+                          letter_spacing=_ls, word_spacing=_ws) if line_text else 0.0
     lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
 
     return lines
@@ -378,6 +434,8 @@ def _break_pre_line(
     size: int,
     fm: FontManager,
     break_word: bool = False,
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> List[Line]:
     """Line-breaking for 'pre-line' white-space mode.
 
@@ -388,7 +446,8 @@ def _break_pre_line(
     segments = text.split("\n")
     result: List[Line] = []
     for segment in segments:
-        sub = _break_normal(segment, available_width, font_path, size, fm, break_word=break_word)
+        sub = _break_normal(segment, available_width, font_path, size, fm, break_word=break_word,
+                            letter_spacing=letter_spacing, word_spacing=word_spacing)
         result.extend(sub)
     return result if result else [Line(text="", width=0.0, char_count=0)]
 
@@ -406,21 +465,40 @@ def align_lines(
     """Set ``x_offset`` on each line based on *text_align*.
 
     Does **not** mutate the input list; returns a new list.
+
+    For ``text-align: justify``, computes per-word (or per-character for
+    CJK) extra spacing.  The last line is always left-aligned (CSS
+    standard behaviour).
     """
     result: List[Line] = []
-    for line in lines:
+    num_lines = len(lines)
+    for i, line in enumerate(lines):
         offset = 0.0
+        justified = False
+        word_gap = 0.0
         if text_align == "center":
             offset = (available_width - line.width) / 2.0
         elif text_align == "right":
             offset = available_width - line.width
-        elif text_align == "justify" and line is not lines[-1]:
-            offset = 0.0  # justify handled per-word at render time
+        elif text_align == "justify" and i < num_lines - 1:
+            extra = available_width - line.width
+            if extra > 0:
+                words = line.text.split()
+                if len(words) > 1:
+                    # Western text: distribute extra space across word gaps
+                    word_gap = extra / (len(words) - 1)
+                    justified = True
+                elif line.char_count > 1 and ' ' not in line.text:
+                    # CJK text without spaces: distribute across char gaps
+                    word_gap = extra / (line.char_count - 1)
+                    justified = True
         result.append(Line(
             text=line.text,
             width=line.width,
             x_offset=max(0.0, offset),
             char_count=line.char_count,
+            justified=justified,
+            word_spacing_justify=word_gap,
         ))
     return result
 
@@ -458,6 +536,8 @@ def get_min_content_width(
     white_space: str = "normal",
     *,
     fm: Optional[FontManager] = None,
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> float:
     """Return the minimum content width — the width of the longest word.
 
@@ -467,7 +547,8 @@ def get_min_content_width(
     if fm is None:
         fm = FontManager.instance()
     if white_space in ("pre", "nowrap"):
-        return measure_text(text, font_path, size, fm=fm)
+        return measure_text(text, font_path, size, fm=fm,
+                            letter_spacing=letter_spacing, word_spacing=word_spacing)
     collapsed = " ".join(text.split())
     if not collapsed:
         return 0.0
@@ -475,7 +556,8 @@ def get_min_content_width(
     max_w = 0.0
     for token_text, is_space in tokens:
         if not is_space:
-            w = measure_text(token_text, font_path, size, fm=fm)
+            w = measure_text(token_text, font_path, size, fm=fm,
+                             letter_spacing=letter_spacing, word_spacing=word_spacing)
             max_w = max(max_w, w)
     return max_w
 
@@ -487,6 +569,8 @@ def get_max_content_width(
     white_space: str = "normal",
     *,
     fm: Optional[FontManager] = None,
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> float:
     """Return the max-content width — text on a single line."""
     if fm is None:
@@ -494,9 +578,12 @@ def get_max_content_width(
     if white_space == "pre":
         # Longest physical line
         raw_lines = text.split("\n")
-        return max((measure_text(l, font_path, size, fm=fm) for l in raw_lines), default=0.0)
+        return max((measure_text(l, font_path, size, fm=fm,
+                                 letter_spacing=letter_spacing, word_spacing=word_spacing)
+                    for l in raw_lines), default=0.0)
     collapsed = " ".join(text.split())
-    return measure_text(collapsed, font_path, size, fm=fm)
+    return measure_text(collapsed, font_path, size, fm=fm,
+                        letter_spacing=letter_spacing, word_spacing=word_spacing)
 
 
 # ---------------------------------------------------------------------------
@@ -523,6 +610,9 @@ class RichLine:
     fragments: List[SpanFragment] = field(default_factory=list)
     width: float = 0.0
     x_offset: float = 0.0
+    justified: bool = False            # True when text-align: justify applies
+    word_spacing_justify: float = 0.0  # extra gap per word boundary for justify
+    _cjk_justify: bool = False         # True when CJK per-char distribution
 
 
 # ---------------------------------------------------------------------------
@@ -574,11 +664,15 @@ def _measure_span_text(
     font_chain: list,
     size: int,
     fm: FontManager,
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> float:
     """Measure *text* using a font chain."""
     if not text:
         return 0.0
-    return measure_text(text, font_chain, size, fm=fm)
+    return measure_text(text, font_chain, size, fm=fm,
+                        letter_spacing=letter_spacing,
+                        word_spacing=word_spacing)
 
 
 # ---------------------------------------------------------------------------
@@ -595,6 +689,8 @@ def break_lines_rich(
     *,
     fm: Optional[FontManager] = None,
     math_backend: Optional[object] = None,
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> List[RichLine]:
     """Break a list of ``TextSpan`` into ``RichLine`` objects.
 
@@ -610,6 +706,7 @@ def break_lines_rich(
     break_word = overflow_wrap in ("break-word", "anywhere")
     collapse_ws = white_space in ("normal", "nowrap")
     wrap = white_space not in ("nowrap", "pre")
+    _ls, _ws = letter_spacing, word_spacing
 
     # ---- pre-process spans: resolve fonts, handle <br> ----
     # Build a flat list of "segment" dicts ready for tokenization.
@@ -702,7 +799,8 @@ def break_lines_rich(
             last = cur_frags[-1]
             stripped = last.text.rstrip(" ")
             if stripped:
-                new_w = _measure_span_text(stripped, [last.font_path] if last.font_path else base_font_chain, last.font_size, fm)
+                new_w = _measure_span_text(stripped, [last.font_path] if last.font_path else base_font_chain, last.font_size, fm,
+                                           letter_spacing=_ls, word_spacing=_ws)
                 cur_frags[-1] = SpanFragment(
                     text=stripped, width=new_w,
                     span_index=last.span_index,
@@ -754,7 +852,8 @@ def break_lines_rich(
                     _flush()  # newline = force break
                 tokens = _tokenize_breakable(sub) if sub else []
                 for tok_text, is_space in tokens:
-                    tok_w = _measure_span_text(tok_text, chain, sz, fm)
+                    tok_w = _measure_span_text(tok_text, chain, sz, fm,
+                                               letter_spacing=_ls, word_spacing=_ws)
                     if wrap and cur_frags and cur_width + tok_w > available_width and not is_space:
                         _flush()
                     cur_frags.append(SpanFragment(
@@ -767,7 +866,8 @@ def break_lines_rich(
         else:
             tokens = _tokenize_breakable(text)
             for tok_text, is_space in tokens:
-                tok_w = _measure_span_text(tok_text, chain, sz, fm)
+                tok_w = _measure_span_text(tok_text, chain, sz, fm,
+                                           letter_spacing=_ls, word_spacing=_ws)
 
                 fits = (not cur_frags) or (cur_width + tok_w <= available_width)
 
@@ -783,7 +883,8 @@ def break_lines_rich(
                         buf_w = 0.0
                         for ch in tok_text:
                             cw = fm.glyph_metrics(fp if isinstance(fp, str) else fp[0], sz, ch).advance_x
-                            if buf and buf_w + cw > available_width:
+                            effective_cw = cw + _ls if buf else cw
+                            if buf and buf_w + effective_cw > available_width:
                                 cur_frags.append(SpanFragment(
                                     text=buf, width=buf_w,
                                     span_index=span_idx,
@@ -795,6 +896,8 @@ def break_lines_rich(
                                 buf = ch
                                 buf_w = cw
                             else:
+                                if buf:
+                                    buf_w += _ls  # letter-spacing between chars
                                 buf += ch
                                 buf_w += cw
                         if buf:
@@ -842,18 +945,56 @@ def align_lines_rich(
     available_width: float,
     text_align: str = "left",
 ) -> List[RichLine]:
-    """Set ``x_offset`` on each ``RichLine`` based on *text_align*."""
+    """Set ``x_offset`` on each ``RichLine`` based on *text_align*.
+
+    For ``text-align: justify``, counts space fragments as word gaps and
+    distributes extra space evenly.  The last line stays left-aligned.
+    """
     result: List[RichLine] = []
-    for line in lines:
+    num_lines = len(lines)
+    for i, line in enumerate(lines):
         offset = 0.0
+        justified = False
+        word_gap = 0.0
+        is_cjk_justify = False
         if text_align == "center":
             offset = (available_width - line.width) / 2.0
         elif text_align == "right":
             offset = available_width - line.width
+        elif text_align == "justify" and i < num_lines - 1:
+            extra = available_width - line.width
+            if extra > 0:
+                # Count space-only fragments as word boundaries
+                space_count = 0
+                has_non_space = False
+                for frag in line.fragments:
+                    if frag.svg_fragment is not None:
+                        has_non_space = True
+                        continue
+                    if frag.text.strip():
+                        has_non_space = True
+                    elif frag.text == ' ':
+                        space_count += 1
+                if space_count > 0 and has_non_space:
+                    word_gap = extra / space_count
+                    justified = True
+                elif space_count == 0 and has_non_space:
+                    # CJK text: count total chars for per-char distribution
+                    total_chars = sum(
+                        len(f.text) for f in line.fragments
+                        if f.svg_fragment is None and f.text.strip()
+                    )
+                    if total_chars > 1:
+                        word_gap = extra / (total_chars - 1)
+                        justified = True
+                        is_cjk_justify = True
         result.append(RichLine(
             fragments=line.fragments,
             width=line.width,
             x_offset=max(0.0, offset),
+            justified=justified,
+            word_spacing_justify=word_gap,
+            _cjk_justify=is_cjk_justify,
         ))
     return result
 
@@ -881,6 +1022,8 @@ def get_min_content_width_rich(
     *,
     fm: Optional[FontManager] = None,
     math_backend: Optional[object] = None,
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> float:
     """Return the min-content width for a rich span list."""
     from ..markup.parser import TextSpan  # type: ignore
@@ -888,7 +1031,8 @@ def get_min_content_width_rich(
     if fm is None:
         fm = FontManager.instance()
     if white_space in ("pre", "nowrap"):
-        return get_max_content_width_rich(spans, base_font_chain, base_size, white_space, fm=fm, math_backend=math_backend)
+        return get_max_content_width_rich(spans, base_font_chain, base_size, white_space, fm=fm, math_backend=math_backend,
+                                          letter_spacing=letter_spacing, word_spacing=word_spacing)
 
     max_w = 0.0
     for span in spans:
@@ -910,7 +1054,8 @@ def get_min_content_width_rich(
         tokens = _tokenize_breakable(text)
         for tok_text, is_space in tokens:
             if not is_space:
-                w = _measure_span_text(tok_text, chain, sz, fm)
+                w = _measure_span_text(tok_text, chain, sz, fm,
+                                       letter_spacing=letter_spacing, word_spacing=word_spacing)
                 max_w = max(max_w, w)
     return max_w
 
@@ -923,6 +1068,8 @@ def get_max_content_width_rich(
     *,
     fm: Optional[FontManager] = None,
     math_backend: Optional[object] = None,
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
 ) -> float:
     """Return the max-content width for a rich span list (single line)."""
     from ..markup.parser import TextSpan  # type: ignore
@@ -947,6 +1094,7 @@ def get_max_content_width_rich(
         text = span.text
         if white_space not in ("pre", "pre-wrap"):
             text = _re.sub(r'\s+', ' ', text) if text else ""
-        w = _measure_span_text(text, chain, sz, fm)
+        w = _measure_span_text(text, chain, sz, fm,
+                               letter_spacing=letter_spacing, word_spacing=word_spacing)
         total += w
     return total

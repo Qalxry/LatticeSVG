@@ -131,7 +131,7 @@ def demo_42_gradient_bg():
 
     root.add(radial_grid)
 
-    save(root, "demo_42_gradient_bg.svg")
+    save(root, "42_gradient_bg.svg")
 
 
 if __name__ == "__main__":

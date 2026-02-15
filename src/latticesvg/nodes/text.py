@@ -101,6 +101,17 @@ class TextNode(Node):
             return max(1, int(fs))
         return 16
 
+    def _spacing_values(self) -> Tuple[float, float]:
+        """Return ``(letter_spacing, word_spacing)`` as floats.
+
+        The CSS value ``"normal"`` maps to ``0.0``.
+        """
+        ls = self.style.get("letter-spacing")
+        ws = self.style.get("word-spacing")
+        ls_val = 0.0 if (ls is None or ls == "normal") else float(ls)
+        ws_val = 0.0 if (ws is None or ws == "normal") else float(ws)
+        return (ls_val, ws_val)
+
     # -----------------------------------------------------------------
     # Measurement
     # -----------------------------------------------------------------
@@ -115,21 +126,28 @@ class TextNode(Node):
         ws = self.style.get("white-space") or "normal"
         ow = self.style.get("overflow-wrap") or "normal"
         fm = FontManager.instance()
+        ls_val, ws_val = self._spacing_values()
 
         if self._spans is not None:
             # Rich text measurement
             math_be = self._math_backend()
-            min_w = get_min_content_width_rich(self._spans, font_chain, size, ws, fm=fm, math_backend=math_be)
-            max_w = get_max_content_width_rich(self._spans, font_chain, size, ws, fm=fm, math_backend=math_be)
-            lines = break_lines_rich(self._spans, max_w + 1, font_chain, size, ws, ow, fm=fm, math_backend=math_be)
+            min_w = get_min_content_width_rich(self._spans, font_chain, size, ws, fm=fm, math_backend=math_be,
+                                               letter_spacing=ls_val, word_spacing=ws_val)
+            max_w = get_max_content_width_rich(self._spans, font_chain, size, ws, fm=fm, math_backend=math_be,
+                                               letter_spacing=ls_val, word_spacing=ws_val)
+            lines = break_lines_rich(self._spans, max_w + 1, font_chain, size, ws, ow, fm=fm, math_backend=math_be,
+                                     letter_spacing=ls_val, word_spacing=ws_val)
             lh = self._line_height()
             _, h = compute_rich_block_size(lines, lh, float(size))
         else:
-            min_w = get_min_content_width(self.text, font_chain, size, ws, fm=fm)
-            max_w = get_max_content_width(self.text, font_chain, size, ws, fm=fm)
+            min_w = get_min_content_width(self.text, font_chain, size, ws, fm=fm,
+                                          letter_spacing=ls_val, word_spacing=ws_val)
+            max_w = get_max_content_width(self.text, font_chain, size, ws, fm=fm,
+                                          letter_spacing=ls_val, word_spacing=ws_val)
 
             # Intrinsic height at max-content width (single line for normal)
-            lines = break_lines(self.text, max_w + 1, font_chain, size, ws, ow, fm=fm)
+            lines = break_lines(self.text, max_w + 1, font_chain, size, ws, ow, fm=fm,
+                                letter_spacing=ls_val, word_spacing=ws_val)
             lh = self._line_height()
             _, h = compute_text_block_size(lines, lh, float(size))
 
@@ -186,9 +204,11 @@ class TextNode(Node):
         if self._spans is not None:
             # ---- Rich text layout ----
             math_be = self._math_backend()
+            ls_val, ws_val = self._spacing_values()
             self._rich_lines = break_lines_rich(
                 self._spans, content_w, font_chain, size, ws, ow,
                 fm=fm, math_backend=math_be,
+                letter_spacing=ls_val, word_spacing=ws_val,
             )
             text_align = self.style.get("text-align") or "left"
             self._rich_lines = align_lines_rich(self._rich_lines, content_w, text_align)
@@ -199,7 +219,9 @@ class TextNode(Node):
         else:
             # ---- Plain text layout (original path) ----
             self._rich_lines = None
-            self.lines = break_lines(self.text, content_w, font_chain, size, ws, ow, fm=fm)
+            ls_val, ws_val = self._spacing_values()
+            self.lines = break_lines(self.text, content_w, font_chain, size, ws, ow, fm=fm,
+                                     letter_spacing=ls_val, word_spacing=ws_val)
             text_align = self.style.get("text-align") or "left"
             self.lines = align_lines(self.lines, content_w, text_align)
             lh = self._line_height()

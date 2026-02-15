@@ -94,7 +94,7 @@ def demo_40_clip_path():
     }), row=1, col=1)
     grid.add(hex_box, row=2, col=3)
 
-    save(grid, "demo_40_clip_path.svg")
+    save(grid, "40_clip_path.svg")
 
 
 if __name__ == "__main__":

@@ -124,7 +124,7 @@ def demo_41_repeat_minmax():
     grid5.add(_cell("1fr\n弹性", "#d35400"))
     root.add(grid5)
 
-    save(root, "demo_41_repeat_minmax.svg")
+    save(root, "41_repeat_minmax.svg")
 
 
 if __name__ == "__main__":
