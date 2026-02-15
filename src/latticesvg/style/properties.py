@@ -64,7 +64,8 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
     "border-left-style": PropertyDef(default="none", parser_hint="keyword"),
 
     # Border radius (shorthand is expanded into four longhands)
-    "border-radius": PropertyDef(default="0px", parser_hint="length"),
+    # NOTE: "border-radius" itself is NOT registered here — it is a
+    # shorthand handled by ``expand_shorthand()`` in parser.py.
     "border-top-left-radius": PropertyDef(default="0px", parser_hint="length"),
     "border-top-right-radius": PropertyDef(default="0px", parser_hint="length"),
     "border-bottom-right-radius": PropertyDef(default="0px", parser_hint="length"),
@@ -114,7 +115,7 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
         default="left", inheritable=True, parser_hint="keyword"
     ),
     "line-height": PropertyDef(
-        default="1.2", inheritable=True, parser_hint="length"
+        default="1.2", inheritable=True, parser_hint="line-height"
     ),
     "white-space": PropertyDef(
         default="normal", inheritable=True, parser_hint="keyword"

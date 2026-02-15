@@ -108,7 +108,7 @@ def demo_22_image_gallery():
             "display": "flex", "align-items": "center",
         }), row=11, col=j + 2)
 
-    save(grid, "22_image_gallery.svg", total_w)
+    save(grid, "22_image_gallery.svg")
     print(f"  → 9 个模型 × 10 张图片对比，宽 {total_w:.0f}px")
     
 if __name__ == "__main__":

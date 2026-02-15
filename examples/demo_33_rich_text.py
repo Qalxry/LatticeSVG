@@ -71,7 +71,7 @@ def demo_33_rich_text():
         markup="html",
     ))
 
-    save(grid, "33_rich_text.svg", 600)
+    save(grid, "33_rich_text.svg")
 
 
 if __name__ == "__main__":

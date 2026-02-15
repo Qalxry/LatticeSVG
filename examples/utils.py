@@ -26,11 +26,7 @@ class ColorBox(Node):
 
 
 def save(node: Node, filename: str, width: float = None, embed_fonts: bool = False) -> Path:
-    """布局 → 渲染 → 保存 SVG。"""
-    if width is None:
-        w = node.style.get("width")
-        width = float(w) if isinstance(w, (int, float)) else 800.0
-    node.layout(available_width=width) if hasattr(node, 'layout') else None
+    """渲染 → 保存 SVG（layout 由 render 自动触发）。"""
     renderer = Renderer()
     path = OUTPUT_DIR / filename
     renderer.render(node, str(path), embed_fonts=embed_fonts)

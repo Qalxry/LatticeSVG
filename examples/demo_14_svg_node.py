@@ -38,7 +38,7 @@ def demo_14_svg_node():
         "padding": "10px",
     }), row=1, col=2)
 
-    save(grid, "14_svg_node.svg", 500)
+    save(grid, "14_svg_node.svg")
     
 if __name__ == "__main__":
     demo_14_svg_node()

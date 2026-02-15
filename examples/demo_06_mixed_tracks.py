@@ -27,7 +27,7 @@ def demo_06_mixed_tracks():
             **{"background-color": color}
         ))
 
-    save(grid, "06_mixed_tracks.svg", 800)
+    save(grid, "06_mixed_tracks.svg")
     
 if __name__ == "__main__":
     demo_06_mixed_tracks()

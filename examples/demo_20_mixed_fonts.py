@@ -63,7 +63,7 @@ def demo_20_mixed_fonts():
     )
     grid.add(tech, row=3, col=1)
 
-    save(grid, "20_mixed_fonts.svg", 600)
+    save(grid, "20_mixed_fonts.svg")
     print("  → 标题与正文使用 Times New Roman + SimSun 混合渲染")
     
 if __name__ == "__main__":

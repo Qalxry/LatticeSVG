@@ -707,14 +707,11 @@ def compute_text_block_size(
 ) -> tuple:
     """Return ``(width, height)`` of a text block.
 
-    *line_height* is either a multiplier (e.g. 1.5) or absolute px value.
-    If multiplier (≤ 5), it's relative to *font_size*.
+    *line_height* is the resolved line-height in absolute px.
+    *font_size* is retained for API compatibility but unused when
+    *line_height* is already absolute.
     """
-    if line_height <= 5.0:
-        # Treat as multiplier
-        lh = font_size * line_height
-    else:
-        lh = line_height
+    lh = line_height
 
     max_width = max((l.width for l in lines), default=0.0)
     total_height = lh * len(lines) if lines else 0.0
@@ -1325,10 +1322,7 @@ def compute_rich_block_size(
     font_size: float,
 ) -> tuple:
     """Return ``(width, height)`` for a rich text block."""
-    if line_height <= 5.0:
-        lh = font_size * line_height
-    else:
-        lh = line_height
+    lh = line_height
     max_w = max((l.width for l in lines), default=0.0)
     total_h = lh * len(lines) if lines else 0.0
     return (max_w, total_h)

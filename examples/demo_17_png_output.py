@@ -25,7 +25,6 @@ def demo_17_png_output():
     for c in colors:
         grid.add(ColorBox(50, 50, **{"background-color": c}))
 
-    grid.layout(available_width=400)
     renderer = Renderer()
 
     png_path = OUTPUT_DIR / "17_png_output.png"

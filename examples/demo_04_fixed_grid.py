@@ -23,7 +23,7 @@ def demo_04_fixed_grid():
             **{"background-color": color}
         ))
 
-    save(grid, "04_fixed_grid.svg", 600)
+    save(grid, "04_fixed_grid.svg")
     
 if __name__ == "__main__":
     demo_04_fixed_grid()

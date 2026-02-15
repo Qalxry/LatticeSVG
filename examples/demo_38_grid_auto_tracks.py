@@ -105,7 +105,7 @@ def demo_38_grid_auto_tracks():
         grid_c.add(ColorBox(40, h, **{"background-color": color}))
     root.add(grid_c)
 
-    save(root, "38_grid_auto_tracks.svg", 500)
+    save(root, "38_grid_auto_tracks.svg")
 
 
 if __name__ == "__main__":

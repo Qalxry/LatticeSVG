@@ -55,7 +55,7 @@ def demo_36_inline_math():
         markup="markdown",
     ))
 
-    save(grid, "36_inline_math.svg", 650)
+    save(grid, "36_inline_math.svg")
 
 
 if __name__ == "__main__":

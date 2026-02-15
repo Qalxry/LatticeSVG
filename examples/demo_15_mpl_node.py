@@ -45,7 +45,7 @@ def demo_15_mpl_node():
     grid.add(MplNode(fig1), row=1, col=1)
     grid.add(MplNode(fig2), row=1, col=2)
 
-    save(grid, "15_mpl_node.svg", 800)
+    save(grid, "15_mpl_node.svg")
 
     plt.close("all")
     

@@ -27,7 +27,7 @@ def demo_05_fr_grid():
             **{"background-color": color}
         ))
 
-    save(grid, "05_fr_grid.svg", 700)
+    save(grid, "05_fr_grid.svg")
     
 if __name__ == "__main__":
     demo_05_fr_grid()

@@ -36,7 +36,7 @@ def demo_09_alignment():
         })
         grid.add(box)
 
-    save(grid, "09_alignment.svg", 600)
+    save(grid, "09_alignment.svg")
 
 if __name__ == "__main__":
     demo_09_alignment()

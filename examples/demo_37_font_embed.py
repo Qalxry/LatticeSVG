@@ -65,9 +65,7 @@ def demo_37_font_embed():
         markup="html",
     ))
     
-    # ── 布局 ──
-    root.layout(available_width=700)
-
+    # ── 渲染 ──
     renderer = Renderer()
 
     # --- 不嵌入字体（参考） ---

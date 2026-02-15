@@ -78,7 +78,7 @@ def demo_XX_feature():
     grid.add(...)
     
     # 保存输出
-    save(grid, "XX_feature.svg", 600)
+    save(grid, "XX_feature.svg")
     
 if __name__ == "__main__":
     demo_XX_feature()
@@ -88,7 +88,7 @@ if __name__ == "__main__":
 
 `utils.py` 提供共享工具：
 - `ColorBox` - 可视化布局的彩色方块
-- `save(node, filename, width)` - 布局 + 渲染 + 保存
+- `save(node, filename)` - 布局 + 渲染 + 保存
 - `heading(title)` - 打印章节标题
 - `OUTPUT_DIR` - 输出目录路径
 

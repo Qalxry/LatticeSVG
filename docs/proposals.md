@@ -27,7 +27,19 @@ LatticeSVG v0.1.0 已是一个**功能完备的版本**：
 
 ## P0 — 正确性缺陷（直接影响输出结果）
 
-### P0-1. `add()` 不触发样式继承
+> 全部 7 个 P0 修复已完成，352 个测试全部通过。以下是各项修复的摘要：
+> 
+> | 编号 | 问题 | 修复方式 |
+> |------|------|----------|
+> | P0-1 | `add()` 不触发样式继承 | 新增 `_rebind_parent()` 方法，跟踪 `_explicit_props`，仅更新非显式设置的可继承属性 |
+> | P0-2 | `line-height ≤ 5.0` 魔法阈值 | 新增 `LineHeightMultiplier` 冻结数据类保留类型信息，移除 4 处 `≤ 5.0` 启发式判断 |
+> | P0-3 | `rem` 等价于 `em` | 为 `parse_value()` 新增 `root_font_size` 参数（默认 16），`rem` 分支使用该参数 |
+> | P0-4 | `margin` 可解析但不生效 | 设置 margin 时发出 `warnings.warn()`，移除 6 个模板中的 margin 定义 |
+> | P0-5 | `border-radius` 双重注册 | 从 `PROPERTY_REGISTRY` 移除简写属性，仅保留四个长写属性 |
+> | P0-6 | 圆角边框静默丢弃多边样式 | 检测四边样式不一致时发出 `warnings.warn()` |
+> | P0-7 | 行轨道计算中 `layout()` 副作用 | 在测量性 `layout()` 调用前后保存/恢复 `border_box`、`padding_box`、`content_box` |
+
+### P0-1. `add()` 不触发样式继承 ✅ 已修复
 
 **位置**：`nodes/base.py:95-102`
 
@@ -50,7 +62,7 @@ if not isinstance(child.style, ComputedStyle):   # ← 永远 False
 
 ---
 
-### P0-2. `line-height` ≤ 5.0 魔法阈值
+### P0-2. `line-height` ≤ 5.0 魔法阈值 ✅ 已修复
 
 **位置**：`text/shaper.py:713`、`text/shaper.py:1328`、`render/renderer.py:978`、`render/renderer.py:1122`（共 4 处）
 
@@ -72,7 +84,7 @@ else:
 
 ---
 
-### P0-3. `rem` 单位等价于 `em`
+### P0-3. `rem` 单位等价于 `em` ✅ 已修复
 
 **位置**：`style/parser.py` 的 `parse_value()` 函数
 
@@ -93,7 +105,7 @@ elif unit == 'rem':
 
 ---
 
-### P0-4. `margin` 属性可解析但布局从不使用
+### P0-4. `margin` 属性可解析但布局从不使用 ✅ 已修复
 
 **位置**：`style/properties.py`（注册了 5 个 margin 属性）、`layout/grid_solver.py`（无任何 margin 读取）
 
@@ -109,7 +121,7 @@ elif unit == 'rem':
 
 ---
 
-### P0-5. `border-radius` 同时作为简写属性和普通属性注册
+### P0-5. `border-radius` 同时作为简写属性和普通属性注册 ✅ 已修复
 
 **位置**：`style/properties.py:73`（在 `PROPERTY_REGISTRY` 中注册）、`style/parser.py` 的 `expand_shorthand()`（作为简写展开）
 
@@ -119,7 +131,7 @@ elif unit == 'rem':
 
 ---
 
-### P0-6. 圆角边框只渲染单边样式
+### P0-6. 圆角边框只渲染单边样式 ✅ 已修复
 
 **位置**：`render/renderer.py` 约第 530–545 行
 
@@ -131,7 +143,7 @@ elif unit == 'rem':
 
 ---
 
-### P0-7. 行轨道内在尺寸计算中 `layout()` 的副作用
+### P0-7. 行轨道内在尺寸计算中 `layout()` 的副作用 ✅ 已修复
 
 **位置**：`layout/grid_solver.py` 约第 658–664 行
 

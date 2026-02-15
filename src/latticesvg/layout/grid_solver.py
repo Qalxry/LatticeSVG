@@ -658,9 +658,16 @@ class GridSolver:
                         c = LayoutConstraints(available_width=item_w)
                         min_w, max_w, min_h = item.node.measure(c)
                         # Row track: base_size and growth_limit are heights
-                        # Re-measure with actual available width to get correct height
+                        # Re-measure with actual available width to get correct height.
+                        # Save/restore box model to avoid side-effects during sizing.
+                        _saved = (
+                            item.node.border_box.copy(),
+                            item.node.padding_box.copy(),
+                            item.node.content_box.copy(),
+                        )
                         item.node.layout(c)
                         item_h = item.node.border_box.height
+                        item.node.border_box, item.node.padding_box, item.node.content_box = _saved
                         t.base_size = max(t.base_size, item_h)
                         if t.growth_limit == float("inf"):
                             t.growth_limit = t.base_size
@@ -764,8 +771,15 @@ class GridSolver:
             item_w = self._item_column_width(item)
             c = LayoutConstraints(available_width=item_w)
             _, _, min_h = item.node.measure(c)
+            # Layout to get accurate wrapped height; save/restore box model.
+            _saved = (
+                item.node.border_box.copy(),
+                item.node.padding_box.copy(),
+                item.node.content_box.copy(),
+            )
             item.node.layout(c)
             needed = item.node.border_box.height
+            item.node.border_box, item.node.padding_box, item.node.content_box = _saved
 
         excess = needed - current_sum
         if excess <= 0:

@@ -45,7 +45,7 @@ def demo_13_text_whitespace():
         },
     ))
 
-    save(grid, "13_text_whitespace.svg", 600)
+    save(grid, "13_text_whitespace.svg")
     
 if __name__ == "__main__":
     demo_13_text_whitespace()

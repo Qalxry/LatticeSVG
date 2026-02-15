@@ -53,7 +53,7 @@ def demo_34_markdown_text():
         markup="markdown",
     ))
 
-    save(grid, "34_markdown_text.svg", 600)
+    save(grid, "34_markdown_text.svg")
 
 
 if __name__ == "__main__":

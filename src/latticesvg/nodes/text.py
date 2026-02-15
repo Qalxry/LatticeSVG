@@ -287,10 +287,15 @@ class TextNode(Node):
     # -----------------------------------------------------------------
 
     def _line_height(self) -> float:
+        """Return the resolved line-height in absolute px."""
+        from ..style.parser import LineHeightMultiplier
         lh = self.style.get("line-height")
+        fs = self._font_size_int()
+        if isinstance(lh, LineHeightMultiplier):
+            return lh.resolve(fs)
         if isinstance(lh, (int, float)):
             return float(lh)
-        return 1.2
+        return fs * 1.2
 
     def _math_backend(self):
         """Return the active math backend, or *None* if unavailable."""

@@ -46,6 +46,25 @@ AUTO = AutoValue()
 
 
 @dataclass(frozen=True)
+class LineHeightMultiplier:
+    """A unitless ``line-height`` multiplier (e.g. ``1.5``).
+
+    CSS distinguishes ``line-height: 1.5`` (multiplier, relative to
+    *font-size*) from ``line-height: 24px`` (absolute).  This wrapper
+    preserves that distinction so downstream code does not need to
+    guess.
+    """
+    value: float
+
+    def resolve(self, font_size: float) -> float:
+        """Return the absolute line-height in px."""
+        return self.value * font_size
+
+    def __repr__(self) -> str:
+        return f"LineHeightMultiplier({self.value})"
+
+
+@dataclass(frozen=True)
 class MinContent:
     """Sentinel for ``min-content``."""
     def __repr__(self) -> str:
@@ -195,6 +214,7 @@ def parse_value(
     *,
     reference_length: Optional[float] = None,
     font_size: Optional[float] = None,
+    root_font_size: Optional[float] = None,
 ) -> Any:
     """Parse a single CSS value string into a resolved Python value.
 
@@ -206,7 +226,9 @@ def parse_value(
     reference_length : float, optional
         The reference length for resolving ``%`` values.
     font_size : float, optional
-        Current computed font-size for resolving ``em`` / ``rem`` units.
+        Current computed font-size for resolving ``em`` units.
+    root_font_size : float, optional
+        Root element font-size for resolving ``rem`` units (default 16).
 
     Returns
     -------
@@ -220,7 +242,8 @@ def parse_value(
         return raw
     if isinstance(raw, list):
         return [
-            parse_value(v, reference_length=reference_length, font_size=font_size)
+            parse_value(v, reference_length=reference_length,
+                        font_size=font_size, root_font_size=root_font_size)
             for v in raw
         ]
 
@@ -266,8 +289,12 @@ def parse_value(
             # Return a deferred percentage object
             return _Percentage(num)
         if unit in ("em", "rem"):
-            fs = font_size if font_size is not None else 16.0
-            return num * fs
+            if unit == "rem":
+                rfs = root_font_size if root_font_size is not None else 16.0
+                return num * rfs
+            else:
+                fs = font_size if font_size is not None else 16.0
+                return num * fs
         if unit == "fr":
             return FrValue(num)
         if unit == "pt":

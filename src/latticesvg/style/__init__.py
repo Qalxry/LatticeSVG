@@ -1,4 +1,4 @@
-from .parser import parse_value, FrValue, BoxShadow, TransformFunction, FilterFunction
+from .parser import parse_value, FrValue, LineHeightMultiplier, BoxShadow, TransformFunction, FilterFunction
 from .properties import PROPERTY_REGISTRY, PropertyDef
 from .computed import ComputedStyle
 

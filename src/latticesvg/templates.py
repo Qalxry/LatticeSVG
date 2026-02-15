@@ -76,7 +76,6 @@ TITLE = {
     "font-weight": "bold",
     "color": "#1a1a1a",
     "text-align": "center",
-    "margin": "0 0 12px 0",
     "line-height": "1.3",
 }
 
@@ -84,7 +83,6 @@ SUBTITLE = {
     "font-size": "20px",
     "font-weight": "bold",
     "color": "#333333",
-    "margin": "0 0 8px 0",
     "line-height": "1.4",
 }
 
@@ -92,7 +90,6 @@ H1 = {
     "font-size": "24px",
     "font-weight": "bold",
     "color": "#222222",
-    "margin": "16px 0 8px 0",
     "line-height": "1.3",
 }
 
@@ -100,7 +97,6 @@ H2 = {
     "font-size": "20px",
     "font-weight": "bold",
     "color": "#333333",
-    "margin": "12px 0 6px 0",
     "line-height": "1.4",
 }
 
@@ -108,7 +104,6 @@ H3 = {
     "font-size": "16px",
     "font-weight": "bold",
     "color": "#444444",
-    "margin": "8px 0 4px 0",
     "line-height": "1.4",
 }
 
@@ -124,7 +119,6 @@ CAPTION = {
     "color": "#888888",
     "text-align": "center",
     "line-height": "1.4",
-    "margin": "4px 0 0 0",
 }
 
 CODE = {

@@ -26,7 +26,7 @@ def demo_07_auto_placement():
             **{"background-color": color}
         ))
 
-    save(grid, "07_auto_placement.svg", 500)
+    save(grid, "07_auto_placement.svg")
 
 if __name__ == "__main__":
     demo_07_auto_placement()

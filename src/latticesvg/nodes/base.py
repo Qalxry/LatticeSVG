@@ -98,7 +98,9 @@ class Node:
         """
         child.parent = self
         # Re-compute style with parent inheritance
-        if not isinstance(child.style, ComputedStyle):
+        if isinstance(child.style, ComputedStyle):
+            child.style._rebind_parent(self.style)
+        else:
             child.style = ComputedStyle(None, parent_style=self.style)
 
         child.placement = PlacementHint(

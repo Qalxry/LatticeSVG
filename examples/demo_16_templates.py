@@ -29,7 +29,7 @@ def demo_16_templates():
     grid.add(TextNode("使用 CAPTION 模板 — 图表说明文字", style=templates.CAPTION))
     grid.add(TextNode("CODE 模板\n  def hello():\n    print('world')", style=templates.CODE))
 
-    save(grid, "16_templates.svg", 600)
+    save(grid, "16_templates.svg")
     
 if __name__ == "__main__":
     demo_16_templates()

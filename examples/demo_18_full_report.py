@@ -102,7 +102,7 @@ def demo_18_full_report():
     }))
     page.add(footer)
 
-    save(page, "18_full_report.svg", 800)
+    save(page, "18_full_report.svg")
     
 if __name__ == "__main__":
     demo_18_full_report()

@@ -62,7 +62,7 @@ def demo_35_math_formula():
         style={"font-size": "22px", "padding": "8px", "text-align": "center"},
     ))
 
-    save(grid, "35_math_formula.svg", 700)
+    save(grid, "35_math_formula.svg")
 
 
 if __name__ == "__main__":

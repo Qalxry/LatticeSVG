@@ -43,7 +43,7 @@ def demo_21_overflow_wrap():
     )
     grid.add(right, row=1, col=2)
 
-    save(grid, "21_overflow_wrap.svg", 400)
+    save(grid, "21_overflow_wrap.svg")
     print("  → 左列：长单词溢出不断行 / 右列：overflow-wrap: break-word 自动断词")
     
 if __name__ == "__main__":

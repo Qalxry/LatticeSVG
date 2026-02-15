@@ -20,8 +20,6 @@ def demo_29_render_to_drawing():
         "font-size": "18px", "color": "#2c3e50", "text-align": "center",
     }), row=1, col=1)
 
-    grid.layout(available_width=400)
-
     renderer = Renderer()
     drawing = renderer.render_to_drawing(grid)
 

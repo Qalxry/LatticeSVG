@@ -33,7 +33,7 @@ def demo_11_box_model():
         "border-color": "#27ae60",
     }))
 
-    save(grid, "11_box_model.svg", 500)
+    save(grid, "11_box_model.svg")
     
 if __name__ == "__main__":
     demo_11_box_model()

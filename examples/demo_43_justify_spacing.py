@@ -169,7 +169,7 @@ def demo_43_justify_spacing():
         "outline": "1px dashed #cccccc",
     }))
 
-    save(grid, "43_justify_spacing.svg", 520)
+    save(grid, "43_justify_spacing.svg")
 
 
 if __name__ == "__main__":

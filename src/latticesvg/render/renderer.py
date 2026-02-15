@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 import os
 import tempfile
+import warnings
 from typing import Optional, Tuple, TYPE_CHECKING
 
 import drawsvg as dw
@@ -66,8 +67,10 @@ class Renderer:
     ) -> dw.Drawing:
         """Render *node* to a ``drawsvg.Drawing`` without writing any file.
 
-        Useful when you want to further manipulate the drawing — add
-        watermarks, merge multiple layouts, etc.
+        A full ``layout()`` pass is performed automatically before
+        rendering, so callers do **not** need to call ``node.layout()``
+        explicitly.  (Calling it beforehand is harmless — it will simply
+        be executed again to guarantee up-to-date geometry.)
 
         Parameters
         ----------
@@ -75,6 +78,8 @@ class Renderer:
             If *True*, subset and embed all used fonts as WOFF2
             ``@font-face`` rules.
         """
+        # Always (re-)layout to ensure geometry is up-to-date.
+        node.layout()
         bb = node.border_box
         self.drawing = dw.Drawing(bb.width, bb.height)
         self._render_node(node, offset_x=-bb.x, offset_y=-bb.y)
@@ -537,27 +542,42 @@ class Renderer:
 
         if any_radius:
             # Rounded border — pick the first available border side's properties.
+            # Warn if sides have different widths/colors/styles.
+            active_sides = []
             for side in ("top", "right", "bottom", "left"):
                 bw = s._float(f"border-{side}-width")
                 bc = s.get(f"border-{side}-color")
                 bs = s.get(f"border-{side}-style") or "solid"
                 if bw > 0 and bc and bc != "none":
-                    kwargs: dict = dict(
-                        fill="none",
-                        stroke=bc,
-                        stroke_width=bw,
+                    active_sides.append((side, bw, bc, bs))
+            if len(active_sides) > 1:
+                widths = {a[1] for a in active_sides}
+                colors = {a[2] for a in active_sides}
+                styles = {a[3] for a in active_sides}
+                if len(widths) > 1 or len(colors) > 1 or len(styles) > 1:
+                    warnings.warn(
+                        "Rounded borders with different per-side widths, colors, "
+                        "or styles are not fully supported. Only the first "
+                        "active side's properties will be used.",
+                        stacklevel=2,
                     )
-                    da = self._dash_array(bs, bw)
-                    if da:
-                        kwargs["stroke_dasharray"] = da
-                    if uniform:
-                        kwargs["rx"] = radii[0]
-                        kwargs["ry"] = radii[0]
-                        group.append(dw.Rectangle(x, y, w, h, **kwargs))
-                    else:
-                        group.append(self._rounded_rect_path(
-                            x, y, w, h, *radii, **kwargs))
-                    break
+            for side, bw, bc, bs in (active_sides or []):
+                kwargs: dict = dict(
+                    fill="none",
+                    stroke=bc,
+                    stroke_width=bw,
+                )
+                da = self._dash_array(bs, bw)
+                if da:
+                    kwargs["stroke_dasharray"] = da
+                if uniform:
+                    kwargs["rx"] = radii[0]
+                    kwargs["ry"] = radii[0]
+                    group.append(dw.Rectangle(x, y, w, h, **kwargs))
+                else:
+                    group.append(self._rounded_rect_path(
+                        x, y, w, h, *radii, **kwargs))
+                break
             return
 
         # No radius — per-side lines (supports different widths/colors/styles).
@@ -975,10 +995,7 @@ class Renderer:
         text_decoration = node.style.get("text-decoration") or "none"
 
         lh_val = node._line_height()
-        if lh_val <= 5.0:
-            line_h = font_size * lh_val
-        else:
-            line_h = lh_val
+        line_h = lh_val
 
         # Compute precise ascender for baseline positioning.
         font_chain = getattr(node, '_resolved_font_chain', None)
@@ -1119,7 +1136,7 @@ class Renderer:
         base_style = node.style.get("font-style") or "normal"
 
         lh_val = node._line_height()
-        line_h = font_size * lh_val if lh_val <= 5.0 else lh_val
+        line_h = lh_val
 
         # Baseline offset
         font_chain = getattr(node, '_resolved_font_chain', None)

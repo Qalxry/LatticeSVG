@@ -43,7 +43,7 @@ def demo_12_text_basic():
         "text-align": "right",
     }))
 
-    save(grid, "12_text_basic.svg", 600)
+    save(grid, "12_text_basic.svg")
     
 if __name__ == "__main__":
     demo_12_text_basic()

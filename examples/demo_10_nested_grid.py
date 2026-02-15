@@ -34,7 +34,7 @@ def demo_10_nested_grid():
 
     outer.add(inner, row=1, col=2)
 
-    save(outer, "10_nested_grid.svg", 700)
+    save(outer, "10_nested_grid.svg")
     
 if __name__ == "__main__":
     demo_10_nested_grid()

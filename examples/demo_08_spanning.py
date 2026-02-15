@@ -33,7 +33,7 @@ def demo_08_spanning():
     grid.add(ColorBox(50, 80, **{"background-color": "#1abc9c"}),
              row=3, col=2, col_span=2)
 
-    save(grid, "08_spanning.svg", 500)
+    save(grid, "08_spanning.svg")
 
 if __name__ == "__main__":
     demo_08_spanning()

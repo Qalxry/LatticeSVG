@@ -169,16 +169,16 @@ class TestAlignLines:
 class TestTextBlockSize:
     def test_single_line(self):
         lines = [Line("Hello", 50, char_count=5)]
-        w, h = compute_text_block_size(lines, 1.5, 16)
+        w, h = compute_text_block_size(lines, 24.0, 16)  # 24px absolute
         assert w == 50.0
-        assert h == pytest.approx(24.0)  # 16 * 1.5
+        assert h == pytest.approx(24.0)
 
     def test_multiple_lines(self):
         lines = [
             Line("Hello", 50, char_count=5),
             Line("World", 50, char_count=5),
         ]
-        w, h = compute_text_block_size(lines, 1.5, 16)
+        w, h = compute_text_block_size(lines, 24.0, 16)  # 24px absolute
         assert w == 50.0
         assert h == pytest.approx(48.0)  # 2 * 24
 

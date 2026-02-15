@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import warnings
 from typing import Any, Dict, Optional
 
 from .parser import (
     AUTO,
     FrValue,
+    LineHeightMultiplier,
     _Percentage,
     expand_shorthand,
     parse_box_shadow,
@@ -19,6 +21,37 @@ from .parser import (
     parse_value,
 )
 from .properties import PROPERTY_REGISTRY, get_default, is_inheritable
+
+import re
+
+_RE_HAS_UNIT = re.compile(r"[a-zA-Z]+\s*$")
+
+
+def _parse_line_height(raw: Any, *, font_size: float = 16.0) -> Any:
+    """Parse a ``line-height`` value, preserving the multiplier vs absolute distinction.
+
+    * A bare number (``1.5``, ``"1.5"``) → ``LineHeightMultiplier(1.5)``
+    * A length with a unit (``"24px"``, ``"1.5em"``) → ``float`` (absolute px)
+    * The keyword ``"normal"`` → ``LineHeightMultiplier(1.2)``
+    """
+    if isinstance(raw, LineHeightMultiplier):
+        return raw
+    if isinstance(raw, (int, float)):
+        return LineHeightMultiplier(float(raw))
+    if not isinstance(raw, str):
+        return LineHeightMultiplier(1.2)
+    s = raw.strip()
+    if s.lower() == "normal":
+        return LineHeightMultiplier(1.2)
+    # Check if the string has a unit suffix (px, em, rem, pt, %)
+    if _RE_HAS_UNIT.search(s):
+        # Has a unit → parse as a normal length, returns absolute px
+        return parse_value(s, font_size=font_size)
+    # Bare number (no unit) → multiplier
+    try:
+        return LineHeightMultiplier(float(s))
+    except ValueError:
+        return LineHeightMultiplier(1.2)
 
 
 class ComputedStyle:
@@ -34,7 +67,7 @@ class ComputedStyle:
     reads the ``font-size`` property.
     """
 
-    __slots__ = ("_values",)
+    __slots__ = ("_values", "_raw", "_explicit_props", "_pct_originals")
 
     def __init__(
         self,
@@ -42,6 +75,9 @@ class ComputedStyle:
         parent_style: Optional["ComputedStyle"] = None,
     ) -> None:
         self._values: Dict[str, Any] = {}
+        self._raw: Optional[Dict[str, Any]] = raw
+        self._explicit_props: set = set()
+        self._pct_originals: Optional[Dict[str, _Percentage]] = None
 
         # 1. Inherit inheritable properties from parent
         if parent_style is not None:
@@ -52,7 +88,13 @@ class ComputedStyle:
         # 2. Apply defaults for all non-inherited properties
         for prop, defn in PROPERTY_REGISTRY.items():
             if prop not in self._values:
-                self._values[prop] = parse_value(defn.default) if defn.default is not None else None
+                if defn.default is not None:
+                    if defn.parser_hint == "line-height":
+                        self._values[prop] = _parse_line_height(defn.default)
+                    else:
+                        self._values[prop] = parse_value(defn.default)
+                else:
+                    self._values[prop] = None
 
         # 3. Parse & expand user-supplied values
         if raw:
@@ -62,6 +104,7 @@ class ComputedStyle:
                 self._values["font-size"] = parse_value(
                     raw["font-size"], font_size=parent_fs
                 )
+                self._explicit_props.add("font-size")
 
             font_size = self._values.get("font-size", 16.0)
             if not isinstance(font_size, (int, float)):
@@ -73,54 +116,117 @@ class ComputedStyle:
 
                 expanded = expand_shorthand(prop, val)
                 for long_prop, long_val in expanded.items():
-                    if PROPERTY_REGISTRY.get(long_prop, None) is not None:
-                        hint = PROPERTY_REGISTRY[long_prop].parser_hint
-                        if hint == "track-list":
-                            self._values[long_prop] = parse_track_template(long_val)
-                        elif hint == "grid-areas":
-                            self._values[long_prop] = parse_grid_template_areas(long_val)
-                        elif hint == "clip-path":
-                            self._values[long_prop] = parse_clip_path(long_val)
-                        elif hint == "gradient":
-                            self._values[long_prop] = parse_gradient(long_val)
-                        elif hint == "box-shadow":
-                            self._values[long_prop] = parse_box_shadow(long_val)
-                        elif hint == "transform":
-                            self._values[long_prop] = parse_transform(long_val)
-                        elif hint == "filter":
-                            self._values[long_prop] = parse_filter(long_val)
-                        else:
-                            self._values[long_prop] = parse_value(
-                                long_val, font_size=font_size
-                            )
-                    else:
-                        # Unknown property — store as-is
-                        self._values[long_prop] = parse_value(
-                            long_val, font_size=font_size
-                        )
+                    self._explicit_props.add(long_prop)
+                    self._values[long_prop] = self._parse_prop(
+                        long_prop, long_val, font_size
+                    )
+
+            # Warn about margin (parsed but not applied in grid layout)
+            _MARGIN_PROPS = {"margin", "margin-top", "margin-right",
+                             "margin-bottom", "margin-left"}
+            used_margins = _MARGIN_PROPS & set(raw.keys())
+            if used_margins:
+                warnings.warn(
+                    f"margin properties ({', '.join(sorted(used_margins))}) are "
+                    "parsed but not applied during grid layout. Use 'gap' or "
+                    "'padding' for spacing instead.",
+                    stacklevel=3,
+                )
 
     # -----------------------------------------------------------------
     # Access helpers
     # -----------------------------------------------------------------
+
+    @staticmethod
+    def _parse_prop(prop: str, raw_val: Any, font_size: float) -> Any:
+        """Parse a single longhand property value according to its registry hint."""
+        defn = PROPERTY_REGISTRY.get(prop)
+        if defn is not None:
+            hint = defn.parser_hint
+            if hint == "track-list":
+                return parse_track_template(raw_val)
+            if hint == "grid-areas":
+                return parse_grid_template_areas(raw_val)
+            if hint == "clip-path":
+                return parse_clip_path(raw_val)
+            if hint == "gradient":
+                return parse_gradient(raw_val)
+            if hint == "box-shadow":
+                return parse_box_shadow(raw_val)
+            if hint == "transform":
+                return parse_transform(raw_val)
+            if hint == "filter":
+                return parse_filter(raw_val)
+            if hint == "line-height":
+                return _parse_line_height(raw_val, font_size=font_size)
+            return parse_value(raw_val, font_size=font_size, root_font_size=16.0)
+        return parse_value(raw_val, font_size=font_size, root_font_size=16.0)
 
     def get(self, prop: str, default: Any = None) -> Any:
         """Get a property value by its CSS name (e.g. ``'font-size'``)."""
         return self._values.get(prop, default)
 
     def set(self, prop: str, value: Any) -> None:
-        """Override a computed property value."""
-        self._values[prop] = value
+        """Set a CSS property, with shorthand expansion and value parsing.
+
+        Supports both longhand and shorthand properties::
+
+            style.set("padding", "10px 20px")      # expands to 4 longhands
+            style.set("border", "1px solid red")    # expands to 12 longhands
+            style.set("font-size", "18px")          # parsed to float 18.0
+            style.set("width", 200)                 # numeric values kept as-is
+        """
+        font_size = self._values.get("font-size", 16.0)
+        if not isinstance(font_size, (int, float)):
+            font_size = 16.0
+
+        expanded = expand_shorthand(prop, value)
+        for long_prop, long_val in expanded.items():
+            self._explicit_props.add(long_prop)
+            self._values[long_prop] = self._parse_prop(long_prop, long_val, font_size)
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        # Allow normal slot assignment for internal attributes
+        if name.startswith("_"):
+            object.__setattr__(self, name, value)
+            return
+        # Map Python attribute name to CSS property name
+        css_name = name.replace("_", "-")
+        self.set(css_name, value)
+
+    def _rebind_parent(self, parent_style: "ComputedStyle") -> None:
+        """Re-inherit inheritable properties from *parent_style*.
+
+        Only updates properties that were **not** explicitly set by the
+        user (via the constructor *raw* dict or :meth:`set`).
+        """
+        for prop, defn in PROPERTY_REGISTRY.items():
+            if defn.inheritable and prop not in self._explicit_props:
+                self._values[prop] = parent_style.get(prop)
 
     def resolve_percentages(self, ref_width: float, ref_height: Optional[float] = None) -> None:
-        """Resolve any remaining ``_Percentage`` values."""
+        """Resolve any remaining ``_Percentage`` values.
+
+        The original ``_Percentage`` instances are preserved internally so
+        that this method can be called again with different reference
+        dimensions (e.g. when ``layout()`` is invoked multiple times).
+        """
         for prop, val in list(self._values.items()):
-            if isinstance(val, _Percentage):
+            pct = val
+            # If already resolved, check for the stashed original
+            if not isinstance(pct, _Percentage):
+                pct = self._pct_originals.get(prop) if self._pct_originals else None
+            if isinstance(pct, _Percentage):
                 # Choose reference based on property axis
                 if "height" in prop or "top" in prop or "bottom" in prop:
                     ref = ref_height if ref_height is not None else ref_width
                 else:
                     ref = ref_width
-                self._values[prop] = val.resolve(ref)
+                # Stash original _Percentage before overwriting
+                if self._pct_originals is None:
+                    self._pct_originals = {}
+                self._pct_originals[prop] = pct
+                self._values[prop] = pct.resolve(ref)
 
     def __getattr__(self, name: str) -> Any:
         if name.startswith("_"):
