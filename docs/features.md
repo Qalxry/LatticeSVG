@@ -21,6 +21,7 @@ LatticeSVG 是一个 **Python 声明式矢量布局引擎**——用户以类似
 | `Pillow`（可选） | 字形度量后备 + 图片尺寸探测 |
 | `matplotlib`（可选） | `MplNode` 图表嵌入 |
 | `fonttools`（可选） | 字体子集化嵌入（WOFF2） |
+| `pyphen`（可选） | 自动断词（`hyphens: auto`） |
 
 ### 公开 API
 
@@ -80,7 +81,7 @@ from latticesvg import (
 
 ### 3.1 CSS 属性注册表
 
-共注册 **56 个属性**，分为五大类：
+共注册 **63 个属性**，分为五大类：
 
 #### 盒模型（不可继承）
 
@@ -129,12 +130,16 @@ from latticesvg import (
 | `font-size` | `16px` | 字号 |
 | `font-weight` | `normal` | 字重（`normal` / `bold`） |
 | `font-style` | `normal` | 字形（`normal` / `italic`） |
-| `text-align` | `left` | 水平对齐（`left` / `center` / `right`） |
+| `text-align` | `left` | 水平对齐（`left` / `center` / `right` / `justify`） |
 | `line-height` | `1.2` | 行高（≤ 5.0 视为倍数，否则为绝对值） |
 | `white-space` | `normal` | 空白处理（`normal` / `nowrap` / `pre` / `pre-wrap` / `pre-line`） |
 | `overflow-wrap` | `normal` | 溢出折行（`normal` / `break-word` / `anywhere`） |
 | `word-break` | `normal` | 单词断行策略 |
 | `color` | `#000000` | 文本颜色 |
+| `letter-spacing` | `normal` | 字符间距（支持长度值，`normal` 等同于 `0`） |
+| `word-spacing` | `normal` | 单词间距（支持长度值，`normal` 等同于 `0`） |
+| `hyphens` | `none` | 断词策略（`none` / `manual` / `auto`） |
+| `lang` | `en` | 语言标识（用于 `hyphens: auto` 的字典查找） |
 
 #### 文本装饰（不可继承）
 
@@ -153,6 +158,9 @@ from latticesvg import (
 | `overflow` | `visible` | 溢出处理（`visible` / `hidden`） |
 | `clip-path` | `none` | 裁剪路径（`circle()` / `ellipse()` / `polygon()` / `inset()`） |
 | `object-fit` | `fill` | 图片适配（`fill` / `contain` / `cover` / `none`） |
+| `box-shadow` | `none` | 盒阴影（支持多重阴影，逗号分隔） |
+| `transform` | `none` | 变换函数链（`translate()` / `rotate()` / `scale()`） |
+| `filter` | `none` | 滤镜函数链（`blur()` / `grayscale()` / `sepia()` 等） |
 
 ### 3.2 值解析
 
@@ -217,11 +225,47 @@ from latticesvg import (
 
 **Grid 行列线规范**：支持 `"2 / span 3"` 语法，解析为 `(start, span)` 元组。
 
+**盒阴影语法**：
+
+```
+box-shadow: offset-x offset-y [blur-radius] [spread-radius] [color]
+```
+
+- 支持 2~4 个长度值：`offset-x offset-y [blur [spread]]`
+- 颜色可在任意位置指定（支持 `#hex` / `rgb()` / `rgba()` / 命名颜色）
+- 多重阴影以逗号分隔：`"0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)"`
+- 数据结构：`BoxShadow(offset_x, offset_y, blur_radius, spread_radius, color, inset)`
+
+**变换函数语法**：
+
+| 函数 | 语法 | 说明 |
+|---|---|---|
+| `translate()` | `translate(x, y)` / `translateX(x)` / `translateY(y)` | 平移 |
+| `rotate()` | `rotate(angle)` | 旋转（支持 `deg` / `rad` / `turn` / `grad`） |
+| `scale()` | `scale(x, y)` / `scale(x)` / `scaleX(x)` / `scaleY(y)` | 缩放 |
+
+支持多函数串联：`"translate(10px, -5px) scale(0.8) rotate(45deg)"`。变换不影响布局，仅影响视觉渲染。变换原点默认为元素中心（等同于 CSS `transform-origin: 50% 50%`）。
+
+**滤镜函数语法**：
+
+| 函数 | 参数 | 说明 |
+|---|---|---|
+| `blur()` | `blur(5px)` | 高斯模糊 |
+| `brightness()` | `brightness(150%)` / `brightness(1.5)` | 亮度调节 |
+| `contrast()` | `contrast(200%)` / `contrast(2)` | 对比度调节 |
+| `grayscale()` | `grayscale(100%)` / `grayscale(1)` | 灰度化 |
+| `saturate()` | `saturate(200%)` / `saturate(2)` | 饱和度调节 |
+| `sepia()` | `sepia(100%)` / `sepia(1)` | 棕褐色调 |
+| `opacity()` | `opacity(50%)` / `opacity(0.5)` | 透明度 |
+| `drop-shadow()` | `drop-shadow(4px 4px 6px rgba(0,0,0,0.3))` | 投影 |
+
+支持多滤镜串联：`"blur(2px) grayscale(50%)"`。参数支持百分比和小数两种写法。
+
 ### 3.3 ComputedStyle
 
 - 合并父级样式（可继承属性自动继承）→ 填充默认值 → 解析用户声明值
 - 优先解析 `font-size`（因为 `em` 单位依赖它）
-- 按 `parser_hint` 分派到专用解析器（轨道模板 / 命名区域 / 裁剪路径 / 渐变）
+- 按 `parser_hint` 分派到专用解析器（轨道模板 / 命名区域 / 裁剪路径 / 渐变 / 盒阴影 / 变换 / 滤镜）
 - 支持 Python 属性风格访问：`style.font_size` ⇔ `style.get("font-size")`
 - 便利属性：`margin_horizontal`、`padding_vertical`、`border_horizontal` 等聚合访问器
 - `border_radii` 属性：返回四角圆角值元组
@@ -325,11 +369,14 @@ text = TextNode(
 - **CJK 混排**：中日韩字符逐字可断行，与西文自然混排
 - **white-space 模式**：`normal`（折行+折叠空白）、`nowrap`（不折行）、`pre`（保留换行和空白）、`pre-wrap`（保留空白但可折行）、`pre-line`（折叠空白但保留显式换行）
 - **overflow-wrap**：`normal` / `break-word`（超宽单词逐字符拆分）/ `anywhere`
-- **text-align**：`left` / `center` / `right`
+- **text-align**：`left` / `center` / `right` / `justify`（两端对齐，末行保持左对齐）
 - **line-height**：支持倍数和绝对值
 - **text-decoration**：`underline` / `line-through`
 - **富文本标记**：`markup="html"` 或 `markup="markdown"`，在单个文本块内混合多种样式
 - **内联数学公式**：通过 `<math>` 标签（HTML）或 `$...$` 语法（Markdown）嵌入 LaTeX 公式
+- **letter-spacing**：字符间距调节，影响度量、折行和渲染
+- **word-spacing**：单词间距调节，同步影响排版全流程
+- **hyphens**：断词支持——`none`（不断词）、`manual`（仅在软连字符 U+00AD 处断词）、`auto`（基于 `pyphen` 字典自动断词，由 `lang` 属性指定语言）
 
 ### 4.4 ImageNode
 
@@ -528,7 +575,7 @@ font-family: "Times New Roman, SimSun, serif"
 |---|---|
 | `measure_text()` | 测量文本总 advance 宽度 |
 | `break_lines()` | 核心折行算法 |
-| `align_lines()` | 设置行内水平偏移（`left` / `center` / `right` / `justify`） |
+| `align_lines()` | 设置行内水平偏移（`left` / `center` / `right` / `justify`），justify 模式计算逐词间隙 |
 | `compute_text_block_size()` | 计算折行后的文本块尺寸 |
 | `get_min_content_width()` | 最小内容宽度（最宽单词 / CJK 单字） |
 | `get_max_content_width()` | 最大内容宽度（不折行的单行宽度） |
@@ -546,6 +593,12 @@ font-family: "Times New Roman, SimSun, serif"
 **CJK 支持细节**：覆盖 CJK 统一汉字、扩展 A/B、兼容、日文假名、韩文音节、全角字符等 15+ Unicode 区块。CJK 字符逐字拆分为独立可断行 token，与西文空格分词自然混排。
 
 **折行算法**：贪心行填充，`overflow-wrap: break-word` 时超宽 token 逐字符拆分。富文本模式下支持跨 span 空白折叠，符合 CSS 行内空白处理规范。
+
+**两端对齐（justify）**：非末行计算额外间距——西文按 `(extra_space) / (word_count - 1)` 分配到词间隙，CJK 无空格文本按字符间隙均匀分散。`Line` 数据类包含 `justified: bool` 和 `word_spacing_justify: float` 字段。渲染时西文通过 SVG `word-spacing` 属性实现，CJK 文本逐字符输出独立 `<text>` 元素并手动计算每个字符的 x 偏移。末行保持左对齐（符合 CSS 标准）。
+
+**字符间距与词间距**：`letter-spacing` 和 `word-spacing` 参数贯穿度量（`measure_text()`）、折行（`break_lines()`）和渲染全流程。`letter-spacing` 加在非末字符后，`word-spacing` 加在空格字符上，影响行宽计算和断行判断。渲染时输出为 SVG `<text>` 元素的 `letter-spacing` / `word-spacing` 属性。
+
+**断词（hyphens）**：三种模式——`none`（不断词）、`manual`（仅在软连字符 U+00AD 处断词）、`auto`（基于 `pyphen` 字典自动查找断词位置）。断词逻辑集成在折行算法中：当 token 溢出当前行时，先尝试在剩余空间内找最长可断前缀；若失败则换行后继续迭代断词。断词产生的行标记 `hyphenated=True`，渲染时末尾追加连字符 `-`。`auto` 模式通过 `lang` 属性（默认 `en`）确定语言字典，支持多语言断词。
 
 ### 6.4 字体嵌入与子集化（text/embed.py）
 
@@ -648,6 +701,12 @@ renderer.render(root, "output.svg", embed_fonts=True)
 | **baseline-shift** | 上标 / 下标（0.7× 字号偏移） |
 | **字体嵌入** | WOFF2 子集化 → `@font-face` CSS → SVG `<defs><style>` |
 | **空格保留** | `white-space: pre/pre-wrap` → `xml:space="preserve"` |
+| **text-align: justify** | 西文通过 SVG `word-spacing` 属性实现逐词间距分散；CJK 文本逐字符绝对定位 |
+| **letter-spacing / word-spacing** | 直接输出为 SVG `<text>` 元素的同名属性 |
+| **hyphens** | 断词行末尾追加连字符 `-`，支持 `none` / `manual` / `auto` |
+| **box-shadow** | 每层阴影生成独立 SVG `<filter>`：无 spread 用 `<feDropShadow>`，有 spread 用 `<feFlood>` + `<feMorphology>` + `<feGaussianBlur>` + `<feOffset>` + `<feMerge>` 管线；支持圆角矩形形状 |
+| **transform** | CSS 变换函数链转为 SVG `transform` 属性；`rotate` / `scale` 通过 translate-to-center 补偿变换原点（CSS 默认 50% 50%） |
+| **filter** | 各滤镜映射为对应 SVG filter primitive：`blur` → `feGaussianBlur`，`brightness`/`contrast` → `feComponentTransfer`，`grayscale`/`saturate` → `feColorMatrix`，`sepia` → `feColorMatrix`（标准矩阵），`opacity` → `feComponentTransfer`，`drop-shadow` → `feDropShadow`；多滤镜链式连接 |
 
 ---
 
@@ -717,17 +776,18 @@ table = build_table(
 
 以下是当前版本中已知的限制：
 
-1. **`text-align: justify`**：shaper 中已实现对齐偏移计算，但渲染器中逐词分布尚未完全支持
-2. **无 `z-index` / 叠放控制**：渲染顺序固定为节点添加顺序
-3. **Pillow 后备的字形检测**：`_has_glyph()` 始终返回 `True`，无法真正判断字体覆盖（仅影响 Pillow 后备路径）
-4. **自动放置搜索上限**：行上限硬编码为 200，迭代上限 10000 次
-5. **`fonttools` 为可选依赖**：字体嵌入功能需手动安装 `fonttools[woff]`
+1. **无 `z-index` / 叠放控制**：渲染顺序固定为节点添加顺序
+2. **Pillow 后备的字形检测**：`_has_glyph()` 始终返回 `True`，无法真正判断字体覆盖（仅影响 Pillow 后备路径）
+3. **自动放置搜索上限**：行上限硬编码为 200，迭代上限 10000 次
+4. **`fonttools` 为可选依赖**：字体嵌入功能需手动安装 `fonttools[woff]`
+5. **`pyphen` 为可选依赖**：`hyphens: auto` 需手动安装 `pyphen`，未安装时优雅降级
+6. **`box-shadow` inset 阴影**：`inset` 关键字已解析但渲染暂未支持
 
 ---
 
 ## 11. 演示覆盖
 
-`examples/` 包含 **42 个演示**（demo_01 ~ demo_42），覆盖：
+`examples/` 包含 **47 个演示**（demo_01 ~ demo_47），覆盖：
 
 - CSS 值解析、简写展开、样式继承
 - 固定列 / fr 弹性列 / 混合轨道
@@ -755,21 +815,27 @@ table = build_table(
 - `clip-path` 裁剪路径
 - `repeat()` / `minmax()` 轨道函数
 - 渐变背景（线性 / 径向）
+- `text-align: justify` 两端对齐（中英文）
+- `letter-spacing` / `word-spacing` 字符间距与词间距
+- `hyphens` 断词（none / manual / auto，多语言支持）
+- `box-shadow` 盒阴影（轻柔 / 中等 / 深度 / 多重 / 彩色）
+- `transform` 变换（旋转 / 平移 / 缩放 / 组合）
+- CSS `filter` 滤镜（blur / grayscale / sepia / brightness / contrast / saturate / 组合）
 
 ---
 
 ## 12. 测试覆盖
 
-11 个测试文件，**279 个测试函数**，使用 pytest：
+10 个测试文件，**352 个测试函数**，使用 pytest：
 
 | 文件 | 覆盖范围 |
 |---|---|
-| `test_style_parser.py` | 值解析、颜色、简写展开、轨道模板、clip-path、渐变、`repeat()` / `minmax()` |
+| `test_style_parser.py` | 值解析、颜色、简写展开、轨道模板、clip-path、渐变、`repeat()` / `minmax()`、box-shadow、transform、filter |
 | `test_computed_style.py` | ComputedStyle 创建、继承、便利属性、百分比解析 |
 | `test_grid_solver.py` | 固定/fr/混合轨道、gap、自动放置、跨列、对齐、`minmax()`/`repeat()`、隐式轨道 |
 | `test_nodes.py` | 节点基类、SVGNode / ImageNode 尺寸解析与 object-fit |
-| `test_renderer.py` | SVG 输出、背景色、渐变、边框、圆角（含四角独立）、clip-path、文本装饰、字体嵌入 |
-| `test_text_shaper.py` | 文本度量、折行、空白处理、break-word、对齐、富文本断行 |
+| `test_renderer.py` | SVG 输出、背景色、渐变、边框、圆角（含四角独立）、clip-path、文本装饰、字体嵌入、box-shadow、transform、filter、justify |
+| `test_text_shaper.py` | 文本度量、折行、空白处理、break-word、对齐、富文本断行、letter-spacing、word-spacing、hyphens、justify |
 | `test_markup_parser.py` | HTML / Markdown 解析、内联样式、数学标记、嵌套标签 |
 | `test_math.py` | 数学后端协议、SVGFragment、MathNode、后端注册 |
 | `test_integration.py` | 端到端：两栏布局、嵌套 Grid、自动放置、SVG 嵌入 |
@@ -781,7 +847,7 @@ table = build_table(
 
 | 指标 | 数值 |
 |---|---|
-| 核心源码 | **~7,650 行**（26 个 `.py` 文件） |
-| 测试代码 | **~3,130 行**（11 个测试文件，279 个测试函数） |
-| 演示文件 | 42 个 |
+| 核心源码 | **~8,900 行**（26 个 `.py` 文件） |
+| 测试代码 | **~3,800 行**（10 个测试文件，352 个测试函数） |
+| 演示文件 | 47 个 |
 | 硬依赖 | `drawsvg` + `freetype-py` + `quickjax` |
