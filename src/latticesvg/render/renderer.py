@@ -10,6 +10,7 @@ from typing import Optional, Tuple, TYPE_CHECKING
 import drawsvg as dw
 
 from ..style.parser import (
+    BoxShadow, TransformFunction, FilterFunction,
     ClipCircle, ClipEllipse, ClipPolygon, ClipInset, _Percentage,
     LinearGradientValue, RadialGradientValue,
 )
@@ -202,6 +203,26 @@ class Renderer:
         else:
             outer = None
             group = dw.Group()
+
+        # --- CSS filter property ---
+        css_filter_val = node.style.get("filter")
+        if css_filter_val and css_filter_val != "none" and isinstance(css_filter_val, tuple):
+            svg_filter = self._create_css_filter(css_filter_val)
+            if svg_filter is not None:
+                self.drawing.append(svg_filter)
+                group.args["filter"] = svg_filter
+
+        # --- CSS transform property ---
+        transform_val = node.style.get("transform")
+        if transform_val and transform_val != "none" and isinstance(transform_val, tuple):
+            svg_tf = self._build_svg_transform(transform_val, x, y, bb.width, bb.height)
+            if svg_tf:
+                group.args["transform"] = svg_tf
+
+        # --- box-shadow ---
+        shadow_val = node.style.get("box-shadow")
+        if shadow_val and shadow_val != "none" and isinstance(shadow_val, tuple):
+            self._render_box_shadows(group, shadow_val, x, y, bb.width, bb.height, radii, any_radius, uniform_radius)
 
         # --- Background ---
         bg = node.style.get("background-image")
@@ -618,6 +639,297 @@ class Renderer:
             group.append(dw.Rectangle(ox, oy, ow_rect, oh_rect, **kwargs))
         else:
             group.append(dw.Rectangle(ox, oy, ow_rect, oh_rect, **kwargs))
+
+    # -----------------------------------------------------------------
+    # box-shadow rendering
+    # -----------------------------------------------------------------
+
+    def _render_box_shadows(
+        self,
+        group: dw.Group,
+        shadows: tuple,
+        x: float, y: float, w: float, h: float,
+        radii: tuple,
+        any_radius: bool,
+        uniform_radius: bool,
+    ) -> None:
+        """Render box-shadow layers as SVG filter elements (below background)."""
+        for shadow in shadows:
+            if not isinstance(shadow, BoxShadow):
+                continue
+            if shadow.inset:
+                continue  # inset shadows not supported yet
+
+            # Build a filter with feDropShadow
+            filt = dw.Filter(x="-50%", y="-50%", width="200%", height="200%")
+
+            # Parse color → flood-color and flood-opacity
+            flood_color, flood_opacity = self._parse_shadow_color(shadow.color)
+
+            # CSS blur-radius maps to SVG stdDeviation (≈ half CSS value)
+            std_dev = shadow.blur_radius / 2.0
+
+            if shadow.spread_radius != 0:
+                # With spread: use feFlood + feComposite + feMorphology + feGaussianBlur + feOffset + feMerge
+                filt.append(dw.FilterItem(
+                    "feFlood", flood_color=flood_color, flood_opacity=str(flood_opacity),
+                    result="flood",
+                ))
+                filt.append(dw.FilterItem(
+                    "feComposite", in_="flood", in2="SourceGraphic",
+                    operator="in", result="shadow-shape",
+                ))
+                filt.append(dw.FilterItem(
+                    "feMorphology", in_="shadow-shape", operator="dilate",
+                    radius=str(abs(shadow.spread_radius)),
+                    result="spread",
+                ))
+                if std_dev > 0:
+                    filt.append(dw.FilterItem(
+                        "feGaussianBlur", in_="spread",
+                        stdDeviation=str(std_dev), result="blur",
+                    ))
+                    offset_in = "blur"
+                else:
+                    offset_in = "spread"
+                filt.append(dw.FilterItem(
+                    "feOffset", in_=offset_in,
+                    dx=str(shadow.offset_x), dy=str(shadow.offset_y),
+                    result="offset",
+                ))
+                merge = dw.FilterItem("feMerge")
+                merge.append(dw.FilterItem("feMergeNode", in_="offset"))
+                merge.append(dw.FilterItem("feMergeNode", in_="SourceGraphic"))
+                filt.append(merge)
+            else:
+                # Simple case: feDropShadow
+                filt.append(dw.FilterItem(
+                    "feDropShadow",
+                    dx=str(shadow.offset_x), dy=str(shadow.offset_y),
+                    stdDeviation=str(std_dev),
+                    flood_color=flood_color,
+                    flood_opacity=str(flood_opacity),
+                ))
+
+            self.drawing.append(filt)
+
+            # Create a shadow-only rect with this filter applied
+            shadow_kwargs: dict = dict(
+                fill=shadow.color if flood_opacity >= 1.0 else "white",
+                fill_opacity="0" if shadow.spread_radius == 0 else "0",
+                filter=filt,
+            )
+            # For feDropShadow, we need a visible source shape
+            if shadow.spread_radius == 0:
+                shadow_kwargs["fill"] = flood_color
+                shadow_kwargs["fill_opacity"] = "1"
+
+            if any_radius and not uniform_radius:
+                group.append(self._rounded_rect_path(
+                    x, y, w, h, *radii, filter=filt,
+                    fill=flood_color, fill_opacity="1",
+                ))
+            elif any_radius:
+                group.append(dw.Rectangle(
+                    x, y, w, h, rx=radii[0], ry=radii[0],
+                    fill=flood_color, fill_opacity="1", filter=filt,
+                ))
+            else:
+                group.append(dw.Rectangle(
+                    x, y, w, h,
+                    fill=flood_color, fill_opacity="1", filter=filt,
+                ))
+
+    @staticmethod
+    def _parse_shadow_color(color: str) -> tuple:
+        """Extract flood-color and flood-opacity from a CSS color string.
+
+        Returns (color_str, opacity_float).
+        """
+        if color.startswith("rgba("):
+            inner = color[5:-1]
+            parts = [p.strip() for p in inner.split(",")]
+            if len(parts) == 4:
+                rgb = f"rgb({parts[0]},{parts[1]},{parts[2]})"
+                return rgb, float(parts[3])
+        return color, 1.0
+
+    # -----------------------------------------------------------------
+    # CSS transform helpers
+    # -----------------------------------------------------------------
+
+    @staticmethod
+    def _build_svg_transform(
+        transforms: tuple,
+        x: float, y: float, w: float, h: float,
+    ) -> str:
+        """Convert parsed CSS transform functions to an SVG transform string.
+
+        CSS transforms default to transform-origin: 50% 50% (element center),
+        while SVG transforms are relative to the canvas origin.  We compensate
+        by wrapping rotate/scale in translate-to-center pairs.
+        """
+        cx = x + w / 2.0
+        cy = y + h / 2.0
+        parts: list = []
+        for tf in transforms:
+            if not isinstance(tf, TransformFunction):
+                continue
+            name = tf.name
+            args = tf.args
+            if name == "translate":
+                tx = args[0] if len(args) > 0 else 0.0
+                ty = args[1] if len(args) > 1 else 0.0
+                parts.append(f"translate({tx},{ty})")
+            elif name == "translatex":
+                parts.append(f"translate({args[0]},0)")
+            elif name == "translatey":
+                parts.append(f"translate(0,{args[0]})")
+            elif name == "rotate":
+                deg = args[0] if args else 0.0
+                parts.append(f"translate({cx},{cy})")
+                parts.append(f"rotate({deg})")
+                parts.append(f"translate({-cx},{-cy})")
+            elif name == "scale":
+                sx = args[0] if len(args) > 0 else 1.0
+                sy = args[1] if len(args) > 1 else sx
+                parts.append(f"translate({cx},{cy})")
+                parts.append(f"scale({sx},{sy})")
+                parts.append(f"translate({-cx},{-cy})")
+            elif name == "scalex":
+                sx = args[0] if args else 1.0
+                parts.append(f"translate({cx},{cy})")
+                parts.append(f"scale({sx},1)")
+                parts.append(f"translate({-cx},{-cy})")
+            elif name == "scaley":
+                sy = args[0] if args else 1.0
+                parts.append(f"translate({cx},{cy})")
+                parts.append(f"scale(1,{sy})")
+                parts.append(f"translate({-cx},{-cy})")
+        return " ".join(parts)
+
+    # -----------------------------------------------------------------
+    # CSS filter rendering
+    # -----------------------------------------------------------------
+
+    def _create_css_filter(self, filters: tuple) -> Optional[dw.Filter]:
+        """Build a ``dw.Filter`` from parsed CSS filter functions."""
+        if not filters:
+            return None
+
+        filt = dw.Filter(x="-10%", y="-10%", width="120%", height="120%")
+        prev_result = "SourceGraphic"
+
+        for i, ff in enumerate(filters):
+            if not isinstance(ff, FilterFunction):
+                continue
+            result_name = f"f{i}"
+            name = ff.name
+            args = ff.args
+
+            if name == "blur":
+                radius = args[0] if args else 0.0
+                filt.append(dw.FilterItem(
+                    "feGaussianBlur", in_=prev_result,
+                    stdDeviation=str(radius), result=result_name,
+                ))
+                if radius > 10:
+                    # Expand filter region for large blurs
+                    filt.args["x"] = "-50%"
+                    filt.args["y"] = "-50%"
+                    filt.args["width"] = "200%"
+                    filt.args["height"] = "200%"
+
+            elif name == "brightness":
+                amt = args[0] if args else 1.0
+                ct = dw.FilterItem(
+                    "feComponentTransfer", in_=prev_result, result=result_name,
+                )
+                ct.append(dw.FilterItem("feFuncR", type="linear", slope=str(amt)))
+                ct.append(dw.FilterItem("feFuncG", type="linear", slope=str(amt)))
+                ct.append(dw.FilterItem("feFuncB", type="linear", slope=str(amt)))
+                filt.append(ct)
+
+            elif name == "contrast":
+                amt = args[0] if args else 1.0
+                intercept = -(amt - 1.0) / 2.0
+                ct = dw.FilterItem(
+                    "feComponentTransfer", in_=prev_result, result=result_name,
+                )
+                ct.append(dw.FilterItem("feFuncR", type="linear", slope=str(amt), intercept=str(intercept)))
+                ct.append(dw.FilterItem("feFuncG", type="linear", slope=str(amt), intercept=str(intercept)))
+                ct.append(dw.FilterItem("feFuncB", type="linear", slope=str(amt), intercept=str(intercept)))
+                filt.append(ct)
+
+            elif name == "grayscale":
+                amt = min(args[0] if args else 0.0, 1.0)
+                sat = 1.0 - amt
+                filt.append(dw.FilterItem(
+                    "feColorMatrix", in_=prev_result, type="saturate",
+                    values=str(sat), result=result_name,
+                ))
+
+            elif name == "saturate":
+                amt = args[0] if args else 1.0
+                filt.append(dw.FilterItem(
+                    "feColorMatrix", in_=prev_result, type="saturate",
+                    values=str(amt), result=result_name,
+                ))
+
+            elif name == "sepia":
+                amt = min(args[0] if args else 0.0, 1.0)
+                # Standard sepia matrix blended with identity
+                r1 = 0.393 * amt + (1 - amt)
+                r2 = 0.769 * amt
+                r3 = 0.189 * amt
+                g1 = 0.349 * amt
+                g2 = 0.686 * amt + (1 - amt)
+                g3 = 0.168 * amt
+                b1 = 0.272 * amt
+                b2 = 0.534 * amt
+                b3 = 0.131 * amt + (1 - amt)
+                vals = (f"{r1} {r2} {r3} 0 0 "
+                        f"{g1} {g2} {g3} 0 0 "
+                        f"{b1} {b2} {b3} 0 0 "
+                        f"0 0 0 1 0")
+                filt.append(dw.FilterItem(
+                    "feColorMatrix", in_=prev_result, type="matrix",
+                    values=vals, result=result_name,
+                ))
+
+            elif name == "opacity":
+                amt = args[0] if args else 1.0
+                ct = dw.FilterItem(
+                    "feComponentTransfer", in_=prev_result, result=result_name,
+                )
+                ct.append(dw.FilterItem("feFuncA", type="linear", slope=str(amt)))
+                filt.append(ct)
+
+            elif name == "drop-shadow":
+                ox = args[0] if len(args) > 0 else 0.0
+                oy = args[1] if len(args) > 1 else 0.0
+                blur = args[2] if len(args) > 2 else 0.0
+                color = getattr(ff, "_color", "rgba(0,0,0,1)")
+                flood_color, flood_opacity = self._parse_shadow_color(color)
+                filt.append(dw.FilterItem(
+                    "feDropShadow", in_=prev_result,
+                    dx=str(ox), dy=str(oy),
+                    stdDeviation=str(blur / 2.0),
+                    flood_color=flood_color,
+                    flood_opacity=str(flood_opacity),
+                    result=result_name,
+                ))
+                # Expand filter region for drop-shadows
+                filt.args["x"] = "-50%"
+                filt.args["y"] = "-50%"
+                filt.args["width"] = "200%"
+                filt.args["height"] = "200%"
+            else:
+                continue
+
+            prev_result = result_name
+
+        return filt
 
     # -----------------------------------------------------------------
     # Text rendering

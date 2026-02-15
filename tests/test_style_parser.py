@@ -4,6 +4,8 @@ import pytest
 from latticesvg.style.parser import (
     AUTO,
     AreaMapping,
+    BoxShadow,
+    FilterFunction,
     FrValue,
     MIN_CONTENT,
     MAX_CONTENT,
@@ -11,11 +13,15 @@ from latticesvg.style.parser import (
     GradientStop,
     LinearGradientValue,
     RadialGradientValue,
+    TransformFunction,
     _Percentage,
     expand_shorthand,
+    parse_box_shadow,
+    parse_filter,
     parse_gradient,
     parse_grid_template_areas,
     parse_track_template,
+    parse_transform,
     parse_value,
 )
 
@@ -552,3 +558,195 @@ class TestBackgroundShorthand:
     def test_background_radial_gradient(self):
         result = expand_shorthand("background", "radial-gradient(circle, red, blue)")
         assert result == {"background-image": "radial-gradient(circle, red, blue)"}
+
+
+# ------------------------------------------------------------------
+# box-shadow parsing
+# ------------------------------------------------------------------
+
+class TestBoxShadowParsing:
+    def test_none(self):
+        assert parse_box_shadow("none") == "none"
+
+    def test_none_value(self):
+        assert parse_box_shadow(None) == "none"
+
+    def test_simple_shadow(self):
+        result = parse_box_shadow("0 4px 6px rgba(0,0,0,0.1)")
+        assert isinstance(result, tuple)
+        assert len(result) == 1
+        s = result[0]
+        assert isinstance(s, BoxShadow)
+        assert s.offset_x == 0.0
+        assert s.offset_y == 4.0
+        assert s.blur_radius == 6.0
+        assert s.spread_radius == 0.0
+        assert "0,0,0" in s.color
+        assert s.inset is False
+
+    def test_shadow_with_spread(self):
+        result = parse_box_shadow("2px 3px 4px 5px #ff0000")
+        assert len(result) == 1
+        s = result[0]
+        assert s.offset_x == 2.0
+        assert s.offset_y == 3.0
+        assert s.blur_radius == 4.0
+        assert s.spread_radius == 5.0
+
+    def test_multiple_shadows(self):
+        result = parse_box_shadow("0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)")
+        assert isinstance(result, tuple)
+        assert len(result) == 2
+
+    def test_inset_shadow(self):
+        result = parse_box_shadow("inset 0 2px 4px black")
+        assert len(result) == 1
+        assert result[0].inset is True
+        assert result[0].offset_x == 0.0
+        assert result[0].offset_y == 2.0
+
+    def test_color_at_start(self):
+        result = parse_box_shadow("red 0 4px 6px")
+        assert len(result) == 1
+        assert result[0].blur_radius == 6.0
+
+    def test_offset_only(self):
+        result = parse_box_shadow("5px 5px")
+        assert len(result) == 1
+        s = result[0]
+        assert s.offset_x == 5.0
+        assert s.offset_y == 5.0
+        assert s.blur_radius == 0.0
+
+
+# ------------------------------------------------------------------
+# transform parsing
+# ------------------------------------------------------------------
+
+class TestTransformParsing:
+    def test_none(self):
+        assert parse_transform("none") == "none"
+
+    def test_none_value(self):
+        assert parse_transform(None) == "none"
+
+    def test_rotate_deg(self):
+        result = parse_transform("rotate(-90deg)")
+        assert isinstance(result, tuple)
+        assert len(result) == 1
+        assert result[0].name == "rotate"
+        assert result[0].args == (-90.0,)
+
+    def test_rotate_bare_number(self):
+        result = parse_transform("rotate(45)")
+        assert result[0].args == (45.0,)
+
+    def test_rotate_rad(self):
+        result = parse_transform("rotate(3.14159rad)")
+        assert abs(result[0].args[0] - 180.0) < 0.1
+
+    def test_translate(self):
+        result = parse_transform("translate(10px, -5px)")
+        assert result[0].name == "translate"
+        assert result[0].args == (10.0, -5.0)
+
+    def test_translate_single(self):
+        result = parse_transform("translate(20px)")
+        assert result[0].args == (20.0,)
+
+    def test_scale_uniform(self):
+        result = parse_transform("scale(0.8)")
+        assert result[0].name == "scale"
+        assert result[0].args == (0.8,)
+
+    def test_scale_xy(self):
+        result = parse_transform("scale(2, 0.5)")
+        assert result[0].args == (2.0, 0.5)
+
+    def test_function_chain(self):
+        result = parse_transform("translate(10px, -5px) scale(0.8)")
+        assert len(result) == 2
+        assert result[0].name == "translate"
+        assert result[1].name == "scale"
+
+    def test_translateX(self):
+        result = parse_transform("translateX(10px)")
+        assert result[0].name == "translatex"
+        assert result[0].args == (10.0,)
+
+    def test_translateY(self):
+        result = parse_transform("translateY(-20px)")
+        assert result[0].name == "translatey"
+        assert result[0].args == (-20.0,)
+
+
+# ------------------------------------------------------------------
+# CSS filter parsing
+# ------------------------------------------------------------------
+
+class TestFilterParsing:
+    def test_none(self):
+        assert parse_filter("none") == "none"
+
+    def test_none_value(self):
+        assert parse_filter(None) == "none"
+
+    def test_blur(self):
+        result = parse_filter("blur(5px)")
+        assert isinstance(result, tuple)
+        assert len(result) == 1
+        assert result[0].name == "blur"
+        assert result[0].args == (5.0,)
+
+    def test_grayscale_percent(self):
+        result = parse_filter("grayscale(100%)")
+        assert result[0].name == "grayscale"
+        assert result[0].args == (1.0,)
+
+    def test_grayscale_number(self):
+        result = parse_filter("grayscale(0.5)")
+        assert result[0].name == "grayscale"
+        assert result[0].args == (0.5,)
+
+    def test_brightness(self):
+        result = parse_filter("brightness(150%)")
+        assert result[0].name == "brightness"
+        assert result[0].args == (1.5,)
+
+    def test_contrast(self):
+        result = parse_filter("contrast(200%)")
+        assert result[0].name == "contrast"
+        assert result[0].args == (2.0,)
+
+    def test_opacity(self):
+        result = parse_filter("opacity(50%)")
+        assert result[0].name == "opacity"
+        assert result[0].args == (0.5,)
+
+    def test_saturate(self):
+        result = parse_filter("saturate(200%)")
+        assert result[0].name == "saturate"
+        assert result[0].args == (2.0,)
+
+    def test_sepia(self):
+        result = parse_filter("sepia(100%)")
+        assert result[0].name == "sepia"
+        assert result[0].args == (1.0,)
+
+    def test_filter_chain(self):
+        result = parse_filter("grayscale(100%) blur(2px)")
+        assert len(result) == 2
+        assert result[0].name == "grayscale"
+        assert result[1].name == "blur"
+
+    def test_drop_shadow(self):
+        result = parse_filter("drop-shadow(4px 4px 6px black)")
+        assert len(result) == 1
+        assert result[0].name == "drop-shadow"
+        assert result[0].args[0] == 4.0  # offset-x
+        assert result[0].args[1] == 4.0  # offset-y
+        assert result[0].args[2] == 6.0  # blur
+
+    def test_unknown_filter_ignored(self):
+        result = parse_filter("url(#foo)")
+        assert result == "none"

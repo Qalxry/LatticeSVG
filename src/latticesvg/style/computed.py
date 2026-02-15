@@ -9,10 +9,13 @@ from .parser import (
     FrValue,
     _Percentage,
     expand_shorthand,
+    parse_box_shadow,
     parse_clip_path,
+    parse_filter,
     parse_gradient,
     parse_grid_template_areas,
     parse_track_template,
+    parse_transform,
     parse_value,
 )
 from .properties import PROPERTY_REGISTRY, get_default, is_inheritable
@@ -80,6 +83,12 @@ class ComputedStyle:
                             self._values[long_prop] = parse_clip_path(long_val)
                         elif hint == "gradient":
                             self._values[long_prop] = parse_gradient(long_val)
+                        elif hint == "box-shadow":
+                            self._values[long_prop] = parse_box_shadow(long_val)
+                        elif hint == "transform":
+                            self._values[long_prop] = parse_transform(long_val)
+                        elif hint == "filter":
+                            self._values[long_prop] = parse_filter(long_val)
                         else:
                             self._values[long_prop] = parse_value(
                                 long_val, font_size=font_size

@@ -749,3 +749,138 @@ class TestGradientRendering:
         renderer = Renderer()
         svg = renderer.render_to_string(grid)
         assert "linearGradient" in svg
+
+
+# ------------------------------------------------------------------
+# box-shadow rendering
+# ------------------------------------------------------------------
+
+class TestBoxShadowRendering:
+    def test_box_shadow_creates_filter(self):
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": ["300px"],
+        })
+        box = BoxNode(
+            width=300, height=50,
+            **{"box-shadow": "0 4px 6px rgba(0,0,0,0.3)", "background-color": "white"},
+        )
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=300)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        root = _parse_svg(svg)
+
+        # Should contain a <filter> element with feDropShadow
+        filters = root.findall(".//{*}filter") + root.findall(".//filter")
+        assert len(filters) >= 1 or "filter" in svg.lower()
+
+    def test_box_shadow_none_no_filter(self):
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": ["300px"],
+        })
+        box = BoxNode(width=300, height=50, **{"box-shadow": "none"})
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=300)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "feDropShadow" not in svg
+
+
+# ------------------------------------------------------------------
+# transform rendering
+# ------------------------------------------------------------------
+
+class TestTransformRendering:
+    def test_transform_rotate(self):
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": ["300px"],
+        })
+        box = BoxNode(width=300, height=50, transform="rotate(45deg)")
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=300)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "rotate(45" in svg
+
+    def test_transform_translate(self):
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": ["300px"],
+        })
+        box = BoxNode(width=300, height=50, transform="translate(10px, 20px)")
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=300)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "translate(10" in svg
+
+    def test_transform_none_no_attr(self):
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": ["300px"],
+        })
+        box = BoxNode(width=300, height=50, transform="none")
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=300)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        # No transform attribute should appear (besides internal ones)
+        root = _parse_svg(svg)
+        groups = root.findall(".//g")
+        for g in groups:
+            tf = g.get("transform", "")
+            assert "rotate" not in tf
+
+
+# ------------------------------------------------------------------
+# CSS filter rendering
+# ------------------------------------------------------------------
+
+class TestFilterRendering:
+    def test_filter_blur(self):
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": ["300px"],
+        })
+        box = BoxNode(width=300, height=50, filter="blur(5px)")
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=300)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "feGaussianBlur" in svg
+
+    def test_filter_grayscale(self):
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": ["300px"],
+        })
+        box = BoxNode(width=300, height=50, filter="grayscale(100%)")
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=300)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "feColorMatrix" in svg
+
+    def test_filter_none_no_filter(self):
+        grid = GridContainer(style={
+            "width": "300px",
+            "grid-template-columns": ["300px"],
+        })
+        box = BoxNode(width=300, height=50, filter="none")
+        grid.add(box, row=1, col=1)
+        grid.layout(available_width=300)
+
+        renderer = Renderer()
+        svg = renderer.render_to_string(grid)
+        assert "feGaussianBlur" not in svg
+        assert "feColorMatrix" not in svg

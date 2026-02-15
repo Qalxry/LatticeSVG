@@ -51,7 +51,7 @@ text = TextNode("This is a justified paragraph with enough words to wrap.", styl
 
 **注意**：末行保持左对齐（CSS 标准行为）。CJK 文本的 justify 可按字符均匀分散。
 
-### P1-2. `box-shadow` 支持
+### ~~P1-2. `box-shadow` 支持~~（已完成）
 
 **场景**：卡片投影、按钮悬浮效果等是报告设计中极常见的视觉需求。当前仅有 `border` 和 `outline` 提供边缘装饰，无法实现柔和阴影效果。
 
@@ -84,7 +84,7 @@ card = GridContainer(style={
 
 **注意**：仅支持外阴影（`inset` 可作为二期），不支持 `filter: drop-shadow()` 等通用滤镜。
 
-### P1-3. `transform` 基础支持
+### ~~P1-3. `transform` 基础支持~~（已完成）
 
 **场景**：微调元素位置（`translate`）、旋转标签文字（`rotate`）、缩放装饰元素（`scale`）是排版中的常见需求。
 
@@ -131,7 +131,7 @@ badge = TextNode("NEW", style={
 
 **评估**：实现成本低，但对核心排版功能无直接增强，按需评估。
 
-### P2-2. CSS `filter` 支持
+### ~~P2-2. CSS `filter` 支持~~（已完成）
 
 **价值**：`filter: blur(5px)`、`filter: grayscale(100%)` 等可增强视觉表现力。SVG 原生有 `<filter>` 元素完整支持。
 

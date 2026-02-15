@@ -102,6 +102,31 @@ class RadialGradientValue:
         return f"RadialGradientValue(shape={self.shape!r}, stops={self.stops})"
 
 
+@dataclass(frozen=True)
+class BoxShadow:
+    """A single ``box-shadow`` layer."""
+    offset_x: float = 0.0
+    offset_y: float = 0.0
+    blur_radius: float = 0.0
+    spread_radius: float = 0.0
+    color: str = "rgba(0,0,0,1)"
+    inset: bool = False
+
+
+@dataclass(frozen=True)
+class TransformFunction:
+    """A single CSS transform function (e.g. ``rotate(45)``)."""
+    name: str           # "translate" | "rotate" | "scale" etc.
+    args: Tuple[float, ...] = ()
+
+
+@dataclass(frozen=True)
+class FilterFunction:
+    """A single CSS filter function (e.g. ``blur(5)``)."""
+    name: str           # "blur" | "grayscale" | "brightness" etc.
+    args: Tuple[float, ...] = ()
+
+
 # ---------------------------------------------------------------------------
 # Named CSS colors (subset — the most common ones)
 # ---------------------------------------------------------------------------
@@ -1029,3 +1054,256 @@ def parse_grid_template_areas(raw: Any) -> Optional[AreaMapping]:
         areas[name] = (r_min, c_min, row_span, col_span)
 
     return AreaMapping(areas=areas, num_rows=num_rows, num_cols=num_cols)
+
+
+# ---------------------------------------------------------------------------
+# box-shadow parsing
+# ---------------------------------------------------------------------------
+
+_RE_RGBA_FN = re.compile(
+    r"rgba?\([^)]*\)", re.IGNORECASE
+)
+
+
+def _smart_split_comma(s: str) -> List[str]:
+    """Split *s* by commas, but ignore commas inside parentheses."""
+    parts: List[str] = []
+    depth = 0
+    current: List[str] = []
+    for ch in s:
+        if ch == "(":
+            depth += 1
+            current.append(ch)
+        elif ch == ")":
+            depth -= 1
+            current.append(ch)
+        elif ch == "," and depth == 0:
+            parts.append("".join(current).strip())
+            current = []
+        else:
+            current.append(ch)
+    tail = "".join(current).strip()
+    if tail:
+        parts.append(tail)
+    return parts
+
+
+def _extract_color_token(tokens: List[str]) -> Tuple[Optional[str], List[str]]:
+    """Extract and remove the color value from a list of tokens.
+
+    The color may be a named color, hex, or rgb()/rgba() function that was
+    already merged back into one token by the caller.
+    """
+    rest: List[str] = []
+    color: Optional[str] = None
+    for t in tokens:
+        if color is None:
+            c = _parse_color(t)
+            if c is not None:
+                color = c
+                continue
+        rest.append(t)
+    return color, rest
+
+
+def _tokenize_shadow(s: str) -> List[str]:
+    """Tokenize a single shadow string, keeping ``rgb()/rgba()`` as one token."""
+    # Replace rgb/rgba functions with placeholders
+    placeholders: List[str] = []
+    def _replace(m: re.Match) -> str:
+        placeholders.append(m.group(0))
+        return f"__COLOR_PH_{len(placeholders) - 1}__"
+    s2 = _RE_RGBA_FN.sub(_replace, s)
+    tokens = s2.split()
+    # Restore placeholders
+    result: List[str] = []
+    for t in tokens:
+        if t.startswith("__COLOR_PH_"):
+            idx = int(t.replace("__COLOR_PH_", "").replace("__", ""))
+            result.append(placeholders[idx])
+        else:
+            result.append(t)
+    return result
+
+
+def parse_box_shadow(raw: Any) -> Any:
+    """Parse a CSS ``box-shadow`` value.
+
+    Returns a tuple of :class:`BoxShadow` instances, or the string
+    ``"none"`` for no shadow.
+    """
+    if raw is None or (isinstance(raw, str) and raw.strip().lower() == "none"):
+        return "none"
+    if not isinstance(raw, str):
+        return "none"
+
+    parts = _smart_split_comma(raw.strip())
+    shadows: List[BoxShadow] = []
+    for part in parts:
+        tokens = _tokenize_shadow(part.strip())
+        if not tokens:
+            continue
+        inset = False
+        clean: List[str] = []
+        for t in tokens:
+            if t.lower() == "inset":
+                inset = True
+            else:
+                clean.append(t)
+        color, lengths = _extract_color_token(clean)
+        if color is None:
+            color = "rgba(0,0,0,1)"
+        nums: List[float] = []
+        for t in lengths:
+            v = parse_value(t)
+            if isinstance(v, (int, float)):
+                nums.append(float(v))
+        if len(nums) < 2:
+            continue  # need at least offset-x and offset-y
+        ox = nums[0]
+        oy = nums[1]
+        blur = nums[2] if len(nums) > 2 else 0.0
+        spread = nums[3] if len(nums) > 3 else 0.0
+        shadows.append(BoxShadow(
+            offset_x=ox, offset_y=oy,
+            blur_radius=blur, spread_radius=spread,
+            color=color, inset=inset,
+        ))
+    return tuple(shadows) if shadows else "none"
+
+
+# ---------------------------------------------------------------------------
+# transform parsing
+# ---------------------------------------------------------------------------
+
+_RE_TRANSFORM_FN = re.compile(
+    r"(translate[XY]?|rotate|scale[XY]?)\(([^)]*)\)",
+    re.IGNORECASE,
+)
+
+
+def _parse_angle(s: str) -> float:
+    """Parse an angle string, returning degrees."""
+    s = s.strip()
+    if s.endswith("rad"):
+        return float(s[:-3]) * (180.0 / 3.141592653589793)
+    if s.endswith("deg"):
+        return float(s[:-3])
+    if s.endswith("turn"):
+        return float(s[:-4]) * 360.0
+    if s.endswith("grad"):
+        return float(s[:-4]) * 0.9
+    # Bare number → degrees
+    return float(s)
+
+
+def parse_transform(raw: Any) -> Any:
+    """Parse a CSS ``transform`` value.
+
+    Returns a tuple of :class:`TransformFunction` instances, or the string
+    ``"none"`` for no transform.
+    """
+    if raw is None or (isinstance(raw, str) and raw.strip().lower() == "none"):
+        return "none"
+    if not isinstance(raw, str):
+        return "none"
+
+    fns: List[TransformFunction] = []
+    for m in _RE_TRANSFORM_FN.finditer(raw):
+        name = m.group(1).lower()
+        args_str = m.group(2).strip()
+        if name == "rotate":
+            fns.append(TransformFunction(name, (_parse_angle(args_str),)))
+        else:
+            parts = [p.strip() for p in args_str.split(",") if p.strip()]
+            if len(parts) == 1:
+                parts = args_str.split()
+            nums: List[float] = []
+            for p in parts:
+                v = parse_value(p)
+                if isinstance(v, (int, float)):
+                    nums.append(float(v))
+            if nums:
+                fns.append(TransformFunction(name, tuple(nums)))
+    return tuple(fns) if fns else "none"
+
+
+# ---------------------------------------------------------------------------
+# CSS filter parsing
+# ---------------------------------------------------------------------------
+
+_RE_FILTER_FN = re.compile(
+    r"([\w-]+)\(([^)]*)\)",
+    re.IGNORECASE,
+)
+
+_FILTER_NAMES = {
+    "blur", "brightness", "contrast", "grayscale",
+    "opacity", "saturate", "sepia", "drop-shadow",
+}
+
+
+def _parse_filter_amount(s: str) -> float:
+    """Parse a filter amount — number or percentage → float."""
+    s = s.strip()
+    if s.endswith("%"):
+        return float(s[:-1]) / 100.0
+    v = parse_value(s)
+    return float(v) if isinstance(v, (int, float)) else 0.0
+
+
+def parse_filter(raw: Any) -> Any:
+    """Parse a CSS ``filter`` value.
+
+    Returns a tuple of :class:`FilterFunction` instances, or the string
+    ``"none"`` for no filter.
+    """
+    if raw is None or (isinstance(raw, str) and raw.strip().lower() == "none"):
+        return "none"
+    if not isinstance(raw, str):
+        return "none"
+
+    fns: List[FilterFunction] = []
+    for m in _RE_FILTER_FN.finditer(raw):
+        name = m.group(1).lower()
+        if name not in _FILTER_NAMES:
+            continue
+        args_str = m.group(2).strip()
+        if name == "drop-shadow":
+            # drop-shadow(offset-x offset-y [blur] [color])
+            tokens = _tokenize_shadow(args_str)
+            color, lengths = _extract_color_token(tokens)
+            nums: List[float] = []
+            for t in lengths:
+                v = parse_value(t)
+                if isinstance(v, (int, float)):
+                    nums.append(float(v))
+            # args = (offset_x, offset_y, blur, color_placeholder)
+            ox = nums[0] if len(nums) > 0 else 0.0
+            oy = nums[1] if len(nums) > 1 else 0.0
+            blur = nums[2] if len(nums) > 2 else 0.0
+            # Store color as a negative hack — we'll keep it in the name
+            # Actually, use a BoxShadow-like approach: pack color into a
+            # special FilterFunction.  But FilterFunction.args is float-only.
+            # Solution: store drop-shadow as a BoxShadow wrapped in tuple.
+            from dataclasses import replace as _dc_replace  # noqa: local import
+            fns.append(FilterFunction(
+                name="drop-shadow",
+                args=(ox, oy, blur),
+            ))
+            # Attach color as extra attribute via subclass trick — simpler:
+            # just store the raw color string on the object after creation.
+            # Since FilterFunction is frozen, we use object.__setattr__.
+            if color:
+                object.__setattr__(fns[-1], "_color", color)
+            else:
+                object.__setattr__(fns[-1], "_color", "rgba(0,0,0,1)")
+        elif name == "blur":
+            v = parse_value(args_str)
+            amt = float(v) if isinstance(v, (int, float)) else 0.0
+            fns.append(FilterFunction(name, (amt,)))
+        else:
+            # brightness, contrast, grayscale, opacity, saturate, sepia
+            amt = _parse_filter_amount(args_str)
+            fns.append(FilterFunction(name, (amt,)))
+    return tuple(fns) if fns else "none"

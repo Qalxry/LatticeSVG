@@ -151,6 +151,9 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
     "opacity": PropertyDef(default="1", parser_hint="length"),
     "overflow": PropertyDef(default="visible", parser_hint="keyword"),
     "clip-path": PropertyDef(default="none", parser_hint="clip-path"),
+    "box-shadow": PropertyDef(default="none", parser_hint="box-shadow"),
+    "transform": PropertyDef(default="none", parser_hint="transform"),
+    "filter": PropertyDef(default="none", parser_hint="filter"),
 
     # ── Image ─────────────────────────────────────────────────────────
     "object-fit": PropertyDef(default="fill", parser_hint="keyword"),
