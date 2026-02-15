@@ -17,11 +17,13 @@ dependencies = [
 
 [project.optional-dependencies]
 png = ["cairosvg>=2.5"]
+hyphens = ["pyphen>=0.16"]
 dev = [
     "pytest>=7.0",
     "pillow>=9.0",
     "matplotlib>=3.5",
     "cairosvg>=2.5",
+    "pyphen>=0.16",
 ]
 
 [tool.hatch.build.targets.wheel]

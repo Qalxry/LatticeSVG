@@ -112,6 +112,18 @@ class TextNode(Node):
         ws_val = 0.0 if (ws is None or ws == "normal") else float(ws)
         return (ls_val, ws_val)
 
+    def _hyphens_value(self) -> str:
+        """Return the resolved ``hyphens`` value (``none``, ``manual``, or ``auto``)."""
+        val = self.style.get("hyphens")
+        if val in ("auto", "manual"):
+            return val
+        return "none"
+
+    def _lang_value(self) -> str:
+        """Return the resolved ``lang`` value for hyphenation dictionaries."""
+        val = self.style.get("lang")
+        return val if isinstance(val, str) and val else "en"
+
     # -----------------------------------------------------------------
     # Measurement
     # -----------------------------------------------------------------
@@ -127,27 +139,33 @@ class TextNode(Node):
         ow = self.style.get("overflow-wrap") or "normal"
         fm = FontManager.instance()
         ls_val, ws_val = self._spacing_values()
+        hyph = self._hyphens_value()
+        lang_v = self._lang_value()
 
         if self._spans is not None:
             # Rich text measurement
             math_be = self._math_backend()
             min_w = get_min_content_width_rich(self._spans, font_chain, size, ws, fm=fm, math_backend=math_be,
-                                               letter_spacing=ls_val, word_spacing=ws_val)
+                                               letter_spacing=ls_val, word_spacing=ws_val,
+                                               hyphens=hyph, lang=lang_v)
             max_w = get_max_content_width_rich(self._spans, font_chain, size, ws, fm=fm, math_backend=math_be,
                                                letter_spacing=ls_val, word_spacing=ws_val)
             lines = break_lines_rich(self._spans, max_w + 1, font_chain, size, ws, ow, fm=fm, math_backend=math_be,
-                                     letter_spacing=ls_val, word_spacing=ws_val)
+                                     letter_spacing=ls_val, word_spacing=ws_val,
+                                     hyphens=hyph, lang=lang_v)
             lh = self._line_height()
             _, h = compute_rich_block_size(lines, lh, float(size))
         else:
             min_w = get_min_content_width(self.text, font_chain, size, ws, fm=fm,
-                                          letter_spacing=ls_val, word_spacing=ws_val)
+                                          letter_spacing=ls_val, word_spacing=ws_val,
+                                          hyphens=hyph, lang=lang_v)
             max_w = get_max_content_width(self.text, font_chain, size, ws, fm=fm,
                                           letter_spacing=ls_val, word_spacing=ws_val)
 
             # Intrinsic height at max-content width (single line for normal)
             lines = break_lines(self.text, max_w + 1, font_chain, size, ws, ow, fm=fm,
-                                letter_spacing=ls_val, word_spacing=ws_val)
+                                letter_spacing=ls_val, word_spacing=ws_val,
+                                hyphens=hyph, lang=lang_v)
             lh = self._line_height()
             _, h = compute_text_block_size(lines, lh, float(size))
 
@@ -205,10 +223,13 @@ class TextNode(Node):
             # ---- Rich text layout ----
             math_be = self._math_backend()
             ls_val, ws_val = self._spacing_values()
+            hyph = self._hyphens_value()
+            lang_v = self._lang_value()
             self._rich_lines = break_lines_rich(
                 self._spans, content_w, font_chain, size, ws, ow,
                 fm=fm, math_backend=math_be,
                 letter_spacing=ls_val, word_spacing=ws_val,
+                hyphens=hyph, lang=lang_v,
             )
             text_align = self.style.get("text-align") or "left"
             self._rich_lines = align_lines_rich(self._rich_lines, content_w, text_align)
@@ -220,8 +241,11 @@ class TextNode(Node):
             # ---- Plain text layout (original path) ----
             self._rich_lines = None
             ls_val, ws_val = self._spacing_values()
+            hyph = self._hyphens_value()
+            lang_v = self._lang_value()
             self.lines = break_lines(self.text, content_w, font_chain, size, ws, ow, fm=fm,
-                                     letter_spacing=ls_val, word_spacing=ws_val)
+                                     letter_spacing=ls_val, word_spacing=ws_val,
+                                     hyphens=hyph, lang=lang_v)
             text_align = self.style.get("text-align") or "left"
             self.lines = align_lines(self.lines, content_w, text_align)
             lh = self._line_height()

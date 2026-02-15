@@ -138,6 +138,12 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
         default="none", inheritable=False, parser_hint="keyword"
     ),
     "text-overflow": PropertyDef(default="clip", parser_hint="keyword"),
+    "hyphens": PropertyDef(
+        default="none", inheritable=True, parser_hint="keyword"
+    ),
+    "lang": PropertyDef(
+        default="en", inheritable=True, parser_hint="keyword"
+    ),
 
     # ── Visual ────────────────────────────────────────────────────────
     "background-color": PropertyDef(default="none", parser_hint="color"),

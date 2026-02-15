@@ -11,6 +11,9 @@ from latticesvg.text.shaper import (
     get_min_content_width,
     measure_text,
     measure_word,
+    _strip_shy,
+    _hyphen_points_manual,
+    _SHY,
 )
 from latticesvg.text.font import FontManager, GlyphMetrics
 
@@ -404,3 +407,169 @@ class TestJustify:
         ]
         result = align_lines(lines, 200, "justify")
         assert result[0].x_offset == 0.0
+
+
+# ------------------------------------------------------------------
+# Hyphens helpers
+# ------------------------------------------------------------------
+
+class TestHyphensHelpers:
+    def test_strip_shy(self):
+        assert _strip_shy("hel\u00ADlo") == "hello"
+        assert _strip_shy("abc") == "abc"
+        assert _strip_shy("") == ""
+
+    def test_hyphen_points_manual(self):
+        word = "un\u00ADbreak\u00ADable"
+        pts = _hyphen_points_manual(word)
+        assert pts == [2, 8]
+
+    def test_hyphen_points_manual_no_shy(self):
+        assert _hyphen_points_manual("hello") == []
+
+
+# ------------------------------------------------------------------
+# Hyphens — manual mode
+# ------------------------------------------------------------------
+
+class TestHyphensManual:
+    """Test hyphens='manual' using soft-hyphen (U+00AD) insertion points."""
+
+    def test_manual_break_at_shy(self, mock_fm):
+        """A word with SHY should break at the soft-hyphen when it overflows."""
+        # "un\u00ADbreakable" — with 10px/char, total clean = 11 chars = 110px
+        # width=70 → "un-" prefix (30px) fits, "breakable" goes to next line
+        text = f"un{_SHY}breakable"
+        lines = break_lines(text, 70, FAKE_FONT, 16, fm=mock_fm,
+                            hyphens="manual")
+        assert len(lines) == 2
+        assert lines[0].text == "un-"
+        assert lines[0].hyphenated is True
+        assert lines[1].text == "breakable"
+
+    def test_manual_no_break_when_fits(self, mock_fm):
+        """Word with SHY that fits on one line — SHY is stripped, no hyphen."""
+        text = f"he{_SHY}llo"
+        lines = break_lines(text, 200, FAKE_FONT, 16, fm=mock_fm,
+                            hyphens="manual")
+        assert len(lines) == 1
+        assert lines[0].text == "hello"
+        assert lines[0].hyphenated is False
+
+    def test_manual_noop_without_shy(self, mock_fm):
+        """Without SHY chars, manual mode should not break words."""
+        text = "longword"  # 80px
+        lines = break_lines(text, 50, FAKE_FONT, 16, fm=mock_fm,
+                            hyphens="manual")
+        # Cannot hyphenate — word stays as-is on new line
+        assert len(lines) == 1
+        assert lines[0].text == "longword"
+
+    def test_manual_multiple_shy(self, mock_fm):
+        """Multiple SHY points — should pick the longest fitting prefix."""
+        # "un\u00ADbreak\u00ADable" → clean "unbreakable" = 110px
+        # width=80: "un-" = 30px fits, "unbreak-" = 80px (7 chars + '-')
+        # "unbreak-" = measure_text("unbreak-", ...) = 8*10 = 80px — fits exactly
+        text = f"un{_SHY}break{_SHY}able"
+        lines = break_lines(text, 80, FAKE_FONT, 16, fm=mock_fm,
+                            hyphens="manual")
+        assert len(lines) == 2
+        assert lines[0].text == "unbreak-"
+        assert lines[0].hyphenated is True
+        assert lines[1].text == "able"
+
+    def test_manual_nowrap_strips_shy(self, mock_fm):
+        """In nowrap mode, SHY chars are stripped but no wrapping occurs."""
+        text = f"hel{_SHY}lo wor{_SHY}ld"
+        lines = break_lines(text, 50, FAKE_FONT, 16, white_space="nowrap",
+                            fm=mock_fm, hyphens="manual")
+        assert len(lines) == 1
+        assert lines[0].text == "hello world"
+
+
+# ------------------------------------------------------------------
+# Hyphens — auto mode
+# ------------------------------------------------------------------
+
+class TestHyphensAuto:
+    """Test hyphens='auto' with a mocked pyphen backend."""
+
+    def test_auto_basic_split(self, mock_fm):
+        """Auto-hyphens with a mock that claims 'hyphenation' breaks as 'hy-phenation'."""
+        # Use side_effect so only "hyphenation" gets split; suffix gets no points
+        def _mock_points(word, lang):
+            if word == "hyphenation":
+                return [2]
+            return []
+        with patch("latticesvg.text.shaper._hyphen_points_auto", side_effect=_mock_points):
+            # "hyphenation" = 11 chars = 110px; width=50
+            # With split at 2: "hy-" = 30px fits in 50px
+            lines = break_lines("hyphenation", 50, FAKE_FONT, 16, fm=mock_fm,
+                                hyphens="auto", lang="en")
+        assert len(lines) == 2
+        assert lines[0].text == "hy-"
+        assert lines[0].hyphenated is True
+        assert lines[1].text == "phenation"
+
+    def test_auto_no_points_fallback(self, mock_fm):
+        """If pyphen returns no points, word moves to next line intact."""
+        with patch("latticesvg.text.shaper._hyphen_points_auto", return_value=[]):
+            lines = break_lines("longword", 50, FAKE_FONT, 16, fm=mock_fm,
+                                hyphens="auto", lang="en")
+        assert len(lines) == 1
+        assert lines[0].text == "longword"
+        assert lines[0].hyphenated is False
+
+    def test_auto_picks_best_point(self, mock_fm):
+        """Should pick the longest prefix that fits (greedy)."""
+        # "examination" = 11 chars; split points at [2, 5, 7]
+        # width=80 → "examina-" = 8*10 = 80px fits exactly
+        def _mock_points(word, lang):
+            if word == "examination":
+                return [2, 5, 7]
+            return []
+        with patch("latticesvg.text.shaper._hyphen_points_auto", side_effect=_mock_points):
+            lines = break_lines("examination", 80, FAKE_FONT, 16, fm=mock_fm,
+                                hyphens="auto", lang="en")
+        assert len(lines) == 2
+        assert lines[0].text == "examina-"
+        assert lines[0].hyphenated is True
+        assert lines[1].text == "tion"
+
+
+# ------------------------------------------------------------------
+# Hyphens — min-content-width
+# ------------------------------------------------------------------
+
+class TestHyphensMinContentWidth:
+    """get_min_content_width should be syllable-aware when hyphens != 'none'."""
+
+    def test_min_content_auto(self, mock_fm):
+        """With auto hyphens, min-width should be the widest syllable + hyphen."""
+        # "hyphenation" = 110px without hyphens
+        # With split at [2, 5]: syllables "hy", "phe", "nation"
+        # widths: "hy-" = 30, "phe-" = 40, "nation" = 60
+        # min-content = 60
+        with patch("latticesvg.text.shaper._hyphen_points_auto", return_value=[2, 5]):
+            w = get_min_content_width("hyphenation", FAKE_FONT, 16, fm=mock_fm,
+                                      hyphens="auto", lang="en")
+        assert w == 60.0
+
+    def test_min_content_manual(self, mock_fm):
+        """With manual hyphens, SHY positions determine syllables."""
+        text = f"un{_SHY}break{_SHY}able"
+        w = get_min_content_width(text, FAKE_FONT, 16, fm=mock_fm,
+                                  hyphens="manual")
+        # syllables: "un-" = 30, "break-" = 60, "able" = 40
+        # min-content = 60
+        assert w == 60.0
+
+    def test_min_content_none_ignores_shy(self, mock_fm):
+        """With hyphens='none', SHY does not affect min-content width."""
+        # "unbreakable" with SHY should still measure as full word
+        text = f"un{_SHY}breakable"
+        w = get_min_content_width(text, FAKE_FONT, 16, fm=mock_fm,
+                                  hyphens="none")
+        # The SHY char itself has advance_x=10 in our mock, so
+        # 12 chars * 10 = 120
+        assert w == 120.0

@@ -22,6 +22,7 @@ class Line:
     char_count: int = 0
     justified: bool = False            # True when text-align: justify applies
     word_spacing_justify: float = 0.0  # extra gap per word boundary for justify
+    hyphenated: bool = False           # True when line ends with a hyphen from auto/manual hyphens
 
 
 # ---------------------------------------------------------------------------
@@ -79,6 +80,107 @@ def _tokenize_breakable(text: str) -> List[Tuple[str, bool]]:
             tokens.append((text[i:j], False))
             i = j
     return tokens
+
+
+# ---------------------------------------------------------------------------
+# Hyphenation helpers
+# ---------------------------------------------------------------------------
+
+# Soft hyphen character (U+00AD) used by ``hyphens: manual``
+_SHY = "\u00AD"
+
+# Module-level cache for pyphen Pyphen instances keyed by language
+_hyphenators: dict = {}
+
+def _get_hyphenator(lang: str):
+    """Return a cached ``pyphen.Pyphen`` instance for *lang*, or ``None``.
+
+    Returns ``None`` when pyphen is not installed so that callers can
+    fall back gracefully.
+    """
+    if lang in _hyphenators:
+        return _hyphenators[lang]
+    try:
+        import pyphen  # type: ignore
+        h = pyphen.Pyphen(lang=lang)
+        _hyphenators[lang] = h
+        return h
+    except Exception:
+        _hyphenators[lang] = None
+        return None
+
+
+def _hyphen_points_auto(word: str, lang: str) -> List[int]:
+    """Return valid hyphenation positions (char indices) using pyphen.
+
+    Each index *i* means the word can be split as ``word[:i]`` + ``-``.
+    Returns an empty list when pyphen is unavailable or the word has no
+    valid break points.
+    """
+    h = _get_hyphenator(lang)
+    if h is None:
+        return []
+    return h.positions(word)
+
+
+def _hyphen_points_manual(word: str) -> List[int]:
+    """Return hyphenation positions from soft-hyphen (U+00AD) markers.
+
+    The returned indices refer to the *original* word (with SHY chars
+    present).  ``word[:i]`` (excluding the SHY itself) + ``-`` is the
+    visible prefix.
+    """
+    positions: List[int] = []
+    for i, ch in enumerate(word):
+        if ch == _SHY:
+            positions.append(i)
+    return positions
+
+
+def _strip_shy(text: str) -> str:
+    """Remove all soft-hyphen characters from *text*."""
+    return text.replace(_SHY, "")
+
+
+def _try_hyphenate(
+    word: str,
+    remaining_width: float,
+    font_path,
+    size: int,
+    fm: FontManager,
+    points: List[int],
+    letter_spacing: float,
+    hyphen_w: float,
+    is_manual: bool = False,
+) -> Optional[Tuple[str, str]]:
+    """Try to break *word* at the best hyphenation point.
+
+    Returns ``(prefix_with_hyphen, suffix)`` if a valid split is found
+    that fits within *remaining_width*, or ``None`` otherwise.
+
+    For ``manual`` mode, *points* are indices into the original word
+    (which may contain SHY chars that must be stripped from the output).
+    """
+    best: Optional[Tuple[str, str]] = None
+    for pos in points:
+        if is_manual:
+            # pos is index of the SHY char; prefix is word[:pos] without SHY
+            prefix_raw = word[:pos]
+            suffix_raw = word[pos + 1:]  # skip the SHY character
+            prefix_clean = _strip_shy(prefix_raw)
+            suffix_clean = _strip_shy(suffix_raw)
+        else:
+            prefix_clean = word[:pos]
+            suffix_clean = word[pos:]
+        if not prefix_clean or not suffix_clean:
+            continue
+        prefix_display = prefix_clean + "-"
+        pw = measure_text(prefix_display, font_path, size, fm=fm,
+                          letter_spacing=letter_spacing)
+        if pw <= remaining_width:
+            # Pick the longest prefix that fits
+            best = (prefix_display, suffix_clean)
+    return best
 
 
 # ---------------------------------------------------------------------------
@@ -143,6 +245,8 @@ def break_lines(
     fm: Optional[FontManager] = None,
     letter_spacing: float = 0.0,
     word_spacing: float = 0.0,
+    hyphens: str = "none",
+    lang: str = "en",
 ) -> List[Line]:
     """Break *text* into lines that fit within *available_width*.
 
@@ -173,17 +277,21 @@ def break_lines(
                           letter_spacing=_ls, word_spacing=_ws)
     if white_space == "pre-line":
         return _break_pre_line(text, available_width, font_path, size, fm, break_word=break_word,
-                               letter_spacing=_ls, word_spacing=_ws)
+                               letter_spacing=_ls, word_spacing=_ws,
+                               hyphens=hyphens, lang=lang)
     if white_space == "nowrap":
         # Collapse whitespace, single line
         collapsed = " ".join(text.split())
+        if hyphens != "none":
+            collapsed = _strip_shy(collapsed)
         w = measure_text(collapsed, font_path, size, fm=fm,
                          letter_spacing=_ls, word_spacing=_ws)
         return [Line(text=collapsed, width=w, char_count=len(collapsed))]
 
     # white_space == "normal" — default
     return _break_normal(text, available_width, font_path, size, fm, break_word=break_word,
-                         letter_spacing=_ls, word_spacing=_ws)
+                         letter_spacing=_ls, word_spacing=_ws,
+                         hyphens=hyphens, lang=lang)
 
 
 def _break_normal(
@@ -195,6 +303,8 @@ def _break_normal(
     break_word: bool = False,
     letter_spacing: float = 0.0,
     word_spacing: float = 0.0,
+    hyphens: str = "none",
+    lang: str = "en",
 ) -> List[Line]:
     """Greedy line-breaking for 'normal' white-space mode.
 
@@ -218,19 +328,73 @@ def _break_normal(
     current_parts: List[str] = []
     current_width = 0.0
 
-    def _flush_line() -> None:
+    # Pre-compute hyphen width once if hyphenation is active
+    _hyph_active = hyphens != "none"
+    _hyphen_w = measure_text("-", font_path, size, fm=fm) if _hyph_active else 0.0
+
+    def _flush_line(hyphenated: bool = False) -> None:
         """Flush *current_parts* into *lines*."""
         nonlocal current_parts, current_width
         line_text = "".join(current_parts).rstrip()
+        # Strip soft-hyphen characters from output
+        if _hyph_active:
+            line_text = _strip_shy(line_text)
         if line_text:
             line_w = measure_text(line_text, font_path, size, fm=fm,
                                   letter_spacing=_ls, word_spacing=_ws)
-            lines.append(Line(text=line_text, width=line_w, char_count=len(line_text)))
+            lines.append(Line(text=line_text, width=line_w,
+                              char_count=len(line_text),
+                              hyphenated=hyphenated))
         current_parts = []
         current_width = 0.0
 
+    def _get_hyph_points(word: str) -> List[int]:
+        """Return hyphenation points for *word*."""
+        if hyphens == "auto":
+            return _hyphen_points_auto(_strip_shy(word), lang)
+        return _hyphen_points_manual(word)
+
+    def _measure_word(word: str) -> float:
+        """Measure *word*, stripping SHY if needed."""
+        clean = _strip_shy(word) if _hyph_active else word
+        return measure_text(clean, font_path, size, fm=fm,
+                            letter_spacing=_ls, word_spacing=_ws)
+
+    def _place_with_hyph(word: str) -> None:
+        """Place *word* on a fresh line, hyphenating iteratively.
+
+        Assumes ``current_parts`` is empty.  Repeatedly splits off the
+        longest fitting prefix until the remainder fits on one line.
+        """
+        nonlocal current_parts, current_width
+        while True:
+            w = _measure_word(word)
+            if w <= available_width:
+                # Remaining piece fits — done
+                current_parts = [word]
+                current_width = w
+                return
+            pts = _get_hyph_points(word)
+            result = _try_hyphenate(
+                word, available_width, font_path, size, fm,
+                pts, _ls, _hyphen_w,
+                is_manual=(hyphens == "manual"),
+            )
+            if result is not None:
+                prefix, suffix = result
+                current_parts = [prefix]
+                _flush_line(hyphenated=True)
+                word = suffix  # loop with the remainder
+            else:
+                # Cannot hyphenate — place as-is (will overflow)
+                current_parts = [word]
+                current_width = w
+                return
+
     for token_text, is_space in tokens:
-        token_w = measure_text(token_text, font_path, size, fm=fm,
+        # SHY chars are zero-width for measurement purposes
+        token_measure_text = _strip_shy(token_text) if _hyph_active else token_text
+        token_w = measure_text(token_measure_text, font_path, size, fm=fm,
                                letter_spacing=_ls, word_spacing=_ws)
 
         # letter-spacing bridge: when appending a new token to an
@@ -253,7 +417,8 @@ def _break_normal(
                 # Flush current line first, then split the token.
                 _flush_line()
                 _split_token_into_lines(
-                    token_text, available_width,
+                    _strip_shy(token_text) if _hyph_active else token_text,
+                    available_width,
                     font_path, size, fm,
                     current_parts, lines,
                     letter_spacing=_ls,
@@ -262,6 +427,26 @@ def _break_normal(
                     "".join(current_parts), font_path, size, fm=fm,
                     letter_spacing=_ls, word_spacing=_ws,
                 )
+            elif _hyph_active and not is_space:
+                # --- Hyphenation attempt ---
+                remaining = available_width - current_width - bridge
+                pts = _get_hyph_points(token_text)
+                result = _try_hyphenate(
+                    token_text, remaining, font_path, size, fm,
+                    pts, _ls, _hyphen_w,
+                    is_manual=(hyphens == "manual"),
+                )
+                if result is not None:
+                    prefix, suffix = result
+                    current_parts.append(prefix)
+                    _flush_line(hyphenated=True)
+                    # Suffix may still exceed available_width → loop
+                    _place_with_hyph(suffix)
+                else:
+                    # Remaining space too small — flush, then try on
+                    # a fresh line with full width (iterative).
+                    _flush_line()
+                    _place_with_hyph(token_text)
             else:
                 # Normal overflow — flush and start new line with this token
                 _flush_line()
@@ -271,7 +456,8 @@ def _break_normal(
             # Check: fresh line with a single oversized token
             if break_word and not current_parts and token_w > available_width:
                 _split_token_into_lines(
-                    token_text, available_width,
+                    _strip_shy(token_text) if _hyph_active else token_text,
+                    available_width,
                     font_path, size, fm,
                     current_parts, lines,
                     letter_spacing=_ls,
@@ -280,6 +466,9 @@ def _break_normal(
                     "".join(current_parts), font_path, size, fm=fm,
                     letter_spacing=_ls, word_spacing=_ws,
                 )
+            elif _hyph_active and not is_space and not current_parts and token_w > available_width:
+                # Oversized token on a fresh line — iterative hyphenation
+                _place_with_hyph(token_text)
             else:
                 current_parts.append(token_text)
                 current_width += bridge + token_w
@@ -436,6 +625,8 @@ def _break_pre_line(
     break_word: bool = False,
     letter_spacing: float = 0.0,
     word_spacing: float = 0.0,
+    hyphens: str = "none",
+    lang: str = "en",
 ) -> List[Line]:
     """Line-breaking for 'pre-line' white-space mode.
 
@@ -447,7 +638,8 @@ def _break_pre_line(
     result: List[Line] = []
     for segment in segments:
         sub = _break_normal(segment, available_width, font_path, size, fm, break_word=break_word,
-                            letter_spacing=letter_spacing, word_spacing=word_spacing)
+                            letter_spacing=letter_spacing, word_spacing=word_spacing,
+                            hyphens=hyphens, lang=lang)
         result.extend(sub)
     return result if result else [Line(text="", width=0.0, char_count=0)]
 
@@ -538,11 +730,17 @@ def get_min_content_width(
     fm: Optional[FontManager] = None,
     letter_spacing: float = 0.0,
     word_spacing: float = 0.0,
+    hyphens: str = "none",
+    lang: str = "en",
 ) -> float:
     """Return the minimum content width — the width of the longest word.
 
     For CJK text each character is breakable so the min width is the
     widest single CJK character or the widest non-CJK word.
+
+    When *hyphens* is ``auto`` or ``manual``, words can be split at
+    hyphenation points so the min width is the widest syllable fragment
+    (plus a trailing hyphen character).
     """
     if fm is None:
         fm = FontManager.instance()
@@ -554,11 +752,54 @@ def get_min_content_width(
         return 0.0
     tokens = _tokenize_breakable(collapsed)
     max_w = 0.0
+    _hyph_active = hyphens != "none"
+    hyphen_w = measure_text("-", font_path, size, fm=fm) if _hyph_active else 0.0
     for token_text, is_space in tokens:
         if not is_space:
-            w = measure_text(token_text, font_path, size, fm=fm,
-                             letter_spacing=letter_spacing, word_spacing=word_spacing)
-            max_w = max(max_w, w)
+            if _hyph_active:
+                # Split the word at hyphenation points and find the
+                # widest syllable fragment (with hyphen appended to
+                # all but the last fragment).
+                clean = _strip_shy(token_text)
+                if hyphens == "auto":
+                    pts = _hyphen_points_auto(clean, lang)
+                else:
+                    pts = _hyphen_points_manual(token_text)
+                if pts:
+                    # Build syllable fragments
+                    fragments: List[str] = []
+                    if hyphens == "manual":
+                        prev = 0
+                        for p in pts:
+                            frag = _strip_shy(token_text[prev:p])
+                            fragments.append(frag)
+                            prev = p + 1  # skip the SHY
+                        tail = _strip_shy(token_text[prev:])
+                        if tail:
+                            fragments.append(tail)
+                    else:
+                        prev = 0
+                        for p in pts:
+                            fragments.append(clean[prev:p])
+                            prev = p
+                        tail = clean[prev:]
+                        if tail:
+                            fragments.append(tail)
+                    for fi, frag in enumerate(fragments):
+                        fw = measure_text(frag, font_path, size, fm=fm,
+                                          letter_spacing=letter_spacing)
+                        # All fragments except the last get a trailing hyphen
+                        if fi < len(fragments) - 1:
+                            fw += hyphen_w
+                        max_w = max(max_w, fw)
+                else:
+                    w = measure_text(clean, font_path, size, fm=fm,
+                                     letter_spacing=letter_spacing, word_spacing=word_spacing)
+                    max_w = max(max_w, w)
+            else:
+                w = measure_text(token_text, font_path, size, fm=fm,
+                                 letter_spacing=letter_spacing, word_spacing=word_spacing)
+                max_w = max(max_w, w)
     return max_w
 
 
@@ -613,6 +854,7 @@ class RichLine:
     justified: bool = False            # True when text-align: justify applies
     word_spacing_justify: float = 0.0  # extra gap per word boundary for justify
     _cjk_justify: bool = False         # True when CJK per-char distribution
+    hyphenated: bool = False           # True when line ends with a hyphen from auto/manual hyphens
 
 
 # ---------------------------------------------------------------------------
@@ -691,6 +933,8 @@ def break_lines_rich(
     math_backend: Optional[object] = None,
     letter_spacing: float = 0.0,
     word_spacing: float = 0.0,
+    hyphens: str = "none",
+    lang: str = "en",
 ) -> List[RichLine]:
     """Break a list of ``TextSpan`` into ``RichLine`` objects.
 
@@ -791,9 +1035,19 @@ def break_lines_rich(
     lines: List[RichLine] = []
     cur_frags: List[SpanFragment] = []
     cur_width = 0.0
+    _hyph_active = hyphens != "none"
 
-    def _flush() -> None:
+    def _flush(hyphenated: bool = False) -> None:
         nonlocal cur_frags, cur_width
+        # Strip soft-hyphen from all fragment texts
+        if _hyph_active:
+            cur_frags = [
+                SpanFragment(
+                    text=_strip_shy(f.text), width=_measure_span_text(_strip_shy(f.text), [f.font_path] if f.font_path else base_font_chain, f.font_size, fm, letter_spacing=_ls, word_spacing=_ws) if _SHY in f.text else f.width,
+                    span_index=f.span_index, font_path=f.font_path, font_size=f.font_size, svg_fragment=f.svg_fragment,
+                ) if f.svg_fragment is None and _SHY in f.text else f
+                for f in cur_frags
+            ]
         # Strip trailing whitespace fragment
         while cur_frags and cur_frags[-1].text.endswith(" "):
             last = cur_frags[-1]
@@ -810,7 +1064,8 @@ def break_lines_rich(
             else:
                 cur_frags.pop()
         total_w = sum(f.width for f in cur_frags)
-        lines.append(RichLine(fragments=list(cur_frags), width=total_w))
+        lines.append(RichLine(fragments=list(cur_frags), width=total_w,
+                               hyphenated=hyphenated))
         cur_frags = []
         cur_width = 0.0
 
@@ -866,7 +1121,8 @@ def break_lines_rich(
         else:
             tokens = _tokenize_breakable(text)
             for tok_text, is_space in tokens:
-                tok_w = _measure_span_text(tok_text, chain, sz, fm,
+                tok_measure = _strip_shy(tok_text) if (_hyph_active and _SHY in tok_text) else tok_text
+                tok_w = _measure_span_text(tok_measure, chain, sz, fm,
                                            letter_spacing=_ls, word_spacing=_ws)
 
                 fits = (not cur_frags) or (cur_width + tok_w <= available_width)
@@ -909,14 +1165,78 @@ def break_lines_rich(
                             ))
                             cur_width += buf_w
                     else:
-                        _flush()
-                        cur_frags.append(SpanFragment(
-                            text=tok_text, width=tok_w,
-                            span_index=span_idx,
-                            font_path=fp if isinstance(fp, str) else (fp[0] if fp else ""),
-                            font_size=sz,
-                        ))
-                        cur_width += tok_w
+                        # --- Hyphenation attempt (rich text) ---
+                        _fp_str = fp if isinstance(fp, str) else (fp[0] if fp else "")
+                        if _hyph_active and not is_space:
+                            remaining = available_width - cur_width
+                            hyp_w = _measure_span_text("-", chain, sz, fm, letter_spacing=_ls)
+
+                            def _get_rich_hyph_pts(w):
+                                if hyphens == "auto":
+                                    return _hyphen_points_auto(_strip_shy(w), lang)
+                                return _hyphen_points_manual(w)
+
+                            def _meas_rich(w):
+                                c = _strip_shy(w) if (_SHY in w) else w
+                                return _measure_span_text(c, chain, sz, fm,
+                                                          letter_spacing=_ls, word_spacing=_ws)
+
+                            # First attempt: fit in remaining space
+                            pts = _get_rich_hyph_pts(tok_text)
+                            result = _try_hyphenate(
+                                tok_text, remaining, _fp_str, sz, fm,
+                                pts, _ls, hyp_w,
+                                is_manual=(hyphens == "manual"),
+                            )
+                            if result is not None:
+                                prefix, suffix = result
+                                cur_frags.append(SpanFragment(
+                                    text=prefix, width=_meas_rich(prefix),
+                                    span_index=span_idx, font_path=_fp_str, font_size=sz,
+                                ))
+                                _flush(hyphenated=True)
+                                word_rem = suffix
+                            else:
+                                # Remaining space too small — flush, retry on fresh line
+                                _flush()
+                                word_rem = tok_text
+
+                            # Iteratively hyphenate until remainder fits
+                            while True:
+                                w_rem = _meas_rich(word_rem)
+                                if w_rem <= available_width:
+                                    break
+                                pts2 = _get_rich_hyph_pts(word_rem)
+                                r2 = _try_hyphenate(
+                                    word_rem, available_width, _fp_str, sz, fm,
+                                    pts2, _ls, hyp_w,
+                                    is_manual=(hyphens == "manual"),
+                                )
+                                if r2 is not None:
+                                    p2, s2 = r2
+                                    cur_frags.append(SpanFragment(
+                                        text=p2, width=_meas_rich(p2),
+                                        span_index=span_idx, font_path=_fp_str, font_size=sz,
+                                    ))
+                                    _flush(hyphenated=True)
+                                    word_rem = s2
+                                else:
+                                    break  # can't split further
+
+                            cur_frags.append(SpanFragment(
+                                text=word_rem, width=_meas_rich(word_rem),
+                                span_index=span_idx, font_path=_fp_str, font_size=sz,
+                            ))
+                            cur_width = cur_frags[-1].width
+                        else:
+                            _flush()
+                            cur_frags.append(SpanFragment(
+                                text=tok_text, width=tok_w,
+                                span_index=span_idx,
+                                font_path=_fp_str,
+                                font_size=sz,
+                            ))
+                            cur_width += tok_w
                 else:
                     cur_frags.append(SpanFragment(
                         text=tok_text, width=tok_w,
@@ -1024,6 +1344,8 @@ def get_min_content_width_rich(
     math_backend: Optional[object] = None,
     letter_spacing: float = 0.0,
     word_spacing: float = 0.0,
+    hyphens: str = "none",
+    lang: str = "en",
 ) -> float:
     """Return the min-content width for a rich span list."""
     from ..markup.parser import TextSpan  # type: ignore
@@ -1034,11 +1356,13 @@ def get_min_content_width_rich(
         return get_max_content_width_rich(spans, base_font_chain, base_size, white_space, fm=fm, math_backend=math_backend,
                                           letter_spacing=letter_spacing, word_spacing=word_spacing)
 
+    _hyph_active = hyphens != "none"
     max_w = 0.0
     for span in spans:
         if span.is_line_break:
             continue
         chain, sz = _resolve_span_font(span, base_font_chain, base_size, fm)
+        fp = chain[0] if isinstance(chain, list) and chain else chain
 
         if span.baseline_shift in ("super", "sub") and span.font_size is None:
             sz = max(1, int(base_size * 0.7))
@@ -1052,11 +1376,48 @@ def get_min_content_width_rich(
         if not text:
             continue
         tokens = _tokenize_breakable(text)
+        hyphen_w = _measure_span_text("-", chain, sz, fm) if _hyph_active else 0.0
         for tok_text, is_space in tokens:
             if not is_space:
-                w = _measure_span_text(tok_text, chain, sz, fm,
-                                       letter_spacing=letter_spacing, word_spacing=word_spacing)
-                max_w = max(max_w, w)
+                if _hyph_active:
+                    clean = _strip_shy(tok_text)
+                    if hyphens == "auto":
+                        pts = _hyphen_points_auto(clean, lang)
+                    else:
+                        pts = _hyphen_points_manual(tok_text)
+                    if pts:
+                        fragments_r: List[str] = []
+                        if hyphens == "manual":
+                            prev_r = 0
+                            for p in pts:
+                                frag_r = _strip_shy(tok_text[prev_r:p])
+                                fragments_r.append(frag_r)
+                                prev_r = p + 1
+                            tail_r = _strip_shy(tok_text[prev_r:])
+                            if tail_r:
+                                fragments_r.append(tail_r)
+                        else:
+                            prev_r = 0
+                            for p in pts:
+                                fragments_r.append(clean[prev_r:p])
+                                prev_r = p
+                            tail_r = clean[prev_r:]
+                            if tail_r:
+                                fragments_r.append(tail_r)
+                        for fi, frag_r in enumerate(fragments_r):
+                            fw = _measure_span_text(frag_r, chain, sz, fm,
+                                                    letter_spacing=letter_spacing)
+                            if fi < len(fragments_r) - 1:
+                                fw += hyphen_w
+                            max_w = max(max_w, fw)
+                    else:
+                        w = _measure_span_text(clean, chain, sz, fm,
+                                               letter_spacing=letter_spacing, word_spacing=word_spacing)
+                        max_w = max(max_w, w)
+                else:
+                    w = _measure_span_text(tok_text, chain, sz, fm,
+                                           letter_spacing=letter_spacing, word_spacing=word_spacing)
+                    max_w = max(max_w, w)
     return max_w
 
 
