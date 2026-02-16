@@ -204,10 +204,19 @@ def _subset_font_woff2(font_path: str, chars: Set[str], face_index: int = 0) -> 
     font = TTFont(font_path, fontNumber=face_index)
 
     options = Options()
-    options.desubroutinize = True
+    # Keep subroutines — desubroutinizing is expensive and actually
+    # *increases* WOFF2 size because brotli compresses subroutinised
+    # CFF data more efficiently.
+    options.desubroutinize = False
+    # Strip hinting — SVG renderers ignore pixel-grid hints, so
+    # removing them saves both processing time and output size.
+    options.hinting = False
     # Retain glyph names for better debuggability, but drop unused tables
     options.name_IDs = ["*"]
     options.name_languages = ["*"]
+    # Explicitly drop tables that fontTools doesn't know how to
+    # subset (avoids warnings) and that are irrelevant for SVG.
+    options.drop_tables += ["FFTM"]
 
     subsetter = Subsetter(options=options)
     text = "".join(sorted(chars))
