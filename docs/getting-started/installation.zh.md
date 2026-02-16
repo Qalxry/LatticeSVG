@@ -1,42 +1,42 @@
-# Installation
+# 安装
 
-## Install with pip
+## 使用 pip 安装
 
 ```bash
 pip install latticesvg
 ```
 
-## Optional Extras
+## 可选功能
 
-LatticeSVG provides two optional dependency groups:
+LatticeSVG 提供两组可选依赖，按需安装：
 
-=== "PNG Output"
+=== "PNG 输出"
 
     ```bash
     pip install latticesvg[png]
     ```
 
-    Installs [CairoSVG](https://cairosvg.org/) for SVG → PNG conversion.
+    安装 [CairoSVG](https://cairosvg.org/) 以支持 SVG → PNG 转换。
 
-=== "Auto-Hyphenation"
+=== "自动断词"
 
     ```bash
     pip install latticesvg[hyphens]
     ```
 
-    Installs [Pyphen](https://github.com/Kozea/Pyphen) for multi-language auto-hyphenation (`hyphens: auto`).
+    安装 [Pyphen](https://github.com/Kozea/Pyphen) 以支持多语言自动断词（`hyphens: auto`）。
 
-=== "Install All"
+=== "全部安装"
 
     ```bash
     pip install latticesvg[png,hyphens]
     ```
 
-## System Dependencies
+## 系统依赖
 
 ### FreeType
 
-LatticeSVG uses [freetype-py](https://github.com/rougier/freetype-py) for precise glyph measurement, which requires the FreeType library on your system.
+LatticeSVG 使用 [freetype-py](https://github.com/rougier/freetype-py) 进行字形精确测量，需要系统安装 FreeType 库。
 
 === "Linux (Debian/Ubuntu)"
 
@@ -56,15 +56,15 @@ LatticeSVG uses [freetype-py](https://github.com/rougier/freetype-py) for precis
     brew install freetype
     ```
 
-    macOS usually comes with FreeType pre-installed.
+    macOS 通常已预装 FreeType。
 
 === "Windows"
 
-    freetype-py automatically downloads a pre-compiled FreeType DLL — no extra steps needed.
+    freetype-py 会自动下载预编译的 FreeType DLL，通常无需额外操作。
 
-### Cairo (PNG Output Only)
+### Cairo（仅 PNG 输出）
 
-For PNG output, you also need the Cairo graphics library:
+如需 PNG 输出，还需安装 Cairo 图形库：
 
 === "Linux (Debian/Ubuntu)"
 
@@ -80,9 +80,9 @@ For PNG output, you also need the Cairo graphics library:
 
 === "Windows"
 
-    See the [CairoSVG installation guide](https://cairosvg.org/documentation/#installation).
+    参阅 [CairoSVG 安装指南](https://cairosvg.org/documentation/#installation)。
 
-## Verify Installation
+## 验证安装
 
 ```python
 import latticesvg
@@ -95,16 +95,16 @@ from latticesvg import GridContainer, TextNode, Renderer
 page = GridContainer(style={"width": "200px", "padding": "10px"})
 page.add(TextNode("Hello LatticeSVG!"))
 Renderer().render(page, "test.svg")
-print("✓ LatticeSVG installed successfully")
+print("✓ LatticeSVG 安装成功")
 ```
 
-## Development Installation
+## 开发安装
 
-To install from source and contribute:
+如果你想从源码安装并参与开发：
 
 ```bash
 git clone https://github.com/nicholasgasior/LatticeSVG.git
 cd LatticeSVG
 pip install -e ".[dev,docs]"
-pytest  # Run tests
+pytest  # 运行测试
 ```

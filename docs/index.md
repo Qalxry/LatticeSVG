@@ -8,18 +8,18 @@ hide:
 
 # LatticeSVG
 
-**基于 CSS Grid 的声明式矢量布局引擎**
+**Declarative Vector Layout Engine Powered by CSS Grid**
 
-用 Python 字典描述布局 → 引擎完成测量、排版、渲染 → 输出精确到像素的 SVG / PNG
+Describe layouts with Python dicts → Engine handles measuring, typesetting & rendering → Pixel-perfect SVG / PNG output
 
-[快速开始](getting-started/quickstart.md){ .md-button .md-button--primary }
-[API 参考](reference/api/index.md){ .md-button }
+[Quick Start](getting-started/quickstart.md){ .md-button .md-button--primary }
+[API Reference](reference/api/index.md){ .md-button }
 
 </div>
 
 <figure markdown="span">
-  ![示例效果](assets/images/examples/landing_hero.svg){ loading=lazy }
-  <figcaption>LatticeSVG 渲染效果预览</figcaption>
+  ![Example output](assets/images/examples/landing_hero.svg){ loading=lazy }
+  <figcaption>LatticeSVG rendering preview</figcaption>
 </figure>
 
 ---
@@ -28,49 +28,49 @@ hide:
 
 <div class="feature-card" markdown>
 
-### :material-grid: CSS Grid 布局
+### :material-grid: CSS Grid Layout
 
-完整的 CSS Grid Level 1 实现——固定轨道、`fr` 弹性单位、`minmax()`、`repeat()`、命名区域、自动放置算法，一切尽在掌握。
-
-</div>
-
-<div class="feature-card" markdown>
-
-### :material-format-text: 精确文本排版
-
-基于 FreeType 的字形级精确测量，支持自动折行、CJK 排版、两端对齐、富文本标记、竖排文本、自动断词。
+Full CSS Grid Level 1 implementation — fixed tracks, `fr` flexible units, `minmax()`, `repeat()`, named areas, auto-placement algorithm, all at your fingertips.
 
 </div>
 
 <div class="feature-card" markdown>
 
-### :material-puzzle: 多节点类型
+### :material-format-text: Precise Text Typesetting
 
-`TextNode`、`ImageNode`、`SVGNode`、`MplNode`（Matplotlib）、`MathNode`（LaTeX 公式）——任意组合嵌套。
-
-</div>
-
-<div class="feature-card" markdown>
-
-### :material-palette: 完整视觉样式
-
-63 个 CSS 属性：盒模型、圆角、边框样式、渐变背景、阴影、变换、滤镜、裁剪路径、透明度。
+FreeType-based glyph-level measurement with automatic line breaking, CJK typesetting, justification, rich text markup, vertical writing, and auto-hyphenation.
 
 </div>
 
 <div class="feature-card" markdown>
 
-### :material-file-document: 声明式 API
+### :material-puzzle: Multiple Node Types
 
-所有配置通过 Python `dict` 传入，属性名与 CSS 一致。无需学习新的 DSL，CSS 经验直接复用。
+`TextNode`, `ImageNode`, `SVGNode`, `MplNode` (Matplotlib), `MathNode` (LaTeX formulas) — freely combine and nest them.
 
 </div>
 
 <div class="feature-card" markdown>
 
-### :material-image-multiple: SVG & PNG 输出
+### :material-palette: Complete Visual Styling
 
-默认输出矢量 SVG，可选通过 CairoSVG 导出高分辨率 PNG。支持 WOFF2 字体子集化嵌入。
+63 CSS properties: box model, border-radius, border styles, gradient backgrounds, shadows, transforms, filters, clip-path, opacity.
+
+</div>
+
+<div class="feature-card" markdown>
+
+### :material-file-document: Declarative API
+
+All configuration via Python `dict` with CSS-compatible property names. No new DSL to learn — your CSS knowledge transfers directly.
+
+</div>
+
+<div class="feature-card" markdown>
+
+### :material-image-multiple: SVG & PNG Output
+
+Vector SVG by default, optional high-resolution PNG via CairoSVG. Supports WOFF2 font subsetting and embedding.
 
 </div>
 
@@ -78,12 +78,12 @@ hide:
 
 ---
 
-## 极简示例
+## Minimal Example
 
 ```python
 from latticesvg import GridContainer, TextNode, Renderer
 
-# 1. 创建 Grid 容器
+# 1. Create a Grid container
 page = GridContainer(style={
     "width": "600px",
     "padding": "24px",
@@ -92,46 +92,46 @@ page = GridContainer(style={
     "background-color": "#ffffff",
 })
 
-# 2. 添加子节点
+# 2. Add child nodes
 page.add(TextNode("Hello", style={"font-size": "24px", "color": "#2c3e50"}))
 page.add(TextNode("World", style={"font-size": "24px", "color": "#e74c3c"}))
 
-# 3. 渲染输出
+# 3. Render output
 Renderer().render(page, "hello.svg")
 ```
 
 <figure markdown="span">
-  ![极简示例效果](assets/images/examples/quickstart_two_col.svg){ loading=lazy }
-  <figcaption>上述代码的渲染结果</figcaption>
+  ![Minimal example output](assets/images/examples/quickstart_two_col.svg){ loading=lazy }
+  <figcaption>Rendered output of the code above</figcaption>
 </figure>
 
 ---
 
-## 安装
+## Installation
 
 ```bash
 pip install latticesvg
 
-# 如需 PNG 输出
+# For PNG output
 pip install latticesvg[png]
 
-# 如需自动断词
+# For auto-hyphenation
 pip install latticesvg[hyphens]
 ```
 
-!!! info "系统依赖"
-    LatticeSVG 需要系统安装 FreeType 库。大多数 Linux 发行版和 macOS 已预装。
-    Windows 用户请参阅 [安装指南](getting-started/installation.md)。
+!!! info "System Dependencies"
+    LatticeSVG requires the FreeType library installed on your system. Most Linux distributions and macOS come with it pre-installed.
+    Windows users please see the [Installation Guide](getting-started/installation.md).
 
 ---
 
-## 项目状态
+## Project Status
 
-| 指标 | 数据 |
+| Metric | Data |
 |---|---|
-| 版本 | v0.1.0 |
-| 许可证 | MIT |
+| Version | v0.1.0 |
+| License | MIT |
 | Python | ≥ 3.8 |
-| 核心代码 | ~8,900 行 |
-| 测试 | 352 个测试函数 |
-| 演示 | 50 个示例脚本 |
+| Core Code | ~8,900 lines |
+| Tests | 352 test functions |
+| Demos | 50 example scripts |

@@ -1,10 +1,10 @@
-# 节点类型
+# Node Types
 
-LatticeSVG 提供 6 种节点类型，满足不同的内容需求。
+LatticeSVG provides 6 node types for different content needs.
 
 ## GridContainer
 
-容器节点，使用 CSS Grid 排列子节点。所有布局都从 `GridContainer` 开始。
+Container node that arranges children using CSS Grid. All layouts start with `GridContainer`.
 
 ```python
 from latticesvg import GridContainer
@@ -18,56 +18,50 @@ container = GridContainer(style={
 })
 ```
 
-详细的 Grid 布局用法请参阅 [Grid 布局教程](grid-layout.md)。
+See the [Grid Layout Tutorial](grid-layout.md) for detailed usage.
 
 ## TextNode
 
-文本叶节点，显示文本内容并支持自动换行。
+Text leaf node with automatic line breaking.
 
 ```python
 from latticesvg import TextNode
 
-# 简单文本
-text = TextNode("Hello, World!", style={
-    "font-size": "18px",
-    "color": "#333333",
-})
+# Simple text
+text = TextNode("Hello, World!", style={"font-size": "18px", "color": "#333"})
 
-# 富文本（HTML 标记）
+# Rich text (HTML markup)
 rich = TextNode(
-    "这是 <b>加粗</b> 和 <i>斜体</i> 文本。",
+    "This is <b>bold</b> and <i>italic</i> text.",
     style={"font-size": "14px"},
     markup="html",
 )
 
-# 富文本（Markdown 标记）
+# Rich text (Markdown markup)
 md = TextNode(
-    "这是 **加粗** 和 *斜体* 文本。",
+    "This is **bold** and *italic* text.",
     style={"font-size": "14px"},
     markup="markdown",
 )
 ```
 
-详细用法请参阅 [文本排版教程](text-typography.md) 和 [富文本教程](rich-text.md)。
+See [Text Typography](text-typography.md) and [Rich Text](rich-text.md) tutorials for details.
 
 ## ImageNode
 
-图片叶节点，嵌入光栅图片（PNG、JPEG 等）。
+Image leaf node for embedding raster images (PNG, JPEG, etc.).
 
 ```python
 from latticesvg import ImageNode
 
-# 从文件路径加载
-img = ImageNode("photo.png", style={
-    "width": "300px",
-    "height": "200px",
-})
+# From file path
+img = ImageNode("photo.png", style={"width": "300px", "height": "200px"})
 
-# 从 bytes 加载
+# From bytes
 with open("photo.png", "rb") as f:
     img = ImageNode(f.read(), style={"width": "300px"})
 
-# 从 PIL Image 加载
+# From PIL Image
 from PIL import Image
 pil_img = Image.open("photo.png")
 img = ImageNode(pil_img, style={"width": "300px"})
@@ -75,50 +69,46 @@ img = ImageNode(pil_img, style={"width": "300px"})
 
 ### object-fit
 
-控制图片在容器中的缩放方式：
+Control how the image scales within its container:
 
 ```python
 ImageNode("photo.png", style={
     "width": "200px",
     "height": "200px",
-    "object-fit": "cover",     # 裁切填满
-    # "contain"   — 完整显示，可能有留白
-    # "fill"      — 拉伸填满（默认）
+    "object-fit": "cover",     # crop to fill
+    # "contain"   — show completely, may have whitespace
+    # "fill"      — stretch to fill (default)
 })
 ```
 
 ## SVGNode
 
-嵌入 SVG 内容，可以从字符串或文件加载。
+Embed SVG content from strings or files.
 
 ```python
 from latticesvg import SVGNode
 
-# 从 SVG 字符串
+# From SVG string
 icon = SVGNode(
     '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#4CAF50"/></svg>',
     style={"width": "48px", "height": "48px"},
 )
 
-# 从文件
-logo = SVGNode("logo.svg", is_file=True, style={
-    "width": "200px",
-})
+# From file
+logo = SVGNode("logo.svg", is_file=True, style={"width": "200px"})
 
-# 从 URL
-remote = SVGNode("https://example.com/icon.svg", style={
-    "width": "64px",
-})
+# From URL
+remote = SVGNode("https://example.com/icon.svg", style={"width": "64px"})
 ```
 
 <figure markdown="span">
-  ![SVGNode 示例](../assets/images/examples/node_svg.svg){ loading=lazy }
-  <figcaption>SVGNode 嵌入矢量图标示例</figcaption>
+  ![SVGNode example](../assets/images/examples/node_svg.svg){ loading=lazy }
+  <figcaption>SVGNode embedding vector icons</figcaption>
 </figure>
 
 ## MplNode
 
-嵌入 Matplotlib 图表。传入一个 `matplotlib.figure.Figure` 对象。
+Embed Matplotlib figures. Pass a `matplotlib.figure.Figure` object.
 
 ```python
 import matplotlib.pyplot as plt
@@ -128,95 +118,79 @@ fig, ax = plt.subplots(figsize=(4, 3))
 ax.plot([1, 2, 3, 4], [1, 4, 2, 3])
 ax.set_title("Sample Chart")
 
-chart = MplNode(fig, style={
-    "width": "400px",
-})
+chart = MplNode(fig, style={"width": "400px"})
 ```
 
 <figure markdown="span">
-  ![MplNode 示例](../assets/images/examples/node_mpl.svg){ loading=lazy }
-  <figcaption>MplNode 嵌入 Matplotlib 图表</figcaption>
+  ![MplNode example](../assets/images/examples/node_mpl.svg){ loading=lazy }
+  <figcaption>MplNode embedding a Matplotlib chart</figcaption>
 </figure>
 
-!!! warning "注意"
-    使用 `MplNode` 需要安装 Matplotlib（`pip install matplotlib`）。
-    图表以 SVG 格式嵌入，保持矢量品质。
+!!! warning "Note"
+    `MplNode` requires Matplotlib (`pip install matplotlib`).
+    Charts are embedded as SVG, preserving vector quality.
 
 ## MathNode
 
-渲染 LaTeX 数学公式。使用 QuickJax（基于 MathJax v4）作为后端。
+Render LaTeX math formulas using QuickJax (based on MathJax v4).
 
 ```python
 from latticesvg import MathNode
 
-# 显示模式公式
-formula = MathNode(
-    r"E = mc^2",
-    style={"font-size": "24px"},
-)
+formula = MathNode(r"E = mc^2", style={"font-size": "24px"})
 
-# 更复杂的公式
 integral = MathNode(
     r"\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}",
     style={"font-size": "20px"},
 )
 
-# 行内模式
-inline = MathNode(
-    r"\alpha + \beta = \gamma",
-    display=False,
-    style={"font-size": "16px"},
-)
+# Inline mode
+inline = MathNode(r"\alpha + \beta = \gamma", display=False, style={"font-size": "16px"})
 ```
 
 <figure markdown="span">
-  ![MathNode 示例](../assets/images/examples/node_math.svg){ loading=lazy }
-  <figcaption>MathNode 渲染 LaTeX 数学公式</figcaption>
+  ![MathNode example](../assets/images/examples/node_math.svg){ loading=lazy }
+  <figcaption>MathNode rendering LaTeX formulas</figcaption>
 </figure>
 
-### 内联数学（在 TextNode 中）
+### Inline Math (within TextNode)
 
-在富文本中嵌入数学公式：
+Embed math formulas in rich text:
 
-=== "HTML 标记"
+=== "HTML Markup"
 
     ```python
     TextNode(
-        "爱因斯坦的质能方程 <math>E = mc^2</math> 是物理学最著名的公式之一。",
+        "Einstein's equation <math>E = mc^2</math> is one of the most famous.",
         markup="html",
     )
     ```
 
-=== "Markdown 标记"
+=== "Markdown Markup"
 
     ```python
     TextNode(
-        "爱因斯坦的质能方程 $E = mc^2$ 是物理学最著名的公式之一。",
+        "Einstein's equation $E = mc^2$ is one of the most famous.",
         markup="markdown",
     )
     ```
 
 <figure markdown="span">
-  ![内联数学](../assets/images/examples/node_inline_math.svg){ loading=lazy }
-  <figcaption>在文本中嵌入数学公式</figcaption>
+  ![Inline math](../assets/images/examples/node_inline_math.svg){ loading=lazy }
+  <figcaption>Inline math formulas in text</figcaption>
 </figure>
 
-## 组合示例
+## Combined Example
 
-将多种节点类型组合在一个布局中：
+Mix multiple node types in a single layout:
 
 ```python
 from latticesvg import GridContainer, TextNode, ImageNode, MathNode, Renderer, templates
 
-page = GridContainer(style={
-    **templates.REPORT_PAGE,
-    "gap": "16px",
-})
+page = GridContainer(style={**templates.REPORT_PAGE, "gap": "16px"})
 
-# 标题
-page.add(TextNode("实验报告", style=templates.TITLE))
+page.add(TextNode("Experiment Report", style=templates.TITLE))
 
-# 图片 + 说明
 figure_area = GridContainer(style={
     "grid-template-columns": ["1fr"],
     "gap": "8px",
@@ -224,22 +198,16 @@ figure_area = GridContainer(style={
     "border": "1px solid #e0e0e0",
 })
 figure_area.add(ImageNode("experiment.png", style={"width": "100%"}))
-figure_area.add(TextNode("图 1：实验装置", style=templates.CAPTION))
+figure_area.add(TextNode("Fig 1: Experimental Setup", style=templates.CAPTION))
 page.add(figure_area)
 
-# 公式
-page.add(MathNode(
-    r"F = G \frac{m_1 m_2}{r^2}",
-    style={"font-size": "20px"},
-))
-
-# 正文
-page.add(TextNode("根据以上公式...", style=templates.PARAGRAPH))
+page.add(MathNode(r"F = G \frac{m_1 m_2}{r^2}", style={"font-size": "20px"}))
+page.add(TextNode("Based on the formula above...", style=templates.PARAGRAPH))
 
 Renderer().render(page, "report.svg")
 ```
 
 <figure markdown="span">
-  ![综合报告](../assets/images/examples/advanced_report.svg){ loading=lazy }
-  <figcaption>多种节点类型组合的报告页面</figcaption>
+  ![Combined report](../assets/images/examples/advanced_report.svg){ loading=lazy }
+  <figcaption>Report page combining multiple node types</figcaption>
 </figure>

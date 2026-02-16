@@ -9,11 +9,40 @@ description = "Grid-based vector layout engine — CSS Grid layout to SVG/PNG"
 readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"
+authors = [
+    { name = "Qalxry" },
+]
+keywords = ["svg", "layout", "css-grid", "vector", "typesetting", "png", "report"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Text Processing :: Markup",
+    "Typing :: Typed",
+]
 dependencies = [
     "drawsvg>=2.0",
     "freetype-py>=2.3",
     "quickjax>=0.1.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/Qalxry/LatticeSVG"
+Documentation = "https://Qalxry.github.io/LatticeSVG/"
+Repository = "https://github.com/Qalxry/LatticeSVG"
+Issues = "https://github.com/Qalxry/LatticeSVG/issues"
+Changelog = "https://Qalxry.github.io/LatticeSVG/changelog/"
 
 [project.optional-dependencies]
 png = ["cairosvg>=2.5"]

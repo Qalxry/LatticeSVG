@@ -1,184 +1,170 @@
-# CSS 属性参考
+# CSS Properties Reference
 
-LatticeSVG 支持 63 个 CSS 属性，分为六大类。
+LatticeSVG supports 63 CSS properties organized into six categories.
 
-## 盒模型（不可继承）
+## Box Model (Non-Inheritable)
 
-| 属性 | 默认值 | 类型 | 说明 |
+| Property | Default | Type | Description |
 |---|---|---|---|
-| `width` | `auto` | length | 元素宽度 |
-| `height` | `auto` | length | 元素高度 |
-| `min-width` | `0px` | length | 最小宽度 |
-| `max-width` | `none` | length | 最大宽度 |
-| `min-height` | `0px` | length | 最小高度 |
-| `max-height` | `none` | length | 最大高度 |
-| `margin-top` | `0px` | length | 上外边距 |
-| `margin-right` | `0px` | length | 右外边距 |
-| `margin-bottom` | `0px` | length | 下外边距 |
-| `margin-left` | `0px` | length | 左外边距 |
-| `padding-top` | `0px` | length | 上内边距 |
-| `padding-right` | `0px` | length | 右内边距 |
-| `padding-bottom` | `0px` | length | 下内边距 |
-| `padding-left` | `0px` | length | 左内边距 |
-| `border-top-width` | `0px` | length | 上边框宽度 |
-| `border-right-width` | `0px` | length | 右边框宽度 |
-| `border-bottom-width` | `0px` | length | 下边框宽度 |
-| `border-left-width` | `0px` | length | 左边框宽度 |
-| `border-top-color` | `none` | color | 上边框颜色 |
-| `border-right-color` | `none` | color | 右边框颜色 |
-| `border-bottom-color` | `none` | color | 下边框颜色 |
-| `border-left-color` | `none` | color | 左边框颜色 |
-| `border-top-style` | `none` | keyword | 上边框样式 (`solid`/`dashed`/`dotted`) |
-| `border-right-style` | `none` | keyword | 右边框样式 |
-| `border-bottom-style` | `none` | keyword | 下边框样式 |
-| `border-left-style` | `none` | keyword | 左边框样式 |
-| `border-top-left-radius` | `0px` | length | 左上圆角半径 |
-| `border-top-right-radius` | `0px` | length | 右上圆角半径 |
-| `border-bottom-right-radius` | `0px` | length | 右下圆角半径 |
-| `border-bottom-left-radius` | `0px` | length | 左下圆角半径 |
-| `box-sizing` | `border-box` | keyword | 盒模型计算方式 |
-| `outline-width` | `0px` | length | 轮廓宽度 |
-| `outline-color` | `none` | color | 轮廓颜色 |
-| `outline-style` | `none` | keyword | 轮廓样式 |
-| `outline-offset` | `0px` | length | 轮廓偏移 |
+| `width` | `auto` | length | Element width |
+| `height` | `auto` | length | Element height |
+| `min-width` | `0px` | length | Minimum width |
+| `max-width` | `none` | length | Maximum width |
+| `min-height` | `0px` | length | Minimum height |
+| `max-height` | `none` | length | Maximum height |
+| `margin-top` | `0px` | length | Top margin |
+| `margin-right` | `0px` | length | Right margin |
+| `margin-bottom` | `0px` | length | Bottom margin |
+| `margin-left` | `0px` | length | Left margin |
+| `padding-top` | `0px` | length | Top padding |
+| `padding-right` | `0px` | length | Right padding |
+| `padding-bottom` | `0px` | length | Bottom padding |
+| `padding-left` | `0px` | length | Left padding |
+| `border-top-width` | `0px` | length | Top border width |
+| `border-right-width` | `0px` | length | Right border width |
+| `border-bottom-width` | `0px` | length | Bottom border width |
+| `border-left-width` | `0px` | length | Left border width |
+| `border-top-color` | `none` | color | Top border color |
+| `border-right-color` | `none` | color | Right border color |
+| `border-bottom-color` | `none` | color | Bottom border color |
+| `border-left-color` | `none` | color | Left border color |
+| `border-top-style` | `none` | keyword | Top border style (`solid`/`dashed`/`dotted`) |
+| `border-right-style` | `none` | keyword | Right border style |
+| `border-bottom-style` | `none` | keyword | Bottom border style |
+| `border-left-style` | `none` | keyword | Left border style |
+| `border-top-left-radius` | `0px` | length | Top-left corner radius |
+| `border-top-right-radius` | `0px` | length | Top-right corner radius |
+| `border-bottom-right-radius` | `0px` | length | Bottom-right corner radius |
+| `border-bottom-left-radius` | `0px` | length | Bottom-left corner radius |
+| `box-sizing` | `border-box` | keyword | Box model calculation |
+| `outline-width` | `0px` | length | Outline width |
+| `outline-color` | `none` | color | Outline color |
+| `outline-style` | `none` | keyword | Outline style |
+| `outline-offset` | `0px` | length | Outline offset |
 
-## 简写属性
+## Shorthand Properties
 
-以下简写属性会被自动展开为对应的长写属性：
-
-| 简写 | 展开为 |
+| Shorthand | Expands To |
 |---|---|
 | `margin` | `margin-top/right/bottom/left` |
 | `padding` | `padding-top/right/bottom/left` |
 | `border` | `border-*-width/color/style` |
 | `border-width` | `border-top/right/bottom/left-width` |
 | `border-color` | `border-top/right/bottom/left-color` |
-| `border-radius` | `border-top-left/top-right/bottom-right/bottom-left-radius` |
-| `border-top` | `border-top-width/color/style` |
-| `border-right` | `border-right-width/color/style` |
-| `border-bottom` | `border-bottom-width/color/style` |
-| `border-left` | `border-left-width/color/style` |
+| `border-radius` | All four corner radii |
+| `border-top/right/bottom/left` | Per-side width/color/style |
 | `gap` | `row-gap` + `column-gap` |
 | `outline` | `outline-width/color/style` |
-| `background` | `background-color` 或 `background-image`（渐变） |
+| `background` | `background-color` or `background-image` (gradient) |
 
-## Grid 布局（不可继承）
+## Grid Layout (Non-Inheritable)
 
-| 属性 | 默认值 | 类型 | 说明 |
+| Property | Default | Type | Description |
 |---|---|---|---|
-| `display` | `block` | keyword | 显示类型（`grid`/`block`） |
-| `grid-template-columns` | `none` | track-list | 列轨道定义 |
-| `grid-template-rows` | `none` | track-list | 行轨道定义 |
-| `row-gap` | `0px` | length | 行间距 |
-| `column-gap` | `0px` | length | 列间距 |
-| `justify-items` | `stretch` | keyword | 子项水平对齐 |
-| `align-items` | `stretch` | keyword | 子项垂直对齐 |
-| `justify-self` | `auto` | keyword | 单个子项水平对齐 |
-| `align-self` | `auto` | keyword | 单个子项垂直对齐 |
-| `grid-template-areas` | `none` | grid-areas | 命名区域模板 |
-| `grid-auto-flow` | `row` | keyword | 自动放置方向 |
-| `grid-auto-rows` | `auto` | track-list | 隐式行轨道大小 |
-| `grid-auto-columns` | `auto` | track-list | 隐式列轨道大小 |
-| `grid-row` | `none` | grid-line | 子项行位置 |
-| `grid-column` | `none` | grid-line | 子项列位置 |
-| `grid-area` | `none` | keyword | 子项命名区域 |
+| `display` | `block` | keyword | Display type (`grid`/`block`) |
+| `grid-template-columns` | `none` | track-list | Column track definitions |
+| `grid-template-rows` | `none` | track-list | Row track definitions |
+| `row-gap` | `0px` | length | Row gap |
+| `column-gap` | `0px` | length | Column gap |
+| `justify-items` | `stretch` | keyword | Horizontal alignment for children |
+| `align-items` | `stretch` | keyword | Vertical alignment for children |
+| `justify-self` | `auto` | keyword | Per-item horizontal alignment |
+| `align-self` | `auto` | keyword | Per-item vertical alignment |
+| `grid-template-areas` | `none` | grid-areas | Named area template |
+| `grid-auto-flow` | `row` | keyword | Auto-placement direction |
+| `grid-auto-rows` | `auto` | track-list | Implicit row track size |
+| `grid-auto-columns` | `auto` | track-list | Implicit column track size |
+| `grid-row` | `none` | grid-line | Item row position |
+| `grid-column` | `none` | grid-line | Item column position |
+| `grid-area` | `none` | keyword | Item named area |
 
-### 轨道值类型
+### Track Value Types
 
-| 值类型 | 示例 | 说明 |
+| Type | Example | Description |
 |---|---|---|
-| 固定像素 | `"200px"` | 固定宽度 |
-| 弹性单位 | `"1fr"`, `"2fr"` | 按比例分配剩余空间 |
-| 百分比 | `"50%"` | 相对于容器可用宽度 |
-| `auto` | `"auto"` | 由内容决定 |
-| `min-content` | `"min-content"` | 内容最小宽度 |
-| `max-content` | `"max-content"` | 内容最大宽度 |
-| `minmax()` | `"minmax(100px, 1fr)"` | 尺寸范围 |
-| `repeat()` | `"repeat(3, 1fr)"` | 重复轨道 |
+| Fixed pixels | `"200px"` | Fixed width |
+| Flexible | `"1fr"`, `"2fr"` | Proportional remaining space |
+| Percentage | `"50%"` | Relative to container |
+| `auto` | `"auto"` | Content-determined |
+| `min-content` | `"min-content"` | Minimum content width |
+| `max-content` | `"max-content"` | Maximum content width |
+| `minmax()` | `"minmax(100px, 1fr)"` | Size range |
+| `repeat()` | `"repeat(3, 1fr)"` | Repeated tracks |
 
-## 文本（可继承）
+## Text (Inheritable)
 
-| 属性 | 默认值 | 类型 | 说明 |
+| Property | Default | Type | Description |
 |---|---|---|---|
-| `font-family` | `sans-serif` | font-family | 字体族 |
-| `font-size` | `16px` | length | 字号 |
-| `font-weight` | `normal` | keyword | 字重 (`normal`/`bold`) |
-| `font-style` | `normal` | keyword | 字形 (`normal`/`italic`) |
-| `text-align` | `left` | keyword | 对齐 (`left`/`center`/`right`/`justify`) |
-| `line-height` | `1.2` | line-height | 行高（无单位倍数/像素值） |
-| `white-space` | `normal` | keyword | 空白处理 |
-| `overflow-wrap` | `normal` | keyword | 溢出换行 (`normal`/`break-word`) |
-| `word-break` | `normal` | keyword | 词断行 |
-| `color` | `#000000` | color | 文字颜色 |
-| `letter-spacing` | `normal` | length | 字间距 |
-| `word-spacing` | `normal` | length | 词间距 |
-| `hyphens` | `none` | keyword | 自动断词 (`none`/`auto`) |
-| `lang` | `en` | keyword | 语言（用于断词规则） |
+| `font-family` | `sans-serif` | font-family | Font family |
+| `font-size` | `16px` | length | Font size |
+| `font-weight` | `normal` | keyword | Font weight (`normal`/`bold`) |
+| `font-style` | `normal` | keyword | Font style (`normal`/`italic`) |
+| `text-align` | `left` | keyword | Alignment (`left`/`center`/`right`/`justify`) |
+| `line-height` | `1.2` | line-height | Line height |
+| `white-space` | `normal` | keyword | Whitespace handling |
+| `overflow-wrap` | `normal` | keyword | Overflow wrap (`normal`/`break-word`) |
+| `word-break` | `normal` | keyword | Word break |
+| `color` | `#000000` | color | Text color |
+| `letter-spacing` | `normal` | length | Letter spacing |
+| `word-spacing` | `normal` | length | Word spacing |
+| `hyphens` | `none` | keyword | Auto-hyphenation (`none`/`auto`) |
+| `lang` | `en` | keyword | Language (for hyphenation rules) |
 
-## 文本装饰（不可继承）
+## Text Decoration (Non-Inheritable)
 
-| 属性 | 默认值 | 类型 | 说明 |
+| Property | Default | Type | Description |
 |---|---|---|---|
-| `text-decoration` | `none` | keyword | 文本装饰 (`underline`/`line-through`) |
-| `text-overflow` | `clip` | keyword | 溢出处理 (`clip`/`ellipsis`) |
+| `text-decoration` | `none` | keyword | Text decoration (`underline`/`line-through`) |
+| `text-overflow` | `clip` | keyword | Overflow handling (`clip`/`ellipsis`) |
 
-## 书写模式（可继承）
+## Writing Mode (Inheritable)
 
-| 属性 | 默认值 | 类型 | 说明 |
+| Property | Default | Type | Description |
 |---|---|---|---|
-| `writing-mode` | `horizontal-tb` | keyword | 书写方向 (`horizontal-tb`/`vertical-rl`) |
-| `text-orientation` | `mixed` | keyword | 文字朝向 (`mixed`/`upright`/`sideways`) |
-| `text-combine-upright` | `none` | keyword | 纵中横 (`none`/`all`/`digits N`) |
+| `writing-mode` | `horizontal-tb` | keyword | Writing direction |
+| `text-orientation` | `mixed` | keyword | Text orientation |
+| `text-combine-upright` | `none` | keyword | Tate-chu-yoko |
 
-## 视觉（不可继承）
+## Visual (Non-Inheritable)
 
-| 属性 | 默认值 | 类型 | 说明 |
+| Property | Default | Type | Description |
 |---|---|---|---|
-| `background-color` | `none` | color | 背景色 |
-| `background-image` | `none` | gradient | 背景图（渐变） |
-| `opacity` | `1` | number | 透明度 (0~1) |
-| `overflow` | `visible` | keyword | 溢出处理 (`visible`/`hidden`) |
-| `clip-path` | `none` | clip-path | 裁剪路径 |
-| `box-shadow` | `none` | box-shadow | 盒阴影 |
-| `transform` | `none` | transform | 变换 |
-| `filter` | `none` | filter | 滤镜 |
+| `background-color` | `none` | color | Background color |
+| `background-image` | `none` | gradient | Background image (gradient) |
+| `opacity` | `1` | number | Opacity (0–1) |
+| `overflow` | `visible` | keyword | Overflow (`visible`/`hidden`) |
+| `clip-path` | `none` | clip-path | Clip path |
+| `box-shadow` | `none` | box-shadow | Box shadow |
+| `transform` | `none` | transform | Transform |
+| `filter` | `none` | filter | Filter |
 
-## 图片（不可继承）
+## Image (Non-Inheritable)
 
-| 属性 | 默认值 | 类型 | 说明 |
+| Property | Default | Type | Description |
 |---|---|---|---|
-| `object-fit` | `fill` | keyword | 图片缩放 (`fill`/`contain`/`cover`) |
+| `object-fit` | `fill` | keyword | Image scaling (`fill`/`contain`/`cover`) |
 
-## 值类型参考
+## Value Type Reference
 
-### 长度值
+### Lengths
 
-支持的单位：`px`（像素）、`pt`（点，1pt = 1.333px）、`%`（百分比）。
-无单位数字解释为像素。
+Supported units: `px` (pixels), `pt` (points, 1pt = 1.333px), `%` (percentage).
+Unitless numbers are interpreted as pixels.
+
+### Colors
 
 ```python
-"16px"   # 16 像素
-"12pt"   # 16 像素
-"50%"    # 参考长度的 50%
-16       # 16 像素（数字类型直接传入）
-```
-
-### 颜色值
-
-```python
-"#ff0000"                    # 十六进制
-"#f00"                       # 简写十六进制
+"#ff0000"                    # hex
+"#f00"                       # shorthand hex
 "rgb(255, 0, 0)"             # RGB
 "rgba(255, 0, 0, 0.5)"       # RGBA
-"red"                        # CSS 命名颜色
-"transparent"                # 透明
+"red"                        # CSS named color
+"transparent"                # transparent
 ```
 
-### 渐变值
+### Gradients
 
 ```python
 "linear-gradient(135deg, #667eea, #764ba2)"
-"linear-gradient(to right, red, blue)"
 "radial-gradient(circle, #f093fb, #f5576c)"
-"radial-gradient(ellipse at center, #fff, #000)"
 ```

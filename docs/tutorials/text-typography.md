@@ -1,8 +1,8 @@
-# 文本排版
+# Text & Typography
 
-LatticeSVG 提供基于 FreeType 的精确文本排版引擎，支持多种文本处理场景。
+LatticeSVG provides a precise text typesetting engine built on FreeType.
 
-## 基础文本
+## Basic Text
 
 ```python
 from latticesvg import GridContainer, TextNode, Renderer
@@ -14,7 +14,7 @@ page = GridContainer(style={
     "gap": "16px",
 })
 
-page.add(TextNode("这是一段基础文本内容。", style={
+page.add(TextNode("This is basic text content.", style={
     "font-size": "16px",
     "color": "#333333",
     "line-height": "1.6",
@@ -24,15 +24,15 @@ Renderer().render(page, "text_basic.svg")
 ```
 
 <figure markdown="span">
-  ![基础文本](../assets/images/examples/text_basic.svg){ loading=lazy }
-  <figcaption>基础文本排版示例</figcaption>
+  ![Basic text](../assets/images/examples/text_basic.svg){ loading=lazy }
+  <figcaption>Basic text typesetting example</figcaption>
 </figure>
 
-## 字体控制
+## Font Control
 
-### 字体族
+### Font Family
 
-`font-family` 支持指定多个字体，按顺序回退：
+`font-family` supports multiple fonts with fallback:
 
 ```python
 TextNode("Hello 你好", style={
@@ -41,7 +41,7 @@ TextNode("Hello 你好", style={
 })
 ```
 
-### 字重与字形
+### Weight and Style
 
 ```python
 TextNode("Bold Italic Text", style={
@@ -51,51 +51,42 @@ TextNode("Bold Italic Text", style={
 })
 ```
 
-## 文本对齐
+## Text Alignment
 
 ```python
-# 左对齐（默认）
-TextNode("左对齐文本", style={"text-align": "left"})
-
-# 居中
-TextNode("居中文本", style={"text-align": "center"})
-
-# 右对齐
-TextNode("右对齐文本", style={"text-align": "right"})
-
-# 两端对齐
-TextNode("This is justified text that will be spread evenly.", style={
-    "text-align": "justify",
-})
+TextNode("Left aligned", style={"text-align": "left"})       # default
+TextNode("Centered", style={"text-align": "center"})
+TextNode("Right aligned", style={"text-align": "right"})
+TextNode("Justified text spread evenly.", style={"text-align": "justify"})
 ```
 
-## 自动折行
+## Automatic Line Breaking
 
-当文本超出容器宽度时，引擎会自动在合适的位置换行：
+The engine automatically wraps text at appropriate positions:
 
-- **西文**：在空格处断行
-- **CJK**：逐字符可断
-- **mixed**：中英文混排自动处理
+- **Latin**: Break at spaces
+- **CJK**: Character-level break opportunities
+- **Mixed**: Automatic handling of mixed scripts
 
 ```python
 page.add(TextNode(
-    "LatticeSVG 支持中英文混排自动折行。"
-    "This is a demonstration of mixed Chinese-English text with automatic line breaking.",
+    "LatticeSVG supports mixed CJK-Latin text with automatic line breaking. "
+    "中英文混排自动折行示例。",
     style={"font-size": "14px", "line-height": "1.8"},
 ))
 ```
 
-## 空白处理
+## White Space Handling
 
-`white-space` 属性控制空白符和换行的处理方式：
+The `white-space` property controls how whitespace and newlines are handled:
 
-| 值 | 说明 |
+| Value | Description |
 |---|---|
-| `normal` | 合并空白，自动换行（默认） |
-| `nowrap` | 合并空白，不自动换行 |
-| `pre` | 保留空白和换行 |
-| `pre-wrap` | 保留空白，允许自动换行 |
-| `pre-line` | 合并空白，保留显式换行 |
+| `normal` | Collapse whitespace, auto-wrap (default) |
+| `nowrap` | Collapse whitespace, no auto-wrap |
+| `pre` | Preserve whitespace and newlines |
+| `pre-wrap` | Preserve whitespace, allow auto-wrap |
+| `pre-line` | Collapse whitespace, preserve explicit newlines |
 
 ```python
 TextNode("Line 1\n  Line 2\n    Line 3", style={
@@ -106,27 +97,27 @@ TextNode("Line 1\n  Line 2\n    Line 3", style={
 ```
 
 <figure markdown="span">
-  ![空白处理](../assets/images/examples/text_whitespace.svg){ loading=lazy }
-  <figcaption>white-space 属性效果对比</figcaption>
+  ![White space](../assets/images/examples/text_whitespace.svg){ loading=lazy }
+  <figcaption>white-space property comparison</figcaption>
 </figure>
 
-## 溢出处理
+## Overflow Handling
 
 ### overflow-wrap
 
-当单个单词超出容器宽度时：
+When a single word exceeds the container width:
 
 ```python
 TextNode("Superlongwordwithoutanyspace", style={
-    "overflow-wrap": "break-word",  # 允许词内断行
+    "overflow-wrap": "break-word",
     "font-size": "14px",
 })
 ```
 
-### 文本省略
+### Text Ellipsis
 
 ```python
-TextNode("这是一段很长的文本，超出部分将被省略号替代。", style={
+TextNode("This is very long text that will be replaced with ellipsis.", style={
     "text-overflow": "ellipsis",
     "white-space": "nowrap",
     "overflow": "hidden",
@@ -135,84 +126,72 @@ TextNode("这是一段很长的文本，超出部分将被省略号替代。", s
 ```
 
 <figure markdown="span">
-  ![文本省略](../assets/images/examples/text_ellipsis.svg){ loading=lazy }
-  <figcaption>文本省略号效果</figcaption>
+  ![Text ellipsis](../assets/images/examples/text_ellipsis.svg){ loading=lazy }
+  <figcaption>Text ellipsis effect</figcaption>
 </figure>
 
-## 自动断词
+## Auto-Hyphenation
 
-启用 `hyphens: auto` 后，引擎会在合适的位置插入连字符断行：
+With `hyphens: auto`, the engine inserts hyphens at appropriate break points:
 
 ```python
 TextNode(
     "Internationalization and standardization are important concepts.",
     style={
         "hyphens": "auto",
-        "lang": "en",  # 指定语言以选择正确的断词规则
+        "lang": "en",
         "font-size": "14px",
     },
 )
 ```
 
-<figure markdown="span">
-  ![自动断词](../assets/images/examples/text_hyphens.svg){ loading=lazy }
-  <figcaption>自动断词示例</figcaption>
-</figure>
+!!! note "Requires `latticesvg[hyphens]`"
+    Auto-hyphenation depends on Pyphen. Run `pip install latticesvg[hyphens]` first.
 
-!!! note "需要安装 `latticesvg[hyphens]`"
-    自动断词依赖 Pyphen 库，请先运行 `pip install latticesvg[hyphens]`。
-
-## 字间距与词间距
+## Letter and Word Spacing
 
 ```python
-TextNode("L e t t e r  S p a c i n g", style={
-    "letter-spacing": "2px",
-    "font-size": "16px",
-})
-
-TextNode("Word   Spacing   Example", style={
-    "word-spacing": "8px",
-    "font-size": "16px",
-})
+TextNode("Letter Spacing", style={"letter-spacing": "2px"})
+TextNode("Word Spacing Example", style={"word-spacing": "8px"})
 ```
 
-## 竖排文本
+## Vertical Text
 
-使用 `writing-mode` 实现竖排文本：
+Use `writing-mode` for vertical text layout:
 
 ```python
 TextNode("竖排文本示例", style={
-    "writing-mode": "vertical-rl",    # 从右到左竖排
-    "text-orientation": "mixed",       # CJK 竖排，拉丁文旋转
+    "writing-mode": "vertical-rl",
+    "text-orientation": "mixed",
     "font-size": "18px",
 })
 ```
 
 <figure markdown="span">
-  ![竖排文本](../assets/images/examples/text_vertical.svg){ loading=lazy }
-  <figcaption>竖排文本示例</figcaption>
+  ![Vertical text](../assets/images/examples/text_vertical.svg){ loading=lazy }
+  <figcaption>Vertical text layout</figcaption>
 </figure>
 
-### 纵中横（text-combine-upright）
+### text-combine-upright
 
-在竖排中，将短数字/拉丁文横排显示：
+Display short numbers/Latin text horizontally within vertical text:
 
 ```python
 TextNode("令和6年12月25日", style={
     "writing-mode": "vertical-rl",
-    "text-combine-upright": "digits 2",  # 2 位以内数字横排
+    "text-combine-upright": "digits 2",
     "font-size": "16px",
 })
 ```
 
 <figure markdown="span">
-  ![纵中横](../assets/images/examples/text_tcu.svg){ loading=lazy }
-  <figcaption>纵中横效果</figcaption>
+  ![text-combine-upright](../assets/images/examples/text_tcu.svg){ loading=lazy }
+  <figcaption>text-combine-upright effect</figcaption>
 </figure>
 
-## 混合字体
+## Mixed Fonts
 
-当文本包含多种文字（如中文 + 英文 + 日文），FontManager 会自动使用字体回退链逐字符查找可用字形：
+When text contains multiple scripts (Chinese + English + Japanese), FontManager automatically uses the font fallback chain to find available glyphs per character:
 
 ```python
 TextNode("Hello 你好 こんにちは", style={
@@ -222,21 +201,16 @@ TextNode("Hello 你好 こんにちは", style={
 ```
 
 <figure markdown="span">
-  ![混合字体](../assets/images/examples/text_mixed_fonts.svg){ loading=lazy }
-  <figcaption>多字体回退链示例</figcaption>
+  ![Mixed fonts](../assets/images/examples/text_mixed_fonts.svg){ loading=lazy }
+  <figcaption>Multi-font fallback chain example</figcaption>
 </figure>
 
-## 行高
+## Line Height
 
-`line-height` 支持多种格式：
+`line-height` supports multiple formats:
 
 ```python
-# 无单位倍数（推荐）— 相对于 font-size
-TextNode("行高 1.6", style={"line-height": "1.6"})
-
-# 像素值
-TextNode("行高 24px", style={"line-height": "24px"})
-
-# 关键字
-TextNode("正常行高", style={"line-height": "normal"})  # 等同于 1.2
+TextNode("Line height 1.6", style={"line-height": "1.6"})         # unitless multiplier (recommended)
+TextNode("Line height 24px", style={"line-height": "24px"})       # pixel value
+TextNode("Normal line height", style={"line-height": "normal"})   # equals 1.2
 ```

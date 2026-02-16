@@ -1,48 +1,48 @@
-# 核心概念
+# Core Concepts
 
-## 架构总览
+## Architecture Overview
 
-LatticeSVG 的渲染流水线分为三个阶段：
+The LatticeSVG rendering pipeline has three stages:
 
 ```
-样式解析          布局求解          SVG 渲染
+Style Parsing         Layout Solving        SVG Rendering
 ┌──────────┐    ┌──────────┐    ┌──────────┐
-│ CSS 字典  │ →  │GridSolver│ →  │ Renderer │ → SVG / PNG
-│ → 计算值  │    │ → 盒模型  │    │ → drawsvg│
+│ CSS dicts │ →  │ GridSolver│ →  │ Renderer │ → SVG / PNG
+│ → computed│    │ → box model│   │ → drawsvg │
 └──────────┘    └──────────┘    └──────────┘
 ```
 
 <figure markdown="span">
-  ![渲染流水线](../assets/images/examples/concepts_pipeline.svg){ loading=lazy }
-  <figcaption>样式解析 → 布局求解 → SVG 渲染的三阶段流水线</figcaption>
+  ![Rendering pipeline](../assets/images/examples/concepts_pipeline.svg){ loading=lazy }
+  <figcaption>Three-stage pipeline: Style Parsing → Layout Solving → SVG Rendering</figcaption>
 </figure>
 
-## 节点树
+## Node Tree
 
-LatticeSVG 使用**节点树**来描述文档结构。每个节点都是 `Node` 的子类：
+LatticeSVG uses a **node tree** to describe document structure. Every node is a subclass of `Node`:
 
-- **`GridContainer`** — 容器节点，使用 CSS Grid 排列子节点
-- **`TextNode`** — 叶子节点，显示文本内容
-- **`ImageNode`** — 叶子节点，嵌入光栅图片
-- **`SVGNode`** — 叶子节点，嵌入 SVG 内容
-- **`MplNode`** — 叶子节点，嵌入 Matplotlib 图表
-- **`MathNode`** — 叶子节点，渲染 LaTeX 公式
+- **`GridContainer`** — Container node, arranges children using CSS Grid
+- **`TextNode`** — Leaf node, displays text content
+- **`ImageNode`** — Leaf node, embeds raster images
+- **`SVGNode`** — Leaf node, embeds SVG content
+- **`MplNode`** — Leaf node, embeds Matplotlib figures
+- **`MathNode`** — Leaf node, renders LaTeX formulas
 
 ```python
-# 节点树示例
-page = GridContainer(style={...})          # 根容器
-├── TextNode("标题")                       # 子节点 1
-├── GridContainer(style={...})             # 嵌套容器
-│   ├── ImageNode("photo.png")             # 孙节点
-│   └── TextNode("图注")
-└── TextNode("页脚")                       # 子节点 3
+# Node tree example
+page = GridContainer(style={...})          # root container
+├── TextNode("Title")                      # child 1
+├── GridContainer(style={...})             # nested container
+│   ├── ImageNode("photo.png")             # grandchild
+│   └── TextNode("Caption")
+└── TextNode("Footer")                     # child 3
 ```
 
-## 样式系统
+## Style System
 
-### 声明式样式
+### Declarative Styles
 
-所有样式通过 Python 字典传入，属性名与 CSS 一致：
+All styles are passed as Python dicts with CSS-compatible property names:
 
 ```python
 style = {
@@ -55,35 +55,34 @@ style = {
 }
 ```
 
-### 样式继承
+### Style Inheritance
 
-与 CSS 一致，部分属性会从父节点继承（如 `color`、`font-size`、`font-family`），
-而盒模型属性（如 `padding`、`margin`）不会继承。
+Consistent with CSS, some properties inherit from parent nodes (e.g., `color`, `font-size`, `font-family`), while box model properties (e.g., `padding`, `margin`) do not.
 
 ### ComputedStyle
 
-每个节点持有一个 `ComputedStyle` 对象，负责：
+Each node holds a `ComputedStyle` object responsible for:
 
-1. **解析原始值** — 将 `"16px"` 解析为 `16.0`
-2. **展开简写** — 将 `"padding": "10px 20px"` 展开为四个方向
-3. **继承** — 可继承属性从父节点获取
-4. **默认值** — 未指定的属性使用注册表默认值
+1. **Parsing raw values** — Converting `"16px"` to `16.0`
+2. **Expanding shorthands** — Expanding `"padding": "10px 20px"` to four directions
+3. **Inheritance** — Inheritable properties taken from parent
+4. **Defaults** — Unspecified properties use registry defaults
 
-## 布局算法
+## Layout Algorithm
 
-### CSS Grid 求解
+### CSS Grid Solving
 
-`GridSolver` 实现了 CSS Grid Level 1 的完整布局算法：
+`GridSolver` implements the complete CSS Grid Level 1 layout algorithm:
 
-1. **轨道模板解析** — 解析 `grid-template-columns` / `grid-template-rows`
-2. **子项放置** — 根据 `row`/`col`/`area` 参数或自动放置算法确定位置
-3. **轨道尺寸求解** — 处理固定值、百分比、`fr`、`auto`、`min-content`、`max-content`、`minmax()`
-4. **对齐** — 应用 `justify-items`、`align-items`、`justify-self`、`align-self`
-5. **盒模型计算** — 为每个节点计算 `border-box`、`padding-box`、`content-box`
+1. **Track template parsing** — Parse `grid-template-columns` / `grid-template-rows`
+2. **Item placement** — Position items via `row`/`col`/`area` or auto-placement
+3. **Track sizing** — Handle fixed, percentage, `fr`, `auto`, `min-content`, `max-content`, `minmax()`
+4. **Alignment** — Apply `justify-items`, `align-items`, `justify-self`, `align-self`
+5. **Box model** — Compute `border-box`, `padding-box`, `content-box` for each node
 
-### 盒模型
+### Box Model
 
-每个节点在布局后拥有三个矩形（`Rect`）：
+After layout, each node has three rectangles (`Rect`):
 
 ```
 ┌─────────────────────────── border-box ──┐
@@ -92,48 +91,48 @@ style = {
 │  │ padding                           │  │
 │  │  ┌──────────── content-box ────┐  │  │
 │  │  │                             │  │  │
-│  │  │     内容区域                 │  │  │
+│  │  │     content area            │  │  │
 │  │  │                             │  │  │
 │  │  └─────────────────────────────┘  │  │
 │  └───────────────────────────────────┘  │
 └─────────────────────────────────────────┘
 ```
 
-默认的 `box-sizing` 是 `border-box`，与现代 CSS 实践一致。
+The default `box-sizing` is `border-box`, consistent with modern CSS practice.
 
-## 渲染管线
+## Rendering Pipeline
 
-`Renderer` 遍历已布局的节点树，为每个节点生成 SVG 元素：
+`Renderer` traverses the laid-out node tree, generating SVG elements for each node:
 
-1. **背景** — 纯色、线性渐变、径向渐变
-2. **边框** — 四边独立颜色/宽度/样式，支持虚线、点线
-3. **圆角** — 四角独立半径
-4. **内容** — 文本字形、嵌入图片、SVG 片段、数学公式
-5. **视觉效果** — 阴影、透明度、变换、滤镜、裁剪路径
+1. **Background** — Solid colors, linear gradients, radial gradients
+2. **Borders** — Independent color/width/style per side, dashed and dotted support
+3. **Border radius** — Independent radius per corner
+4. **Content** — Text glyphs, embedded images, SVG fragments, math formulas
+5. **Visual effects** — Shadows, opacity, transforms, filters, clip-path
 
-输出格式：
+Output formats:
 
-| 方法 | 输出 | 说明 |
+| Method | Output | Notes |
 |---|---|---|
-| `render(node, path)` | `.svg` 文件 | 并返回 `Drawing` 对象 |
-| `render_to_drawing(node)` | `Drawing` 对象 | 内存中的 SVG |
-| `render_to_string(node)` | SVG 字符串 | 适合嵌入 HTML |
-| `render_png(node, path)` | `.png` 文件 | 需要 `cairosvg` |
+| `render(node, path)` | `.svg` file | Also returns `Drawing` object |
+| `render_to_drawing(node)` | `Drawing` object | In-memory SVG |
+| `render_to_string(node)` | SVG string | For HTML embedding |
+| `render_png(node, path)` | `.png` file | Requires `cairosvg` |
 
-## 文本引擎
+## Text Engine
 
-LatticeSVG 的文本引擎基于 FreeType，提供：
+LatticeSVG's text engine is built on FreeType:
 
-- **精确测量** — 字形级别的宽度、高度、基线偏移
-- **自动折行** — 基于贪心算法的文本换行
-- **CJK 支持** — 中日韩字符逐字可断
-- **富文本** — HTML / Markdown 标记 → `TextSpan` → 多样式混排
-- **竖排文本** — `writing-mode: vertical-rl` 支持
-- **字体回退** — 多字体族链式查找
-- **字体嵌入** — WOFF2 子集化嵌入到 SVG
+- **Precise measurement** — Glyph-level width, height, baseline offset
+- **Automatic line breaking** — Greedy algorithm for text wrapping
+- **CJK support** — Character-level break opportunities for CJK scripts
+- **Rich text** — HTML / Markdown markup → `TextSpan` → multi-style composition
+- **Vertical text** — `writing-mode: vertical-rl` support
+- **Font fallback** — Multi-family font chain lookup
+- **Font embedding** — WOFF2 subsetting and embedding in SVG
 
-## 下一步
+## Next Steps
 
-- 📐 [Grid 布局教程](../tutorials/grid-layout.md) — 实践 CSS Grid 的各种布局模式
-- 📖 [CSS 属性参考](../reference/css-properties.md) — 查阅全部 63 个支持的属性
-- 🔧 [API 参考](../reference/api/index.md) — 完整的类与方法文档
+- 📐 [Grid Layout Tutorial](../tutorials/grid-layout.md) — Practice CSS Grid layout patterns
+- 📖 [CSS Properties Reference](../reference/css-properties.md) — Browse all 63 supported properties
+- 🔧 [API Reference](../reference/api/index.md) — Complete class and method documentation

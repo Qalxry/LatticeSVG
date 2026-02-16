@@ -1,18 +1,18 @@
-# 文本引擎 API
+# Text Engine API
 
-文本模块负责字体加载、文本测量、自动换行和垂直排版。
+The text module handles font loading, text measurement, automatic line breaking, and vertical typesetting.
 
-## 模块概览
+## Module Overview
 
-| 子模块 | 职责 |
+| Submodule | Responsibility |
 |---|---|
-| `text.font` | 字体管理器 (`FontManager`)，FreeType/Pillow 后端 |
-| `text.shaper` | 文本测量、换行、对齐（`measure_text`, `break_lines`, `align_lines`） |
-| `text.embed` | 字体子集化和 WOFF2 嵌入 |
+| `text.font` | Font manager (`FontManager`), FreeType/Pillow backends |
+| `text.shaper` | Text measurement, line breaking, alignment (`measure_text`, `break_lines`, `align_lines`) |
+| `text.embed` | Font subsetting and WOFF2 embedding |
 
 ## FontManager
 
-全局单例，管理字体查找和加载。
+Global singleton managing font discovery and loading.
 
 ```python
 from latticesvg.text.font import FontManager
@@ -22,9 +22,9 @@ path = fm.find_font("Noto Sans SC", weight="bold")
 chain = fm.find_font_chain(["Times New Roman", "SimSun"], weight="normal")
 ```
 
-## 自动生成的 API 文档
+## Auto-generated API Docs
 
-### 字体管理
+### Font Management
 
 ::: latticesvg.text.font
     options:
@@ -33,7 +33,7 @@ chain = fm.find_font_chain(["Times New Roman", "SimSun"], weight="normal")
       members_order: source
       heading_level: 4
 
-### 文本排版
+### Text Shaping
 
 ::: latticesvg.text.shaper
     options:
@@ -42,7 +42,7 @@ chain = fm.find_font_chain(["Times New Roman", "SimSun"], weight="normal")
       members_order: source
       heading_level: 4
 
-### 字体嵌入
+### Font Embedding
 
 ::: latticesvg.text.embed
     options:

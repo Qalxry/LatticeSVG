@@ -1,50 +1,58 @@
 # LatticeSVG
 
-基于 CSS Grid 的矢量布局引擎，输出高质量 SVG/PNG。
+A declarative vector layout engine powered by CSS Grid. Describe layouts with Python dicts, get pixel-perfect SVG/PNG output.
 
-## 安装
+## Features
+
+- **Full CSS Grid Level 1** — fixed tracks, `fr` units, `minmax()`, `repeat()`, named areas, auto-placement
+- **Precise text typesetting** — FreeType-based glyph measurement, auto line-breaking, CJK support, rich text (HTML/Markdown), vertical writing
+- **Multiple node types** — `TextNode`, `ImageNode`, `SVGNode`, `MplNode` (Matplotlib), `MathNode` (LaTeX)
+- **63 CSS properties** — box model, border-radius, gradients, shadows, transforms, filters, clip-path, opacity
+- **SVG & PNG output** — vector SVG by default, optional high-res PNG via CairoSVG, WOFF2 font embedding
+
+## Installation
 
 ```bash
 pip install latticesvg
 
-# 如需 PNG 输出
+# For PNG output
 pip install latticesvg[png]
+
+# For auto-hyphenation
+pip install latticesvg[hyphens]
 ```
 
-## 快速开始
+## Quick Start
 
 ```python
-from latticesvg import GridContainer, TextNode, ImageNode, Renderer
+from latticesvg import GridContainer, TextNode, Renderer
 
-grid = GridContainer(style={
-    "width": "800px",
-    "padding": "20px",
+page = GridContainer(style={
+    "width": "600px",
+    "padding": "24px",
+    "grid-template-columns": ["1fr", "1fr"],
+    "gap": "16px",
     "background-color": "#ffffff",
-    "grid-template-columns": ["200px", "1fr"],
-    "gap": "20px",
 })
 
-title = TextNode("实验报告", style={
-    "font-size": "24px",
-    "font-weight": "bold",
-    "color": "#333333",
-    "justify-self": "center",
-})
-grid.add(title, row=1, col=1)
+page.add(TextNode("Hello", style={"font-size": "24px", "color": "#2c3e50"}))
+page.add(TextNode("World", style={"font-size": "24px", "color": "#e74c3c"}))
 
-grid.layout(available_width=800)
-
-renderer = Renderer()
-renderer.render(grid, "report.svg")
+Renderer().render(page, "hello.svg")
 ```
 
-## 依赖
+## Documentation
+
+Full documentation is available at [https://qalxry.github.io/LatticeSVG/](https://qalxry.github.io/LatticeSVG/)
+
+## Dependencies
 
 - Python ≥ 3.8
-- drawsvg — SVG 生成
-- freetype-py — 文本测量
-- cairosvg（可选）— PNG 转换
+- [drawsvg](https://pypi.org/project/drawsvg/) — SVG generation
+- [freetype-py](https://pypi.org/project/freetype-py/) — text measurement
+- [quickjax](https://pypi.org/project/quickjax/) — LaTeX math rendering
+- [cairosvg](https://pypi.org/project/cairosvg/) (optional) — PNG conversion
 
-## 许可证
+## License
 
 MIT

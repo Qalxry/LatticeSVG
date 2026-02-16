@@ -1,22 +1,22 @@
-# Style System API
+# 样式系统 API
 
-The style module handles CSS property parsing, registration, and computation.
+样式模块负责 CSS 属性的解析、注册和计算。
 
-## Module Overview
+## 模块概览
 
-| Submodule | Responsibility |
+| 子模块 | 职责 |
 |---|---|
-| `style.properties` | Property registry (`PROPERTY_REGISTRY`) |
-| `style.parser` | Value parsers and special value types |
-| `style.computed` | `ComputedStyle` computed style object |
+| `style.properties` | 属性注册表 (`PROPERTY_REGISTRY`) |
+| `style.parser` | 值解析器和特殊值类型 |
+| `style.computed` | `ComputedStyle` 计算样式对象 |
 
 ## ComputedStyle
 
-`ComputedStyle` is the style container for each node, responsible for:
+`ComputedStyle` 是每个节点的样式容器，负责：
 
-- Storing explicitly set property values
-- Property inheritance (from parent nodes)
-- Computing final used values
+- 存储显式设置的属性值
+- 提供属性继承（从父节点）
+- 计算最终使用值
 
 ```python
 from latticesvg import ComputedStyle
@@ -26,9 +26,9 @@ print(cs.font_size)     # 24
 print(cs.get("color"))  # "red"
 ```
 
-## Auto-generated API Docs
+## 自动生成的 API 文档
 
-### Style Properties
+### 样式属性
 
 ::: latticesvg.style.properties
     options:
@@ -37,7 +37,7 @@ print(cs.get("color"))  # "red"
       members_order: source
       heading_level: 4
 
-### Value Parser
+### 值解析器
 
 ::: latticesvg.style.parser
     options:
@@ -46,7 +46,7 @@ print(cs.get("color"))  # "red"
       members_order: source
       heading_level: 4
 
-### Computed Style
+### 计算样式
 
 ::: latticesvg.style.computed
     options:

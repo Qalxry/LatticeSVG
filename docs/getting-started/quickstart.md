@@ -1,31 +1,31 @@
-# 快速上手
+# Quick Start
 
-本教程将带你用 5 分钟完成第一个 LatticeSVG 布局。
+This tutorial walks you through your first LatticeSVG layout in 5 minutes.
 
-## 基本流程
+## Basic Workflow
 
-LatticeSVG 的工作流程分为三步：
+LatticeSVG follows a three-step workflow:
 
-1. **创建 `GridContainer`** — 定义布局容器和样式
-2. **添加子节点** — 使用 `.add()` 添加文本、图片等内容
-3. **渲染输出** — 调用 `Renderer` 生成 SVG 或 PNG
+1. **Create a `GridContainer`** — Define the layout container and its styles
+2. **Add child nodes** — Use `.add()` to insert text, images, etc.
+3. **Render output** — Call `Renderer` to generate SVG or PNG
 
-## 第一个示例
+## First Example
 
 ```python
 from latticesvg import GridContainer, TextNode, Renderer
 
-# 步骤 1：创建页面容器
+# Step 1: Create a page container
 page = GridContainer(style={
     "width": "600px",
     "padding": "32px",
     "background-color": "#ffffff",
-    "grid-template-columns": ["1fr"],  # 单列布局
+    "grid-template-columns": ["1fr"],  # single-column layout
     "gap": "16px",
 })
 
-# 步骤 2：添加内容
-page.add(TextNode("欢迎使用 LatticeSVG", style={
+# Step 2: Add content
+page.add(TextNode("Welcome to LatticeSVG", style={
     "font-size": "28px",
     "font-weight": "bold",
     "color": "#2c3e50",
@@ -33,8 +33,8 @@ page.add(TextNode("欢迎使用 LatticeSVG", style={
 }))
 
 page.add(TextNode(
-    "LatticeSVG 是一个基于 CSS Grid 的声明式矢量布局引擎，"
-    "用 Python 字典描述样式，输出高质量 SVG。",
+    "LatticeSVG is a declarative vector layout engine based on CSS Grid. "
+    "Describe styles with Python dicts, output high-quality SVG.",
     style={
         "font-size": "14px",
         "color": "#555555",
@@ -42,16 +42,16 @@ page.add(TextNode(
     },
 ))
 
-# 步骤 3：渲染
+# Step 3: Render
 Renderer().render(page, "my_first_layout.svg")
 ```
 
 <figure markdown="span">
-  ![第一个示例](../assets/images/examples/quickstart_first.svg){ loading=lazy }
-  <figcaption>渲染结果</figcaption>
+  ![First example](../assets/images/examples/quickstart_first.svg){ loading=lazy }
+  <figcaption>Rendered output</figcaption>
 </figure>
 
-## 两列布局
+## Two-Column Layout
 
 ```python
 from latticesvg import GridContainer, TextNode, Renderer
@@ -60,18 +60,18 @@ page = GridContainer(style={
     "width": "600px",
     "padding": "24px",
     "background-color": "#f8f9fa",
-    "grid-template-columns": ["1fr", "1fr"],  # 两列等宽
+    "grid-template-columns": ["1fr", "1fr"],  # two equal columns
     "gap": "16px",
 })
 
-page.add(TextNode("左侧内容", style={
+page.add(TextNode("Left content", style={
     "padding": "16px",
     "background-color": "#ffffff",
     "border": "1px solid #dee2e6",
     "font-size": "14px",
 }))
 
-page.add(TextNode("右侧内容", style={
+page.add(TextNode("Right content", style={
     "padding": "16px",
     "background-color": "#ffffff",
     "border": "1px solid #dee2e6",
@@ -82,40 +82,40 @@ Renderer().render(page, "two_columns.svg")
 ```
 
 <figure markdown="span">
-  ![两列布局](../assets/images/examples/quickstart_two_col.svg){ loading=lazy }
-  <figcaption>两列等宽布局</figcaption>
+  ![Two-column layout](../assets/images/examples/quickstart_two_col.svg){ loading=lazy }
+  <figcaption>Two-column equal-width layout</figcaption>
 </figure>
 
-## 使用内置模板
+## Using Built-in Templates
 
-LatticeSVG 提供 17 个内置样式模板，可以直接使用或覆盖部分属性：
+LatticeSVG provides 17 built-in style templates that can be used directly or partially overridden:
 
 ```python
 from latticesvg import GridContainer, TextNode, Renderer, templates
 
 page = GridContainer(style={
-    **templates.REPORT_PAGE,  # 800px 宽，白色背景，单列
+    **templates.REPORT_PAGE,  # 800px wide, white background, single column
 })
 
-page.add(TextNode("报告标题", style={
-    **templates.TITLE,  # 28px 加粗居中
+page.add(TextNode("Report Title", style={
+    **templates.TITLE,  # 28px bold centered
 }))
 
-page.add(TextNode("这是一段正文内容。", style={
-    **templates.PARAGRAPH,  # 14px，行高 1.6
+page.add(TextNode("This is body text.", style={
+    **templates.PARAGRAPH,  # 14px, line-height 1.6
 }))
 
 Renderer().render(page, "report.svg")
 ```
 
 <figure markdown="span">
-  ![模板示例](../assets/images/examples/quickstart_template.svg){ loading=lazy }
-  <figcaption>使用内置模板快速创建报告</figcaption>
+  ![Template example](../assets/images/examples/quickstart_template.svg){ loading=lazy }
+  <figcaption>Quickly create reports with built-in templates</figcaption>
 </figure>
 
-## Grid 放置
+## Grid Placement
 
-使用 `row`、`col` 参数精确控制子节点在网格中的位置：
+Use `row`, `col` parameters to precisely control child position in the grid:
 
 ```python
 grid = GridContainer(style={
@@ -126,31 +126,31 @@ grid = GridContainer(style={
     "padding": "16px",
 })
 
-# 第 1 行第 1 列，横跨 2 列
-grid.add(TextNode("跨两列"), row=1, col=1, col_span=2)
+# Row 1, column 1, spanning 2 columns
+grid.add(TextNode("Span two cols"), row=1, col=1, col_span=2)
 
-# 第 1 行第 3 列
-grid.add(TextNode("右上角"), row=1, col=3)
+# Row 1, column 3
+grid.add(TextNode("Top right"), row=1, col=3)
 
-# 第 2 行，横跨全部 3 列
-grid.add(TextNode("底部全宽"), row=2, col=1, col_span=3)
+# Row 2, spanning all 3 columns
+grid.add(TextNode("Full width bottom"), row=2, col=1, col_span=3)
 
 Renderer().render(grid, "grid_placement.svg")
 ```
 
-## 输出 PNG
+## PNG Output
 
 ```python
 renderer = Renderer()
-renderer.render_png(page, "output.png", scale=2.0)  # 2x 高清
+renderer.render_png(page, "output.png", scale=2.0)  # 2x retina
 ```
 
-!!! note "需要安装 `latticesvg[png]`"
-    PNG 输出依赖 CairoSVG，请先运行 `pip install latticesvg[png]`。
+!!! note "Requires `latticesvg[png]`"
+    PNG output depends on CairoSVG. Run `pip install latticesvg[png]` first.
 
-## 下一步
+## Next Steps
 
-- 📐 [Grid 布局教程](../tutorials/grid-layout.md) — 深入学习 CSS Grid 的各种技巧
-- 📝 [文本排版教程](../tutorials/text-typography.md) — 掌握文本排版的精髓
-- 🧩 [节点类型](../tutorials/node-types.md) — 了解所有可用节点
-- 📖 [CSS 属性参考](../reference/css-properties.md) — 查阅所有支持的属性
+- 📐 [Grid Layout Tutorial](../tutorials/grid-layout.md) — Master CSS Grid techniques
+- 📝 [Text Typography Tutorial](../tutorials/text-typography.md) — Master text typesetting
+- 🧩 [Node Types](../tutorials/node-types.md) — Learn about all available nodes
+- 📖 [CSS Properties Reference](../reference/css-properties.md) — Browse all supported properties

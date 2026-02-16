@@ -1,16 +1,16 @@
-# 布局引擎 API
+# Layout Engine API
 
-布局模块包含 CSS Grid 求解器，负责轨道尺寸计算、子项放置和对齐。
+The layout module contains the CSS Grid solver, responsible for track sizing, item placement, and alignment.
 
-## 模块概览
+## Module Overview
 
-| 类 | 职责 |
+| Class | Responsibility |
 |---|---|
-| `GridSolver` | Grid 布局求解器主类 |
-| `TrackDef` | 轨道定义（fixed/fr/auto/minmax/etc.） |
-| `Track` | 求解后的轨道（含实际尺寸） |
-| `GridItem` | 包装子节点的 Grid 项 |
-| `SizeType` | 尺寸类型枚举 |
+| `GridSolver` | Main grid layout solver |
+| `TrackDef` | Track definition (fixed/fr/auto/minmax/etc.) |
+| `Track` | Solved track (with actual size) |
+| `GridItem` | Grid item wrapping child nodes |
+| `SizeType` | Size type enum |
 
 ## GridSolver
 
@@ -23,7 +23,7 @@ solver = GridSolver(grid)
 solver.solve(LayoutConstraints(available_width=600))
 ```
 
-## 自动生成的 API 文档
+## Auto-generated API Docs
 
 ::: latticesvg.layout.grid_solver
     options:

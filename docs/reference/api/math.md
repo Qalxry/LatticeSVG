@@ -1,47 +1,47 @@
-# 数学公式 API
+# Math Formula API
 
-数学模块提供 LaTeX 公式渲染后端的注册与管理。
+The math module provides registration and management of LaTeX formula rendering backends.
 
-## 模块概览
+## Module Overview
 
-| 导出 | 类型 | 职责 |
+| Export | Type | Responsibility |
 |---|---|---|
-| `MathBackend` | Protocol | 后端接口协议 |
-| `SVGFragment` | dataclass | 渲染结果（SVG 内容 + 尺寸） |
-| `QuickJaxBackend` | 类 | 默认后端（基于 QuickJax / MathJax v4） |
-| `register_backend()` | 函数 | 注册自定义后端 |
-| `set_default_backend()` | 函数 | 设置默认后端 |
-| `get_backend()` | 函数 | 获取后端实例 |
-| `get_default_backend_name()` | 函数 | 获取默认后端名称 |
+| `MathBackend` | Protocol | Backend interface protocol |
+| `SVGFragment` | dataclass | Render result (SVG content + dimensions) |
+| `QuickJaxBackend` | class | Default backend (based on QuickJax / MathJax v4) |
+| `register_backend()` | function | Register a custom backend |
+| `set_default_backend()` | function | Set the default backend |
+| `get_backend()` | function | Get a backend instance |
+| `get_default_backend_name()` | function | Get the default backend name |
 
-## 基本用法
+## Basic Usage
 
 ```python
 from latticesvg.math import get_backend
 
-backend = get_backend()  # 默认 QuickJax
+backend = get_backend()  # Default QuickJax
 fragment = backend.render(r"E = mc^2", font_size=20, display=True)
 print(fragment.width, fragment.height)
-print(fragment.svg)  # SVG 字符串片段
+print(fragment.svg)  # SVG string fragment
 ```
 
-## 自定义后端
+## Custom Backends
 
 ```python
 from latticesvg.math import register_backend, set_default_backend
 
 class MyBackend:
     def render(self, latex: str, font_size: float, display: bool = True):
-        # 返回 SVGFragment
+        # Return SVGFragment
         ...
 
 register_backend("my_backend", MyBackend)
 set_default_backend("my_backend")
 ```
 
-## 自动生成的 API 文档
+## Auto-generated API Docs
 
-### 后端管理
+### Backend Management
 
 ::: latticesvg.math
     options:
@@ -50,7 +50,7 @@ set_default_backend("my_backend")
       members_order: source
       heading_level: 4
 
-### QuickJax 后端
+### QuickJax Backend
 
 ::: latticesvg.math.backend
     options:
