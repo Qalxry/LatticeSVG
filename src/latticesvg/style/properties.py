@@ -146,6 +146,14 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
         default="en", inheritable=True, parser_hint="keyword"
     ),
 
+    # ── Writing mode ──────────────────────────────────────────────────
+    "writing-mode": PropertyDef(
+        default="horizontal-tb", inheritable=True, parser_hint="keyword"
+    ),
+    "text-orientation": PropertyDef(
+        default="mixed", inheritable=True, parser_hint="keyword"
+    ),
+
     # ── Visual ────────────────────────────────────────────────────────
     "background-color": PropertyDef(default="none", parser_hint="color"),
     "background-image": PropertyDef(default="none", parser_hint="gradient"),

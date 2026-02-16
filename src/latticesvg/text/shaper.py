@@ -1453,3 +1453,416 @@ def get_max_content_width_rich(
                                letter_spacing=letter_spacing, word_spacing=word_spacing)
         total += w
     return total
+
+
+# ======================================================================
+# Vertical text support (writing-mode: vertical-rl / vertical-lr)
+# ======================================================================
+
+# ---------------------------------------------------------------------------
+# Character orientation helpers
+# ---------------------------------------------------------------------------
+
+def _is_upright_in_vertical(ch: str, orientation: str = "mixed") -> bool:
+    """Determine if *ch* should be rendered upright in vertical writing.
+
+    When *orientation* is ``"mixed"`` (CSS default):
+      - CJK ideographs, kana, fullwidth chars → upright
+      - Latin, digits, other scripts → sideways (rotated 90° CW)
+    When ``"upright"``: all characters upright.
+    When ``"sideways"``: all characters rotated.
+    """
+    if orientation == "upright":
+        return True
+    if orientation == "sideways":
+        return False
+    # "mixed" — use Unicode heuristic
+    return _is_cjk_char(ch) or _is_kana_or_fullwidth(ch)
+
+
+def _is_kana_or_fullwidth(ch: str) -> bool:
+    """Extra ranges that should be upright beyond ``_is_cjk_char``."""
+    cp = ord(ch)
+    return (
+        (0x2000 <= cp <= 0x206F)   or  # General Punctuation (some)
+        (0x2190 <= cp <= 0x21FF)   or  # Arrows
+        (0x2500 <= cp <= 0x257F)   or  # Box Drawing
+        (0x2580 <= cp <= 0x259F)   or  # Block Elements
+        (0x25A0 <= cp <= 0x25FF)   or  # Geometric Shapes
+        (0x2600 <= cp <= 0x26FF)   or  # Misc. Symbols
+        (0x2700 <= cp <= 0x27BF)   or  # Dingbats
+        (0x31F0 <= cp <= 0x31FF)   or  # Katakana Phonetic Ext.
+        (0x1B000 <= cp <= 0x1B0FF)     # Kana Supplement
+    )
+
+
+@dataclass
+class VerticalRun:
+    """A contiguous run of characters with the same orientation.
+
+    *upright* runs have each character standing upright (CJK style).
+    *sideways* (rotated) runs are Latin/digit text rotated 90° CW as a group.
+    """
+    text: str
+    upright: bool           # True → upright, False → sideways (rotated CW)
+    advance: float = 0.0   # total advance in the block-direction (vertical)
+
+
+@dataclass
+class Column:
+    """A single column of vertically-set text (analogous to ``Line``)."""
+    text: str
+    height: float           # measured height in px (block-direction extent)
+    y_offset: float = 0.0   # cross-axis offset after alignment
+    char_count: int = 0
+    runs: List[VerticalRun] = field(default_factory=list)
+
+
+def _segment_vertical_runs(
+    text: str,
+    orientation: str = "mixed",
+) -> List[Tuple[str, bool]]:
+    """Split *text* into ``(substring, is_upright)`` runs.
+
+    Consecutive characters with the same orientation are grouped together.
+    Spaces are attached to the preceding run type, or treated as upright
+    if at the start.
+    """
+    if not text:
+        return []
+    runs: List[Tuple[str, bool]] = []
+    buf = text[0]
+    is_up = _is_upright_in_vertical(text[0], orientation)
+    for ch in text[1:]:
+        if ch == ' ':
+            # Attach spaces to current run
+            buf += ch
+            continue
+        ch_up = _is_upright_in_vertical(ch, orientation)
+        if ch_up == is_up:
+            buf += ch
+        else:
+            runs.append((buf, is_up))
+            buf = ch
+            is_up = ch_up
+    if buf:
+        runs.append((buf, is_up))
+    return runs
+
+
+def measure_text_vertical(
+    text: str,
+    font_path,
+    size: int,
+    *,
+    fm: Optional[FontManager] = None,
+    orientation: str = "mixed",
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
+) -> float:
+    """Return the total advance height of *text* in vertical writing mode.
+
+    Upright characters contribute their vertical advance (``advance_y``,
+    falling back to ``advance_x`` for fonts lacking vertical metrics).
+    Sideways (rotated) runs contribute the horizontal width of the run
+    as vertical advance (since the run is rotated 90° CW).
+    """
+    if fm is None:
+        fm = FontManager.instance()
+    if not text:
+        return 0.0
+    runs = _segment_vertical_runs(text, orientation)
+    total = 0.0
+    for run_text, upright in runs:
+        if upright:
+            for i, ch in enumerate(run_text):
+                gm = fm.glyph_metrics(font_path, size, ch)
+                adv_y = gm.advance_y if gm.advance_y > 0 else gm.advance_x
+                total += adv_y
+                if letter_spacing and i < len(run_text) - 1:
+                    total += letter_spacing
+                if word_spacing and ch == ' ':
+                    total += word_spacing
+        else:
+            # Sideways run: horizontal width becomes vertical extent
+            run_w = measure_text(run_text, font_path, size, fm=fm,
+                                 letter_spacing=letter_spacing,
+                                 word_spacing=word_spacing)
+            total += run_w
+        # letter-spacing between runs
+        if letter_spacing:
+            total += letter_spacing
+    # Remove trailing letter-spacing
+    if letter_spacing and runs:
+        total -= letter_spacing
+    return total
+
+
+def break_columns(
+    text: str,
+    available_height: float,
+    font_path,
+    size: int,
+    white_space: str = "normal",
+    overflow_wrap: str = "normal",
+    *,
+    fm: Optional[FontManager] = None,
+    orientation: str = "mixed",
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
+) -> List[Column]:
+    """Break *text* into columns that fit within *available_height*.
+
+    This is the vertical counterpart of :func:`break_lines`.  Each
+    ``Column`` represents one vertical column of text.
+
+    Characters are distributed top-to-bottom; when a column's height
+    exceeds *available_height*, a new column starts.
+    """
+    if fm is None:
+        fm = FontManager.instance()
+
+    # Collapse whitespace (simplified — uses same model as horizontal)
+    if white_space in ("normal", "nowrap"):
+        collapsed = " ".join(text.split())
+        if not collapsed:
+            return [Column(text="", height=0.0, char_count=0)]
+        text = collapsed
+
+    if white_space == "nowrap":
+        h = measure_text_vertical(text, font_path, size, fm=fm,
+                                  orientation=orientation,
+                                  letter_spacing=letter_spacing,
+                                  word_spacing=word_spacing)
+        runs = _build_vertical_runs(text, font_path, size, fm, orientation,
+                                    letter_spacing, word_spacing)
+        return [Column(text=text, height=h, char_count=len(text), runs=runs)]
+
+    # Handle pre modes with explicit newlines
+    if white_space in ("pre", "pre-wrap", "pre-line"):
+        segments = text.split("\n")
+        columns: List[Column] = []
+        for seg in segments:
+            if white_space == "pre-line":
+                seg = " ".join(seg.split())
+            if white_space == "pre" or not seg.strip():
+                h = measure_text_vertical(seg, font_path, size, fm=fm,
+                                          orientation=orientation,
+                                          letter_spacing=letter_spacing,
+                                          word_spacing=word_spacing)
+                runs = _build_vertical_runs(seg, font_path, size, fm,
+                                            orientation, letter_spacing,
+                                            word_spacing)
+                columns.append(Column(text=seg, height=h,
+                                     char_count=len(seg), runs=runs))
+            else:
+                sub = _break_column_normal(seg, available_height, font_path,
+                                           size, fm, orientation,
+                                           letter_spacing, word_spacing)
+                columns.extend(sub)
+        return columns if columns else [Column(text="", height=0.0,
+                                               char_count=0)]
+
+    # Normal wrapping
+    return _break_column_normal(text, available_height, font_path, size, fm,
+                                orientation, letter_spacing, word_spacing)
+
+
+def _break_column_normal(
+    text: str,
+    available_height: float,
+    font_path,
+    size: int,
+    fm: FontManager,
+    orientation: str = "mixed",
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
+) -> List[Column]:
+    """Greedy column-breaking for normal white-space mode (vertical)."""
+    tokens = _tokenize_breakable(text)
+    columns: List[Column] = []
+    cur_chars: List[str] = []
+    cur_height = 0.0
+
+    def _flush_col():
+        nonlocal cur_chars, cur_height
+        col_text = "".join(cur_chars).rstrip()
+        if col_text:
+            runs = _build_vertical_runs(col_text, font_path, size, fm,
+                                        orientation, letter_spacing,
+                                        word_spacing)
+            h = sum(r.advance for r in runs)
+            columns.append(Column(text=col_text, height=h,
+                                 char_count=len(col_text), runs=runs))
+        cur_chars = []
+        cur_height = 0.0
+
+    for token_text, is_space in tokens:
+        tok_h = measure_text_vertical(token_text, font_path, size, fm=fm,
+                                      orientation=orientation,
+                                      letter_spacing=letter_spacing,
+                                      word_spacing=word_spacing)
+
+        if cur_chars and cur_height + tok_h > available_height:
+            if is_space:
+                _flush_col()
+                continue
+            _flush_col()
+            cur_chars = [token_text]
+            cur_height = tok_h
+        else:
+            cur_chars.append(token_text)
+            cur_height += tok_h
+
+    if cur_chars:
+        _flush_col()
+
+    return columns if columns else [Column(text="", height=0.0, char_count=0)]
+
+
+def _build_vertical_runs(
+    text: str,
+    font_path,
+    size: int,
+    fm: FontManager,
+    orientation: str = "mixed",
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
+) -> List[VerticalRun]:
+    """Build ``VerticalRun`` list with computed advances."""
+    raw_runs = _segment_vertical_runs(text, orientation)
+    result: List[VerticalRun] = []
+    for run_text, upright in raw_runs:
+        if upright:
+            adv = 0.0
+            for i, ch in enumerate(run_text):
+                gm = fm.glyph_metrics(font_path, size, ch)
+                adv_y = gm.advance_y if gm.advance_y > 0 else gm.advance_x
+                adv += adv_y
+                if letter_spacing and i < len(run_text) - 1:
+                    adv += letter_spacing
+                if word_spacing and ch == ' ':
+                    adv += word_spacing
+        else:
+            adv = measure_text(run_text, font_path, size, fm=fm,
+                               letter_spacing=letter_spacing,
+                               word_spacing=word_spacing)
+        result.append(VerticalRun(text=run_text, upright=upright, advance=adv))
+    return result
+
+
+def align_columns(
+    columns: List[Column],
+    available_height: float,
+    text_align: str = "left",
+) -> List[Column]:
+    """Set ``y_offset`` on each column based on *text_align*.
+
+    In vertical mode, ``text-align`` controls the *block-direction*
+    (vertical) alignment within each column:
+      - ``left`` / ``start`` → top-aligned (y_offset = 0)
+      - ``center`` → vertically centred
+      - ``right`` / ``end`` → bottom-aligned
+    """
+    result: List[Column] = []
+    for col in columns:
+        offset = 0.0
+        if text_align == "center":
+            offset = (available_height - col.height) / 2.0
+        elif text_align in ("right", "end"):
+            offset = available_height - col.height
+        result.append(Column(
+            text=col.text,
+            height=col.height,
+            y_offset=max(0.0, offset),
+            char_count=col.char_count,
+            runs=col.runs,
+        ))
+    return result
+
+
+def compute_vertical_block_size(
+    columns: List[Column],
+    line_height: float,
+    font_size: float,
+) -> Tuple[float, float]:
+    """Return ``(width, height)`` for a vertical text block.
+
+    *width* = number of columns × line_height (inter-column spacing).
+    *height* = tallest column.
+    """
+    if not columns:
+        return (0.0, 0.0)
+    lh = line_height
+    total_width = lh * len(columns)
+    max_height = max((c.height for c in columns), default=0.0)
+    return (total_width, max_height)
+
+
+def get_min_content_height(
+    text: str,
+    font_path,
+    size: int,
+    white_space: str = "normal",
+    *,
+    fm: Optional[FontManager] = None,
+    orientation: str = "mixed",
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
+) -> float:
+    """Return the minimum content height for vertical text.
+
+    This is the height of the tallest single breakable unit — analogous
+    to ``get_min_content_width`` for horizontal text.
+    """
+    if fm is None:
+        fm = FontManager.instance()
+    if white_space in ("pre", "nowrap"):
+        return measure_text_vertical(text, font_path, size, fm=fm,
+                                     orientation=orientation,
+                                     letter_spacing=letter_spacing,
+                                     word_spacing=word_spacing)
+    collapsed = " ".join(text.split())
+    if not collapsed:
+        return 0.0
+    tokens = _tokenize_breakable(collapsed)
+    max_h = 0.0
+    for token_text, is_space in tokens:
+        if not is_space:
+            h = measure_text_vertical(token_text, font_path, size, fm=fm,
+                                      orientation=orientation,
+                                      letter_spacing=letter_spacing,
+                                      word_spacing=word_spacing)
+            max_h = max(max_h, h)
+    return max_h
+
+
+def get_max_content_height(
+    text: str,
+    font_path,
+    size: int,
+    white_space: str = "normal",
+    *,
+    fm: Optional[FontManager] = None,
+    orientation: str = "mixed",
+    letter_spacing: float = 0.0,
+    word_spacing: float = 0.0,
+) -> float:
+    """Return the max-content height for vertical text — all text in one column."""
+    if fm is None:
+        fm = FontManager.instance()
+    if white_space == "pre":
+        lines = text.split("\n")
+        return max(
+            (measure_text_vertical(l, font_path, size, fm=fm,
+                                   orientation=orientation,
+                                   letter_spacing=letter_spacing,
+                                   word_spacing=word_spacing)
+             for l in lines),
+            default=0.0,
+        )
+    collapsed = " ".join(text.split())
+    return measure_text_vertical(collapsed, font_path, size, fm=fm,
+                                 orientation=orientation,
+                                 letter_spacing=letter_spacing,
+                                 word_spacing=word_spacing)

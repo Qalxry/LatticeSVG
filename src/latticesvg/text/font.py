@@ -20,6 +20,10 @@ class GlyphMetrics:
     bearing_y: float   # top-side bearing
     width: float       # bitmap / outline width
     height: float      # bitmap / outline height
+    # Vertical metrics (populated when available)
+    advance_y: float = 0.0       # vertical advance in px
+    vert_origin_x: float = 0.0   # vertical origin X offset
+    vert_origin_y: float = 0.0   # vertical origin Y offset
 
 
 # ---------------------------------------------------------------------------
@@ -53,12 +57,24 @@ class _FreeTypeBackend:
         glyph = face.glyph
         m = glyph.metrics
         # FreeType metrics are in 26.6 fixed point (1/64 px)
+        # Read vertical metrics if the font provides them.
+        try:
+            vert_adv = m.vertAdvance / 64.0 if m.vertAdvance else 0.0
+            vert_ox = m.vertBearingX / 64.0 if m.vertBearingX else 0.0
+            vert_oy = m.vertBearingY / 64.0 if m.vertBearingY else 0.0
+        except (AttributeError, TypeError):
+            vert_adv = 0.0
+            vert_ox = 0.0
+            vert_oy = 0.0
         return GlyphMetrics(
             advance_x=glyph.advance.x / 64.0,
             bearing_x=m.horiBearingX / 64.0,
             bearing_y=m.horiBearingY / 64.0,
             width=m.width / 64.0,
             height=m.height / 64.0,
+            advance_y=vert_adv,
+            vert_origin_x=vert_ox,
+            vert_origin_y=vert_oy,
         )
 
     def ascender(self, font_path: str, size: int) -> float:

@@ -962,7 +962,15 @@ class Renderer:
         offset_x: float,
         offset_y: float,
     ) -> None:
-        """Render text lines (plain or rich)."""
+        """Render text lines (plain or rich), dispatching by writing-mode."""
+        wm = getattr(node, "_resolved_writing_mode", "horizontal-tb")
+        if wm in ("sideways-rl", "sideways-lr"):
+            self._render_sideways_text(group, node, offset_x, offset_y)
+            return
+        if wm in ("vertical-rl", "vertical-lr"):
+            self._render_vertical_text(group, node, offset_x, offset_y)
+            return
+        # horizontal-tb (default)
         rich_lines = getattr(node, "_rich_lines", None)
         if rich_lines:
             self._render_rich_text(group, node, offset_x, offset_y)
@@ -1330,6 +1338,257 @@ class Renderer:
                 if ws_px:
                     t.args["word-spacing"] = f"{ws_px}"
                 group.append(t)
+
+    # -----------------------------------------------------------------
+    # Sideways text rendering (writing-mode: sideways-rl / sideways-lr)
+    # -----------------------------------------------------------------
+
+    def _render_sideways_text(
+        self,
+        group: dw.Group,
+        node: "TextNode",
+        offset_x: float,
+        offset_y: float,
+    ) -> None:
+        """Render text with a 90° rotation for sideways writing modes.
+
+        The text was shaped horizontally at ``_sideways_shaping_width``
+        but the node's ``content_box`` has already been axis-swapped
+        (width ↔ height).  To get correct text positioning we
+        temporarily replace ``content_box`` with a virtual box whose
+        dimensions match the original horizontal shaping, centred on
+        the physical content area, render horizontally into a group,
+        then rotate the group 90°/-90° around the centre.
+        """
+        from ..nodes.base import Rect
+
+        wm = getattr(node, "_resolved_writing_mode", "sideways-rl")
+        cb = node.content_box
+
+        # Build a virtual box whose dimensions are the physical box
+        # dimensions swapped (width ↔ height), centred on the same
+        # point.  After a 90° rotation around the centre this maps
+        # exactly back onto the physical box, ensuring:
+        #   sideways-rl (90° CW):  text starts at top-right
+        #   sideways-lr (−90° CCW): text starts at bottom-left
+        vx = cb.x + (cb.width - cb.height) / 2.0
+        vy = cb.y + (cb.height - cb.width) / 2.0
+
+        # Temporarily swap content_box for correct horizontal rendering
+        saved_cb = node.content_box
+        node.content_box = Rect(x=vx, y=vy, width=cb.height, height=cb.width)
+
+        # Cross-axis centering: in the virtual box the y-axis corresponds
+        # to the physical width.  If the text block is shorter than the
+        # virtual height we may need to centre it (mirroring the
+        # display:grid/flex + align-items logic of horizontal text).
+        virtual_height = cb.width
+        text_block_h = getattr(node, '_text_block_h', 0.0)
+        if text_block_h <= 0:
+            lh = node._line_height()
+            rlines = getattr(node, '_rich_lines', None)
+            n_lines = len(node.lines) if node.lines else (len(rlines) if rlines else 0)
+            text_block_h = n_lines * lh if n_lines > 0 else 0
+
+        saved_y_offset = getattr(node, '_text_y_offset', 0.0)
+        display = node.style.get("display")
+        align_items = node.style.get("align-items")
+        if display in ("flex", "grid") and virtual_height > text_block_h:
+            if align_items == "center":
+                node._text_y_offset = (virtual_height - text_block_h) / 2.0
+            elif align_items == "end":
+                node._text_y_offset = virtual_height - text_block_h
+
+        inner_g = dw.Group()
+        rich_lines = getattr(node, "_rich_lines", None)
+        if rich_lines:
+            self._render_rich_text(inner_g, node, offset_x, offset_y)
+        else:
+            self._render_plain_text(inner_g, node, offset_x, offset_y)
+
+        # Restore the real content_box & y-offset
+        node._text_y_offset = saved_y_offset
+        node.content_box = saved_cb
+
+        # Rotation centre = physical content area centre (in render coords)
+        cx = cb.x + offset_x + cb.width / 2.0
+        cy = cb.y + offset_y + cb.height / 2.0
+
+        angle = 90 if wm == "sideways-rl" else -90
+
+        rot_g = dw.Group(transform=f"rotate({angle},{cx},{cy})")
+        rot_g.append(inner_g)
+        group.append(rot_g)
+
+    # -----------------------------------------------------------------
+    # Vertical text rendering (writing-mode: vertical-rl / vertical-lr)
+    # -----------------------------------------------------------------
+
+    def _render_vertical_text(
+        self,
+        group: dw.Group,
+        node: "TextNode",
+        offset_x: float,
+        offset_y: float,
+    ) -> None:
+        """Render text in true vertical writing mode.
+
+        Each upright character is positioned individually using SVG
+        ``<text>`` elements.  Sideways (rotated) runs of Latin text
+        are rendered as a single ``<text>`` with a 90° rotation.
+        """
+        from ..text.shaper import _is_upright_in_vertical  # noqa: F811
+
+        cb = node.content_box
+        columns = getattr(node, "_columns", None)
+        if not columns:
+            return
+
+        wm = getattr(node, "_resolved_writing_mode", "vertical-rl")
+        orient = getattr(node, "_resolved_text_orientation", "mixed")
+
+        font_size = node._font_size_int()
+        color = node.style.get("color") or "#000000"
+        font_family = getattr(node, '_resolved_font_family', None)
+        if font_family is None:
+            font_family = node.style.get("font-family")
+        if isinstance(font_family, list):
+            font_family = ", ".join(font_family)
+        font_weight = node.style.get("font-weight") or "normal"
+        font_style = node.style.get("font-style") or "normal"
+
+        lh_val = node._line_height()
+        line_h = lh_val
+
+        font_chain = getattr(node, '_resolved_font_chain', None)
+        if font_chain:
+            from ..text.font import FontManager as _FM
+            fm = _FM.instance()
+            fp0 = font_chain[0] if isinstance(font_chain, list) else font_chain
+            _ascender = fm.ascender(fp0, font_size)
+            _descender = fm.descender(fp0, font_size)
+            em_height = _ascender - _descender
+        else:
+            fp0 = ""
+            fm = None
+            em_height = font_size
+
+        ls_raw = node.style.get("letter-spacing")
+        ls_px = 0.0 if (ls_raw is None or ls_raw == "normal") else float(ls_raw)
+
+        ws_raw = node.style.get("word-spacing")
+        ws_px = 0.0 if (ws_raw is None or ws_raw == "normal") else float(ws_raw)
+
+        opacity = node.style.get("opacity")
+        op = float(opacity) if isinstance(opacity, (int, float)) else 1.0
+
+        x0 = cb.x + offset_x
+        y0 = cb.y + offset_y
+
+        n_cols = len(columns)
+
+        for col_idx, col in enumerate(columns):
+            # Column x position
+            if wm == "vertical-rl":
+                # Columns go right-to-left
+                col_x = x0 + cb.width - (col_idx + 1) * line_h + line_h / 2.0
+            else:
+                # vertical-lr: columns go left-to-right
+                col_x = x0 + col_idx * line_h + line_h / 2.0
+
+            cur_y = y0 + col.y_offset
+
+            for run in col.runs:
+                if run.upright:
+                    # Upright characters: position each one individually
+                    for ch in run.text:
+                        if ch == ' ':
+                            # Space: advance vertically by a standard amount
+                            if fm and fp0:
+                                gm = fm.glyph_metrics(fp0, font_size, ch)
+                                adv = gm.advance_y if gm.advance_y > 0 else gm.advance_x
+                            else:
+                                adv = font_size * 0.5
+                            adv += ws_px
+                            cur_y += adv
+                            continue
+                        # Centre the character horizontally in the column
+                        if fm and fp0:
+                            gm = fm.glyph_metrics(fp0, font_size, ch)
+                            char_w = gm.advance_x
+                            adv_y = gm.advance_y if gm.advance_y > 0 else gm.advance_x
+                        else:
+                            char_w = font_size
+                            adv_y = font_size
+
+                        char_x = col_x - char_w / 2.0
+                        # Baseline: place near top of character cell
+                        char_y = cur_y + adv_y * 0.85
+
+                        text_kw = dict(
+                            fill=color,
+                            font_family=font_family,
+                            font_weight=font_weight,
+                            font_style=font_style,
+                        )
+                        if op < 1.0:
+                            text_kw["opacity"] = op
+
+                        t = dw.Text(ch, font_size, char_x, char_y, **text_kw)
+                        group.append(t)
+
+                        cur_y += adv_y
+                        if ls_px:
+                            cur_y += ls_px
+                else:
+                    # Sideways (rotated) run: render horizontally then
+                    # rotate 90° clockwise around the run's centre.
+                    run_text = run.text.rstrip()
+                    if not run_text:
+                        cur_y += run.advance
+                        continue
+
+                    from ..text.shaper import measure_text as _mt
+                    if fm and fp0:
+                        run_w = _mt(run_text, fp0, font_size, fm=fm,
+                                    letter_spacing=ls_px,
+                                    word_spacing=ws_px)
+                    else:
+                        run_w = len(run_text) * font_size * 0.6
+
+                    # Centre of the rotated text block
+                    rot_cx = col_x
+                    rot_cy = cur_y + run_w / 2.0
+
+                    text_kw = dict(
+                        fill=color,
+                        font_family=font_family,
+                        font_weight=font_weight,
+                        font_style=font_style,
+                    )
+                    if op < 1.0:
+                        text_kw["opacity"] = op
+
+                    # Place text at the centre, then rotate
+                    text_x = rot_cx - run_w / 2.0
+                    text_y = rot_cy + font_size * 0.35  # baseline offset
+
+                    inner_t = dw.Text(run_text, font_size, text_x, text_y,
+                                      **text_kw)
+                    if ls_px:
+                        inner_t.args["letter-spacing"] = f"{ls_px}"
+                    if ws_px:
+                        inner_t.args["word-spacing"] = f"{ws_px}"
+
+                    rot_g = dw.Group(
+                        transform=f"rotate(90,{rot_cx},{rot_cy})"
+                    )
+                    rot_g.append(inner_t)
+                    group.append(rot_g)
+
+                    cur_y += run_w
+                    if ls_px:
+                        cur_y += ls_px
 
     @staticmethod
     def _truncate_with_ellipsis(
