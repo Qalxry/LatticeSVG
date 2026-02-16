@@ -130,10 +130,10 @@ extra:
       link: https://pypi.org/project/latticesvg/
   alternate:
     - name: English
-      link: /
+      link: /LatticeSVG/
       lang: en
     - name: 简体中文
-      link: /zh/
+      link: /LatticeSVG/zh/
       lang: zh
 
 extra_css:

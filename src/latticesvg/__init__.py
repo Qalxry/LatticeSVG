@@ -31,4 +31,4 @@ __all__ = [
     "build_table",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
