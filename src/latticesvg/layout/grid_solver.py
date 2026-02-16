@@ -21,6 +21,11 @@ if TYPE_CHECKING:
 # Internal data structures
 # ---------------------------------------------------------------------------
 
+# Upper bounds for auto-placement search loops
+_MAX_AUTO_SEARCH_ROWS = 200
+_MAX_AUTO_SEARCH_ITER = 10000
+
+
 class SizeType(Enum):
     FIXED = auto()
     PERCENT = auto()
@@ -478,7 +483,7 @@ class GridSolver:
     def _find_row(
         self, col: int, row_span: int, occupied: Set[Tuple[int, int]]
     ) -> int:
-        for r in range(200):  # reasonable upper bound
+        for r in range(_MAX_AUTO_SEARCH_ROWS):
             if all((r + dr, col) not in occupied for dr in range(row_span)):
                 return r
         return 0
@@ -494,7 +499,7 @@ class GridSolver:
         dense: bool,
     ) -> Tuple[int, int]:
         r, c = (0, 0) if dense else (start_r, start_c)
-        for _ in range(10000):
+        for _ in range(_MAX_AUTO_SEARCH_ITER):
             if c + cs > num_cols:
                 r += 1
                 c = 0
@@ -523,8 +528,8 @@ class GridSolver:
         dense: bool,
     ) -> Tuple[int, int]:
         r, c = (0, 0) if dense else (start_r, start_c)
-        max_r = num_rows if num_rows > 0 else 200
-        for _ in range(10000):
+        max_r = num_rows if num_rows > 0 else _MAX_AUTO_SEARCH_ROWS
+        for _ in range(_MAX_AUTO_SEARCH_ITER):
             if r + rs > max_r:
                 c += 1
                 r = 0
