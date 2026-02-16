@@ -24,6 +24,15 @@ from .properties import PROPERTY_REGISTRY, get_default, is_inheritable
 
 import re
 
+# CSS shorthand properties recognised by ``expand_shorthand()``.
+# They are *not* in ``PROPERTY_REGISTRY`` (only longhands live there)
+# but are perfectly valid user-supplied names.
+_KNOWN_SHORTHANDS = frozenset({
+    "margin", "padding", "border-width", "border-color",
+    "gap", "border", "outline", "border-radius", "background",
+    "border-top", "border-right", "border-bottom", "border-left",
+})
+
 _RE_HAS_UNIT = re.compile(r"[a-zA-Z]+\s*$")
 
 
@@ -114,6 +123,14 @@ class ComputedStyle:
                 if prop == "font-size":
                     continue  # already handled
 
+                # Warn about unknown CSS properties (P1-3)
+                if (prop not in PROPERTY_REGISTRY
+                        and prop not in _KNOWN_SHORTHANDS):
+                    warnings.warn(
+                        f"Unknown CSS property: '{prop}'",
+                        stacklevel=3,
+                    )
+
                 expanded = expand_shorthand(prop, val)
                 for long_prop, long_val in expanded.items():
                     self._explicit_props.add(long_prop)
@@ -176,6 +193,13 @@ class ComputedStyle:
             style.set("font-size", "18px")          # parsed to float 18.0
             style.set("width", 200)                 # numeric values kept as-is
         """
+        # Warn about unknown CSS properties (P1-3)
+        if prop not in PROPERTY_REGISTRY and prop not in _KNOWN_SHORTHANDS:
+            warnings.warn(
+                f"Unknown CSS property: '{prop}'",
+                stacklevel=2,
+            )
+
         font_size = self._values.get("font-size", 16.0)
         if not isinstance(font_size, (int, float)):
             font_size = 16.0

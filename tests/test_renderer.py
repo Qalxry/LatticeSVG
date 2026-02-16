@@ -17,7 +17,9 @@ class BoxNode(Node):
     """Minimal node with explicit size for renderer testing."""
 
     def __init__(self, width=100, height=50, **style):
-        super().__init__(style=style)
+        # Convert Python-style underscored names to CSS hyphenated names
+        css_style = {k.replace("_", "-"): v for k, v in style.items()}
+        super().__init__(style=css_style)
         self._w = width
         self._h = height
 

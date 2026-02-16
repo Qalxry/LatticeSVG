@@ -750,3 +750,57 @@ class TestFilterParsing:
     def test_unknown_filter_ignored(self):
         result = parse_filter("url(#foo)")
         assert result == "none"
+
+
+# ------------------------------------------------------------------
+# Unknown CSS property warnings (P1-3)
+# ------------------------------------------------------------------
+
+class TestUnknownPropertyWarning:
+    """ComputedStyle should warn about unrecognised CSS property names."""
+
+    def test_typo_in_constructor(self):
+        """A misspelled property triggers a warning at construction time."""
+        import warnings
+        from latticesvg.style.computed import ComputedStyle
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            ComputedStyle({"backgroud-color": "red"})
+        msgs = [str(x.message) for x in w]
+        assert any("backgroud-color" in m for m in msgs)
+
+    def test_typo_via_set(self):
+        """A misspelled property triggers a warning via set()."""
+        import warnings
+        from latticesvg.style.computed import ComputedStyle
+
+        style = ComputedStyle()
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            style.set("colr", "#f00")
+        msgs = [str(x.message) for x in w]
+        assert any("colr" in m for m in msgs)
+
+    def test_valid_longhand_no_warning(self):
+        """A valid longhand property does NOT trigger a warning."""
+        import warnings
+        from latticesvg.style.computed import ComputedStyle
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            ComputedStyle({"background-color": "red", "font-size": "18px"})
+        unknown_msgs = [str(x.message) for x in w if "Unknown CSS property" in str(x.message)]
+        assert unknown_msgs == []
+
+    def test_valid_shorthand_no_warning(self):
+        """Known shorthands (border, padding, etc.) do NOT trigger a warning."""
+        import warnings
+        from latticesvg.style.computed import ComputedStyle
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            ComputedStyle({"padding": "10px", "border": "1px solid red",
+                           "border-radius": "5px", "gap": "8px"})
+        unknown_msgs = [str(x.message) for x in w if "Unknown CSS property" in str(x.message)]
+        assert unknown_msgs == []

@@ -181,7 +181,7 @@ elif unit == 'rem':
 
 ---
 
-### P1-3. 未知 CSS 属性静默接受
+### P1-3. 未知 CSS 属性静默接受 ✅ 已修复
 
 **位置**：`style/parser.py` 的 `parse_value()`、`style/computed.py`
 
@@ -189,7 +189,7 @@ elif unit == 'rem':
 
 **影响**：打字错误极难排查。用户可能长时间以为某个属性已生效，实际上因为拼写错误从未生效。
 
-**建议修复**：在 `ComputedStyle.__init__` 或 `parse_value()` 中，对不在 `PROPERTY_REGISTRY` 中的属性名发出 `warnings.warn(f"Unknown CSS property: '{name}'")`。
+**修复方式**：在 `ComputedStyle.__init__` 和 `set()` 中，对不在 `PROPERTY_REGISTRY` 也不在已知简写属性集合 `_KNOWN_SHORTHANDS` 中的属性名发出 `warnings.warn(f"Unknown CSS property: '{name}'")`。
 
 ---
 
