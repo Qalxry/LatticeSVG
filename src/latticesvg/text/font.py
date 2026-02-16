@@ -486,14 +486,22 @@ class FontManager:
 
     def font_family_name(self, font_path: str) -> Optional[str]:
         """Get the CSS font-family name from a font file using FreeType."""
+        key = ('_family_name', font_path)
+        cached = self._cache.get(key)
+        if cached is not None:
+            return cached
+        result: Optional[str] = None
         if isinstance(self._backend, _FreeTypeBackend):
             try:
                 face = self._backend._freetype.Face(font_path)
                 name = face.family_name
                 if isinstance(name, bytes):
                     name = name.decode('utf-8', errors='replace')
-                return name
+                result = name
             except Exception:
                 pass
-        # Fallback: derive from filename stem
-        return Path(font_path).stem.replace('-', ' ').replace('_', ' ')
+        if result is None:
+            # Fallback: derive from filename stem
+            result = Path(font_path).stem.replace('-', ' ').replace('_', ' ')
+        self._cache[key] = result
+        return result

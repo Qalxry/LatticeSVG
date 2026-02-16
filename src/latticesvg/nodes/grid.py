@@ -55,10 +55,15 @@ class GridContainer(Node):
     # -----------------------------------------------------------------
 
     def measure(self, constraints: LayoutConstraints) -> Tuple[float, float, float]:
+        cached = getattr(self, '_measure_cache', None)
+        if cached is not None:
+            return cached
         from ..layout.grid_solver import GridSolver
 
         solver = GridSolver(self)
-        return solver.measure(constraints)
+        result = solver.measure(constraints)
+        self._measure_cache = result
+        return result
 
     # -----------------------------------------------------------------
     # Grid layout implementation

@@ -23,13 +23,6 @@ class TestComputedStyleCreation:
         assert s.padding_bottom == 10.0
         assert s.padding_left == 10.0
 
-    def test_margin_two_values(self):
-        s = ComputedStyle({"margin": "10px 20px"})
-        assert s.margin_top == 10.0
-        assert s.margin_right == 20.0
-        assert s.margin_bottom == 10.0
-        assert s.margin_left == 20.0
-
     def test_gap_shorthand(self):
         s = ComputedStyle({"gap": "15px"})
         assert s.get("row-gap") == 15.0

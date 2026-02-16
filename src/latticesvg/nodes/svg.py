@@ -102,10 +102,15 @@ class SVGNode(Node):
     # -----------------------------------------------------------------
 
     def measure(self, constraints: LayoutConstraints) -> Tuple[float, float, float]:
+        cached = getattr(self, '_measure_cache', None)
+        if cached is not None:
+            return cached
         iw, ih = self._parse_intrinsic()
         ph = self.style.padding_horizontal + self.style.border_horizontal
         pv = self.style.padding_vertical + self.style.border_vertical
-        return (iw + ph, iw + ph, ih + pv)
+        result = (iw + ph, iw + ph, ih + pv)
+        self._measure_cache = result
+        return result
 
     # -----------------------------------------------------------------
     # Layout

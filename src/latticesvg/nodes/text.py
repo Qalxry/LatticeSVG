@@ -75,12 +75,20 @@ class TextNode(Node):
         ``"Times New Roman, SimSun, serif"`` — each family is resolved
         independently so that characters missing in the primary font
         can be measured with a fallback.
+
+        The result is cached on the node because it depends only on
+        style properties that do not change after construction.
         """
+        cached = getattr(self, '_cached_font_chain', None)
+        if cached is not None:
+            return cached
         fm = FontManager.instance()
         families = self._parse_font_families()
         weight = self.style.get("font-weight") or "normal"
         fstyle = self.style.get("font-style") or "normal"
-        return fm.find_font_chain(families, weight=weight, style=fstyle)
+        result = fm.find_font_chain(families, weight=weight, style=fstyle)
+        self._cached_font_chain = result
+        return result
 
     def _parse_font_families(self) -> list:
         """Parse the ``font-family`` value into a flat list of family names."""
@@ -176,7 +184,13 @@ class TextNode(Node):
         For vertical/sideways writing modes the axes are swapped
         internally so that the grid solver always receives values in
         the physical (horizontal/vertical) coordinate system.
+
+        The result is cached because it depends only on text content
+        and style properties, not on *constraints*.
         """
+        cached = getattr(self, '_measure_cache', None)
+        if cached is not None:
+            return cached
         font_chain = self._font_chain()
         if not font_chain:
             return (0.0, 0.0, 0.0)
@@ -222,7 +236,9 @@ class TextNode(Node):
                 text_w, text_h = compute_text_block_size(lines, lh, float(size))
             # Swap axes: horizontal text_h becomes physical width,
             # horizontal text_w becomes physical height.
-            return (text_h + ph, text_h + ph, max_w + pv)
+            result = (text_h + ph, text_h + ph, max_w + pv)
+            self._measure_cache = result
+            return result
 
         # -- vertical-rl / vertical-lr --
         if wm in ("vertical-rl", "vertical-lr"):
@@ -242,7 +258,9 @@ class TextNode(Node):
             lh = self._line_height()
             block_w, block_h = compute_vertical_block_size(cols, lh, float(size))
             # In physical coords: width = block_w, height = block_h (= max_h)
-            return (block_w + ph, block_w + ph, max_h + pv)
+            result = (block_w + ph, block_w + ph, max_h + pv)
+            self._measure_cache = result
+            return result
 
         # -- horizontal-tb (default) --
         if self._spans is not None:
@@ -269,7 +287,9 @@ class TextNode(Node):
             lh = self._line_height()
             _, h = compute_text_block_size(lines, lh, float(size))
 
-        return (min_w + ph, max_w + ph, h + pv)
+        result = (min_w + ph, max_w + ph, h + pv)
+        self._measure_cache = result
+        return result
 
     # -----------------------------------------------------------------
     # Layout
