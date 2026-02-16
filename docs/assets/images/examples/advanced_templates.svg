@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="600.0" height="328.5" viewBox="0 0 600.0 328.5">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="600.0" height="328.5" fill="#ffffff" opacity="1.0" />
+<g>
+<text x="198.8203125" y="60.2" font-size="28" fill="#1a1a1a" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">使用 TITLE 模板</text>
+</g>
+<g>
+<text x="30.0" y="109.4" font-size="20" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">使用 SUBTITLE 模板</text>
+</g>
+<g>
+<text x="30.0" y="151.60000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">使用 PARAGRAPH 模板。这是一段正文示例，展示了段落的默认字号、行高和颜色配置</text>
+<text x="30.0" y="174.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">。模板可以通过字典合并进行自定义。</text>
+</g>
+<g>
+<text x="203.84375" y="212.60000000000002" font-size="12" fill="#888888" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">使用 CAPTION 模板 — 图表说明文字</text>
+</g>
+<g>
+<rect x="30.0" y="236.0" width="540.0" height="62.5" fill="#f8f9fa" opacity="1.0" />
+<text x="36.0" y="252.75" font-size="13" fill="#d63384" font-family="Noto Sans Mono, DejaVu Sans Mono, Courier New, Liberation Mono, FreeMono, monospace" font-weight="normal" font-style="normal" xml:space="preserve">CODE 模板</text>
+<text x="36.0" y="272.25" font-size="13" fill="#d63384" font-family="Noto Sans Mono, DejaVu Sans Mono, Courier New, Liberation Mono, FreeMono, monospace" font-weight="normal" font-style="normal" xml:space="preserve">  def hello():</text>
+<text x="36.0" y="291.75" font-size="13" fill="#d63384" font-family="Noto Sans Mono, DejaVu Sans Mono, Courier New, Liberation Mono, FreeMono, monospace" font-weight="normal" font-style="normal" xml:space="preserve">    print('world')</text>
+</g>
+</g>
+</svg>

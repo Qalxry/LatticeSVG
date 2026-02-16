@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="800.0" height="134.8" viewBox="0 0 800.0 134.8">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="800.0" height="134.8" fill="#ffffff" opacity="1.0" />
+<g>
+<text x="302.0" y="60.2" font-size="28" fill="#1a1a1a" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">使用模板的报告</text>
+</g>
+<g>
+<text x="30.0" y="99.60000000000001" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">LatticeSVG 内置 17 个样式模板，涵盖常见的布局和排版场景。只需解包模板字典并按需覆盖即可快速上手。</text>
+</g>
+</g>
+</svg>

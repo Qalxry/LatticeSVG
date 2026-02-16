@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="600.0" height="262.0" viewBox="0 0 600.0 262.0">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="600.0" height="262.0" fill="#f0f0f0" opacity="1.0" />
+<path d="M0.0,0.0 L600.0,0.0" stroke="#cccccc" stroke-width="1.0" />
+<path d="M600.0,0.0 L600.0,262.0" stroke="#cccccc" stroke-width="1.0" />
+<path d="M0.0,262.0 L600.0,262.0" stroke="#cccccc" stroke-width="1.0" />
+<path d="M0.0,0.0 L0.0,262.0" stroke="#cccccc" stroke-width="1.0" />
+<g>
+<rect x="11.0" y="11.0" width="60.0" height="40.0" fill="#e74c3c" opacity="1.0" />
+</g>
+<g>
+<rect x="281.0" y="51.0" width="60.0" height="40.0" fill="#3498db" opacity="1.0" />
+</g>
+<g>
+<rect x="551.0" y="91.0" width="60.0" height="40.0" fill="#2ecc71" opacity="1.0" />
+</g>
+<g>
+<rect x="11.0" y="211.0" width="60.0" height="40.0" fill="#f39c12" opacity="1.0" />
+</g>
+<g>
+<rect x="281.0" y="131.0" width="60.0" height="40.0" fill="#9b59b6" opacity="1.0" />
+</g>
+<g>
+<rect x="551.0" y="171.0" width="60.0" height="40.0" fill="#e67e22" opacity="1.0" />
+</g>
+</g>
+</svg>

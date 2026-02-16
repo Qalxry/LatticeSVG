@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="1000.0" height="2408.0" viewBox="0 0 1000.0 2408.0">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="1000.0" height="2408.0" fill="#ffffff" opacity="1.0" />
+<g>
+<text x="267.609375" y="42.7" font-size="22" fill="#2c3e50" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="bold" font-style="normal">text-combine-upright: compatibility tests</text>
+</g>
+<g>
+<text x="384.0703125" y="85.30000000000001" font-size="14" fill="#555555" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="bold" font-style="normal">Test 1: text-orientation × tcu: all</text>
+</g>
+<g>
+<rect x="200.0" y="111.19999999999999" width="600.0" height="264.0" fill="#f8f9fa" opacity="1.0" />
+<path d="M200.0,111.19999999999999 L800.0,111.19999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M800.0,111.19999999999999 L800.0,375.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M200.0,375.2 L800.0,375.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M200.0,111.19999999999999 L200.0,375.2" stroke="#dee2e6" stroke-width="1.0" />
+<g>
+<text x="259.15104166666663" y="134.7" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">orientation: mixed</text>
+</g>
+<g>
+<text x="451.3125" y="134.7" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">orientation: upright</text>
+</g>
+<g>
+<text x="643.0442708333333" y="134.7" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">orientation: sideways</text>
+</g>
+<g>
+<rect x="213.0" y="142.2" width="183.33333333333331" height="220.0" fill="#ffffff" opacity="1.0" />
+<path d="M213.0,142.2 L396.3333333333333,142.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M396.3333333333333,142.2 L396.3333333333333,362.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M213.0,362.2 L396.3333333333333,362.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M213.0,142.2 L213.0,362.2" stroke="#dee2e6" stroke-width="1.0" />
+<text x="369.73333333333335" y="164.79999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">令</text>
+<text x="369.73333333333335" y="180.79999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">和</text>
+<text x="373.27239583333335" y="196.79999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">5</text>
+<text x="369.73333333333335" y="212.79999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">年</text>
+<g transform="translate(377.73333333333335,0) scale(0.972460,1) translate(-377.73333333333335,0)">
+<text x="369.50677083333335" y="228.79999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">12</text>
+</g>
+<text x="369.73333333333335" y="244.79999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">月</text>
+<g transform="translate(377.73333333333335,0) scale(0.896673,1) translate(-377.73333333333335,0)">
+<text x="368.81145833333335" y="260.8" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">25</text>
+</g>
+<text x="369.73333333333335" y="276.8" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">日</text>
+</g>
+<g>
+<rect x="408.3333333333333" y="142.2" width="183.33333333333331" height="220.0" fill="#ffffff" opacity="1.0" />
+<path d="M408.3333333333333,142.2 L591.6666666666666,142.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M591.6666666666666,142.2 L591.6666666666666,362.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M408.3333333333333,362.2 L591.6666666666666,362.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M408.3333333333333,142.2 L408.3333333333333,362.2" stroke="#dee2e6" stroke-width="1.0" />
+<text x="565.0666666666666" y="164.79999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">令</text>
+<text x="565.0666666666666" y="180.79999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">和</text>
+<text x="568.6057291666666" y="196.79999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">5</text>
+<text x="565.0666666666666" y="212.79999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">年</text>
+<text x="569.3010416666666" y="228.79999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">1</text>
+<text x="568.6057291666666" y="244.79999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">2</text>
+<text x="565.0666666666666" y="260.8" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">月</text>
+<text x="568.6057291666666" y="276.8" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">2</text>
+<text x="568.6057291666666" y="292.8" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">5</text>
+<text x="565.0666666666666" y="308.8" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">日</text>
+</g>
+<g>
+<rect x="603.6666666666666" y="142.2" width="183.33333333333331" height="220.0" fill="#ffffff" opacity="1.0" />
+<path d="M603.6666666666666,142.2 L787.0,142.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M787.0,142.2 L787.0,362.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M603.6666666666666,362.2 L787.0,362.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M603.6666666666666,142.2 L603.6666666666666,362.2" stroke="#dee2e6" stroke-width="1.0" />
+<g transform="rotate(90,768.4,212.809375)">
+<text x="706.790625" y="218.40937499999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">令和5年12月25日</text>
+</g>
+</g>
+</g>
+<g>
+<text x="405.4921875" y="414.09999999999997" font-size="14" fill="#555555" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="bold" font-style="normal">Test 2: text-align × tcu: all</text>
+</g>
+<g>
+<rect x="200.0" y="440.0" width="600.0" height="244.0" fill="#f8f9fa" opacity="1.0" />
+<path d="M200.0,440.0 L800.0,440.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M800.0,440.0 L800.0,684.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M200.0,684.0 L800.0,684.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M200.0,440.0 L200.0,684.0" stroke="#dee2e6" stroke-width="1.0" />
+<g>
+<text x="270.37760416666663" y="463.5" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">text-align: left</text>
+</g>
+<g>
+<text x="458.28125" y="463.5" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">text-align: center</text>
+</g>
+<g>
+<text x="657.2786458333333" y="463.5" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">text-align: right</text>
+</g>
+<g>
+<rect x="213.0" y="471.0" width="183.33333333333331" height="200.0" fill="#ffffff" opacity="1.0" />
+<path d="M213.0,471.0 L396.3333333333333,471.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M396.3333333333333,471.0 L396.3333333333333,671.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M213.0,671.0 L396.3333333333333,671.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M213.0,471.0 L213.0,671.0" stroke="#dee2e6" stroke-width="1.0" />
+<text x="367.5333333333333" y="495.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">第</text>
+<g transform="translate(376.5333333333333,0) scale(0.896498,1) translate(-376.5333333333333,0)">
+<text x="366.4942708333333" y="513.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">23</text>
+</g>
+<text x="367.5333333333333" y="531.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">節</text>
+</g>
+<g>
+<rect x="408.3333333333333" y="471.0" width="183.33333333333331" height="200.0" fill="#ffffff" opacity="1.0" />
+<path d="M408.3333333333333,471.0 L591.6666666666666,471.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M591.6666666666666,471.0 L591.6666666666666,671.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M408.3333333333333,671.0 L591.6666666666666,671.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M408.3333333333333,471.0 L408.3333333333333,671.0" stroke="#dee2e6" stroke-width="1.0" />
+<text x="562.8666666666666" y="559.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">第</text>
+<g transform="translate(571.8666666666666,0) scale(0.896498,1) translate(-571.8666666666666,0)">
+<text x="561.8276041666666" y="577.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">23</text>
+</g>
+<text x="562.8666666666666" y="595.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">節</text>
+</g>
+<g>
+<rect x="603.6666666666666" y="471.0" width="183.33333333333331" height="200.0" fill="#ffffff" opacity="1.0" />
+<path d="M603.6666666666666,471.0 L787.0,471.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M787.0,471.0 L787.0,671.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M603.6666666666666,671.0 L787.0,671.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M603.6666666666666,471.0 L603.6666666666666,671.0" stroke="#dee2e6" stroke-width="1.0" />
+<text x="758.1999999999999" y="623.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">第</text>
+<g transform="translate(767.1999999999999,0) scale(0.896498,1) translate(-767.1999999999999,0)">
+<text x="757.1609374999999" y="641.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">23</text>
+</g>
+<text x="758.1999999999999" y="659.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">節</text>
+</g>
+</g>
+<g>
+<text x="390.9609375" y="722.9" font-size="14" fill="#555555" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="bold" font-style="normal">Test 3: word-spacing × tcu: all</text>
+</g>
+<g>
+<rect x="200.0" y="748.8" width="600.0" height="284.0" fill="#f8f9fa" opacity="1.0" />
+<path d="M200.0,748.8 L800.0,748.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M800.0,748.8 L800.0,1032.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M200.0,1032.8 L800.0,1032.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M200.0,748.8 L200.0,1032.8" stroke="#dee2e6" stroke-width="1.0" />
+<g>
+<text x="259.79947916666663" y="772.3" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">word-spacing: 0px</text>
+</g>
+<g>
+<text x="455.125" y="772.3" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">word-spacing: 8px</text>
+</g>
+<g>
+<text x="648.1067708333333" y="772.3" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">word-spacing: 16px</text>
+</g>
+<g>
+<rect x="213.0" y="779.8" width="183.33333333333331" height="240.0" fill="#ffffff" opacity="1.0" />
+<path d="M213.0,779.8 L396.3333333333333,779.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M396.3333333333333,779.8 L396.3333333333333,1019.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M213.0,1019.8 L396.3333333333333,1019.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M213.0,779.8 L213.0,1019.8" stroke="#dee2e6" stroke-width="1.0" />
+<text x="369.73333333333335" y="802.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">売</text>
+<text x="369.73333333333335" y="818.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">上</text>
+<g transform="translate(377.73333333333335,0) scale(0.630930,1) translate(-377.73333333333335,0)">
+<text x="365.05364583333335" y="850.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">120</text>
+</g>
+<text x="369.73333333333335" y="866.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">億</text>
+<text x="369.73333333333335" y="898.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">円</text>
+</g>
+<g>
+<rect x="408.3333333333333" y="779.8" width="183.33333333333331" height="240.0" fill="#ffffff" opacity="1.0" />
+<path d="M408.3333333333333,779.8 L591.6666666666666,779.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M591.6666666666666,779.8 L591.6666666666666,1019.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M408.3333333333333,1019.8 L591.6666666666666,1019.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M408.3333333333333,779.8 L408.3333333333333,1019.8" stroke="#dee2e6" stroke-width="1.0" />
+<text x="565.0666666666666" y="802.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">売</text>
+<text x="565.0666666666666" y="818.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">上</text>
+<g transform="translate(573.0666666666666,0) scale(0.630930,1) translate(-573.0666666666666,0)">
+<text x="560.3869791666666" y="858.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">120</text>
+</g>
+<text x="565.0666666666666" y="874.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">億</text>
+<text x="565.0666666666666" y="914.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">円</text>
+</g>
+<g>
+<rect x="603.6666666666666" y="779.8" width="183.33333333333331" height="240.0" fill="#ffffff" opacity="1.0" />
+<path d="M603.6666666666666,779.8 L787.0,779.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M787.0,779.8 L787.0,1019.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M603.6666666666666,1019.8 L787.0,1019.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M603.6666666666666,779.8 L603.6666666666666,1019.8" stroke="#dee2e6" stroke-width="1.0" />
+<text x="760.4" y="802.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">売</text>
+<text x="760.4" y="818.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">上</text>
+<g transform="translate(768.4,0) scale(0.630930,1) translate(-768.4,0)">
+<text x="755.7203125" y="866.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">120</text>
+</g>
+<text x="760.4" y="882.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">億</text>
+<text x="760.4" y="930.4" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">円</text>
+</g>
+</g>
+<g>
+<text x="390.046875" y="1071.7" font-size="14" fill="#555555" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="bold" font-style="normal">Test 4: letter-spacing × tcu: all</text>
+</g>
+<g>
+<rect x="200.0" y="1097.6" width="600.0" height="324.0" fill="#f8f9fa" opacity="1.0" />
+<path d="M200.0,1097.6 L800.0,1097.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M800.0,1097.6 L800.0,1421.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M200.0,1421.6 L800.0,1421.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M200.0,1097.6 L200.0,1421.6" stroke="#dee2e6" stroke-width="1.0" />
+<g>
+<text x="259.29947916666663" y="1121.1" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">letter-spacing: 0px</text>
+</g>
+<g>
+<text x="454.640625" y="1121.1" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">letter-spacing: 4px</text>
+</g>
+<g>
+<text x="649.9583333333333" y="1121.1" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">letter-spacing: 8px</text>
+</g>
+<g>
+<rect x="213.0" y="1128.6" width="183.33333333333331" height="280.0" fill="#ffffff" opacity="1.0" />
+<path d="M213.0,1128.6 L396.3333333333333,1128.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M396.3333333333333,1128.6 L396.3333333333333,1408.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M213.0,1408.6 L396.3333333333333,1408.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M213.0,1128.6 L213.0,1408.6" stroke="#dee2e6" stroke-width="1.0" />
+<text x="369.73333333333335" y="1151.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">令</text>
+<text x="369.73333333333335" y="1167.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">和</text>
+<text x="373.27239583333335" y="1183.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">5</text>
+<text x="369.73333333333335" y="1199.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">年</text>
+<g transform="translate(377.73333333333335,0) scale(0.972460,1) translate(-377.73333333333335,0)">
+<text x="369.50677083333335" y="1215.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">12</text>
+</g>
+<text x="369.73333333333335" y="1231.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">月</text>
+<g transform="translate(377.73333333333335,0) scale(0.896673,1) translate(-377.73333333333335,0)">
+<text x="368.81145833333335" y="1247.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">25</text>
+</g>
+<text x="369.73333333333335" y="1263.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">日</text>
+</g>
+<g>
+<rect x="408.3333333333333" y="1128.6" width="183.33333333333331" height="280.0" fill="#ffffff" opacity="1.0" />
+<path d="M408.3333333333333,1128.6 L591.6666666666666,1128.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M591.6666666666666,1128.6 L591.6666666666666,1408.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M408.3333333333333,1408.6 L591.6666666666666,1408.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M408.3333333333333,1128.6 L408.3333333333333,1408.6" stroke="#dee2e6" stroke-width="1.0" />
+<text x="565.0666666666666" y="1151.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">令</text>
+<text x="565.0666666666666" y="1171.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">和</text>
+<text x="568.6057291666666" y="1191.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">5</text>
+<text x="565.0666666666666" y="1211.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">年</text>
+<g transform="translate(573.0666666666666,0) scale(0.972460,1) translate(-573.0666666666666,0)">
+<text x="564.8401041666666" y="1231.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">12</text>
+</g>
+<text x="565.0666666666666" y="1251.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">月</text>
+<g transform="translate(573.0666666666666,0) scale(0.896673,1) translate(-573.0666666666666,0)">
+<text x="564.1447916666666" y="1271.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">25</text>
+</g>
+<text x="565.0666666666666" y="1291.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">日</text>
+</g>
+<g>
+<rect x="603.6666666666666" y="1128.6" width="183.33333333333331" height="280.0" fill="#ffffff" opacity="1.0" />
+<path d="M603.6666666666666,1128.6 L787.0,1128.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M787.0,1128.6 L787.0,1408.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M603.6666666666666,1408.6 L787.0,1408.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M603.6666666666666,1128.6 L603.6666666666666,1408.6" stroke="#dee2e6" stroke-width="1.0" />
+<text x="760.4" y="1151.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">令</text>
+<text x="760.4" y="1175.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">和</text>
+<text x="763.9390625" y="1199.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">5</text>
+<text x="760.4" y="1223.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">年</text>
+<g transform="translate(768.4,0) scale(0.972460,1) translate(-768.4,0)">
+<text x="760.1734375" y="1247.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">12</text>
+</g>
+<text x="760.4" y="1271.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">月</text>
+<g transform="translate(768.4,0) scale(0.896673,1) translate(-768.4,0)">
+<text x="759.478125" y="1295.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">25</text>
+</g>
+<text x="760.4" y="1319.1999999999998" font-size="16" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">日</text>
+</g>
+</g>
+<g>
+<text x="408.90625" y="1460.5" font-size="14" fill="#555555" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="bold" font-style="normal">Test 5: font-size × tcu: all</text>
+</g>
+<g>
+<rect x="200.0" y="1486.3999999999999" width="600.0" height="244.0" fill="#f8f9fa" opacity="1.0" />
+<path d="M200.0,1486.3999999999999 L800.0,1486.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M800.0,1486.3999999999999 L800.0,1730.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M200.0,1730.3999999999999 L800.0,1730.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M200.0,1486.3999999999999 L200.0,1730.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<g>
+<text x="269.57291666666663" y="1509.8999999999999" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">font-size: 12px</text>
+</g>
+<g>
+<text x="464.90625" y="1509.8999999999999" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">font-size: 18px</text>
+</g>
+<g>
+<text x="659.8177083333333" y="1509.8999999999999" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">font-size: 24px</text>
+</g>
+<g>
+<rect x="213.0" y="1517.3999999999999" width="183.33333333333331" height="200.0" fill="#ffffff" opacity="1.0" />
+<path d="M213.0,1517.3999999999999 L396.3333333333333,1517.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M396.3333333333333,1517.3999999999999 L396.3333333333333,1717.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M213.0,1717.3999999999999 L396.3333333333333,1717.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M213.0,1517.3999999999999 L213.0,1717.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<text x="374.1333333333333" y="1536.6" font-size="12" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">達</text>
+<text x="374.1333333333333" y="1548.6" font-size="12" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">成</text>
+<text x="374.1333333333333" y="1560.6" font-size="12" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">率</text>
+<g transform="translate(380.1333333333333,0) scale(0.471455,1) translate(-380.1333333333333,0)">
+<text x="367.4067708333333" y="1572.6" font-size="12" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">98％</text>
+</g>
+</g>
+<g>
+<rect x="408.3333333333333" y="1517.3999999999999" width="183.33333333333331" height="200.0" fill="#ffffff" opacity="1.0" />
+<path d="M408.3333333333333,1517.3999999999999 L591.6666666666666,1517.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M591.6666666666666,1517.3999999999999 L591.6666666666666,1717.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M408.3333333333333,1717.3999999999999 L591.6666666666666,1717.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M408.3333333333333,1517.3999999999999 L408.3333333333333,1717.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<text x="562.8666666666666" y="1541.6999999999998" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">達</text>
+<text x="562.8666666666666" y="1559.6999999999998" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">成</text>
+<text x="562.8666666666666" y="1577.6999999999998" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">率</text>
+<g transform="translate(571.8666666666666,0) scale(0.471744,1) translate(-571.8666666666666,0)">
+<text x="552.7885416666666" y="1595.6999999999998" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">98％</text>
+</g>
+</g>
+<g>
+<rect x="603.6666666666666" y="1517.3999999999999" width="183.33333333333331" height="200.0" fill="#ffffff" opacity="1.0" />
+<path d="M603.6666666666666,1517.3999999999999 L787.0,1517.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M787.0,1517.3999999999999 L787.0,1717.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M603.6666666666666,1717.3999999999999 L787.0,1717.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M603.6666666666666,1517.3999999999999 L603.6666666666666,1717.3999999999999" stroke="#dee2e6" stroke-width="1.0" />
+<text x="751.6" y="1546.8" font-size="24" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">達</text>
+<text x="751.6" y="1570.8" font-size="24" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">成</text>
+<text x="751.6" y="1594.8" font-size="24" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">率</text>
+<g transform="translate(763.6,0) scale(0.471744,1) translate(-763.6,0)">
+<text x="738.1625" y="1618.8" font-size="24" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">98％</text>
+</g>
+</g>
+</g>
+<g>
+<text x="357.0234375" y="1769.3" font-size="14" fill="#555555" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="bold" font-style="normal">Test 6: vertical-rl vs vertical-lr × tcu: all</text>
+</g>
+<g>
+<rect x="300.0" y="1795.1999999999998" width="400.0" height="284.0" fill="#f8f9fa" opacity="1.0" />
+<path d="M300.0,1795.1999999999998 L700.0,1795.1999999999998" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M700.0,1795.1999999999998 L700.0,2079.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M300.0,2079.2 L700.0,2079.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M300.0,1795.1999999999998 L300.0,2079.2" stroke="#dee2e6" stroke-width="1.0" />
+<g>
+<text x="379.3671875" y="1818.6999999999998" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">vertical-rl</text>
+</g>
+<g>
+<text x="572.3671875" y="1818.6999999999998" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">vertical-lr</text>
+</g>
+<g>
+<rect x="313.0" y="1826.1999999999998" width="181.0" height="240.0" fill="#ffffff" opacity="1.0" />
+<path d="M313.0,1826.1999999999998 L494.0,1826.1999999999998" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M494.0,1826.1999999999998 L494.0,2066.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M313.0,2066.2 L494.0,2066.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M313.0,1826.1999999999998 L313.0,2066.2" stroke="#dee2e6" stroke-width="1.0" />
+<g transform="translate(473.0,0) scale(0.448965,1) translate(-473.0,0)">
+<text x="450.7265625" y="1852.1999999999998" font-size="20" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">2024</text>
+</g>
+<text x="463.0" y="1872.1999999999998" font-size="20" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">年</text>
+<text x="463.0" y="1892.1999999999998" font-size="20" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">度</text>
+<text x="463.0" y="1912.1999999999998" font-size="20" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">報</text>
+<text x="463.0" y="1932.1999999999998" font-size="20" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">告</text>
+</g>
+<g>
+<rect x="506.0" y="1826.1999999999998" width="181.0" height="240.0" fill="#ffffff" opacity="1.0" />
+<path d="M506.0,1826.1999999999998 L687.0,1826.1999999999998" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M687.0,1826.1999999999998 L687.0,2066.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M506.0,2066.2 L687.0,2066.2" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M506.0,1826.1999999999998 L506.0,2066.2" stroke="#dee2e6" stroke-width="1.0" />
+<g transform="translate(527.0,0) scale(0.448965,1) translate(-527.0,0)">
+<text x="504.7265625" y="1852.1999999999998" font-size="20" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">2024</text>
+</g>
+<text x="517.0" y="1872.1999999999998" font-size="20" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">年</text>
+<text x="517.0" y="1892.1999999999998" font-size="20" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">度</text>
+<text x="517.0" y="1912.1999999999998" font-size="20" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">報</text>
+<text x="517.0" y="1932.1999999999998" font-size="20" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">告</text>
+</g>
+</g>
+<g>
+<text x="323.4453125" y="2118.1" font-size="14" fill="#555555" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="bold" font-style="normal">Test 7: display:grid + align-items:center × tcu: all</text>
+</g>
+<g>
+<rect x="200.0" y="2144.0" width="600.0" height="244.0" fill="#f8f9fa" opacity="1.0" />
+<path d="M200.0,2144.0 L800.0,2144.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M800.0,2144.0 L800.0,2388.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M200.0,2388.0 L800.0,2388.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M200.0,2144.0 L200.0,2388.0" stroke="#dee2e6" stroke-width="1.0" />
+<g>
+<text x="263.19010416666663" y="2167.5" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">align-items: start</text>
+</g>
+<g>
+<text x="454.046875" y="2167.5" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">align-items: center</text>
+</g>
+<g>
+<text x="655.8020833333333" y="2167.5" font-size="10" fill="#888888" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">align-items: end</text>
+</g>
+<g>
+<rect x="213.0" y="2175.0" width="183.33333333333331" height="200.0" fill="#ffffff" opacity="1.0" />
+<path d="M213.0,2175.0 L396.3333333333333,2175.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M396.3333333333333,2175.0 L396.3333333333333,2375.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M213.0,2375.0 L396.3333333333333,2375.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M213.0,2175.0 L213.0,2375.0" stroke="#dee2e6" stroke-width="1.0" />
+<text x="367.5333333333333" y="2199.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">第</text>
+<g transform="translate(376.5333333333333,0) scale(0.896498,1) translate(-376.5333333333333,0)">
+<text x="366.4942708333333" y="2217.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">23</text>
+</g>
+<text x="367.5333333333333" y="2235.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">節</text>
+</g>
+<g>
+<rect x="408.3333333333333" y="2175.0" width="183.33333333333331" height="200.0" fill="#ffffff" opacity="1.0" />
+<path d="M408.3333333333333,2175.0 L591.6666666666666,2175.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M591.6666666666666,2175.0 L591.6666666666666,2375.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M408.3333333333333,2375.0 L591.6666666666666,2375.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M408.3333333333333,2175.0 L408.3333333333333,2375.0" stroke="#dee2e6" stroke-width="1.0" />
+<text x="562.8666666666666" y="2199.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">第</text>
+<g transform="translate(571.8666666666666,0) scale(0.896498,1) translate(-571.8666666666666,0)">
+<text x="561.8276041666666" y="2217.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">23</text>
+</g>
+<text x="562.8666666666666" y="2235.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">節</text>
+</g>
+<g>
+<rect x="603.6666666666666" y="2175.0" width="183.33333333333331" height="200.0" fill="#ffffff" opacity="1.0" />
+<path d="M603.6666666666666,2175.0 L787.0,2175.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M787.0,2175.0 L787.0,2375.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M603.6666666666666,2375.0 L787.0,2375.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M603.6666666666666,2175.0 L603.6666666666666,2375.0" stroke="#dee2e6" stroke-width="1.0" />
+<text x="758.1999999999999" y="2199.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">第</text>
+<g transform="translate(767.1999999999999,0) scale(0.896498,1) translate(-767.1999999999999,0)">
+<text x="757.1609374999999" y="2217.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">23</text>
+</g>
+<text x="758.1999999999999" y="2235.3" font-size="18" fill="#212529" font-family="Noto Serif CJK JP, Noto Serif, DejaVu Serif, Times New Roman, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">節</text>
+</g>
+</g>
+</g>
+</svg>

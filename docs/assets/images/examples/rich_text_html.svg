@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="700.0" height="330.9" viewBox="0 0 700.0 330.9">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="700.0" height="330.9" fill="#ffffff" opacity="1.0" />
+<g>
+<text x="253.515625" y="48.9" font-size="24" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">HTML 富文本演示</text>
+</g>
+<g>
+<text x="24.0" y="87.8" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">This sentence has </text>
+<text x="159.921875" y="87.8" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal" xml:space="preserve">bold text</text>
+<text x="230.953125" y="87.8" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">, </text>
+<text x="238.984375" y="87.8" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="italic" xml:space="preserve">italic text</text>
+<text x="308.015625" y="87.8" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">, and </text>
+<text x="348.328125" y="87.8" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="italic" xml:space="preserve">bold italic</text>
+<text x="427.0" y="87.8" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve"> combined.</text>
+</g>
+<g>
+<text x="24.0" y="126.55" font-size="15" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">运行 </text>
+<rect x="57.359375" y="112.55" width="198.0" height="18.0" fill="#f0f0f0" rx="2" ry="2" />
+<text x="57.359375" y="126.55" font-size="15" fill="#333333" font-family="Noto Sans Mono, DejaVu Sans Mono, Courier New, Liberation Mono, FreeMono, monospace" font-weight="normal" font-style="normal" xml:space="preserve">pip install latticesvg</text>
+<text x="255.359375" y="126.55" font-size="15" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve"> 来安装，或使用 </text>
+<rect x="367.078125" y="112.55" width="180.0" height="18.0" fill="#f0f0f0" rx="2" ry="2" />
+<text x="367.078125" y="126.55" font-size="15" fill="#333333" font-family="Noto Sans Mono, DejaVu Sans Mono, Courier New, Liberation Mono, FreeMono, monospace" font-weight="normal" font-style="normal" xml:space="preserve">python -m latticesvg</text>
+<text x="547.078125" y="126.55" font-size="15" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve"> 执行。</text>
+</g>
+<g>
+<text x="24.0" y="163.9" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">彩色文本：</text>
+<text x="104.0" y="163.9" font-size="16" fill="#e74c3c" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">红色</text>
+<text x="136.0" y="163.9" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">、</text>
+<text x="152.0" y="163.9" font-size="16" fill="#27ae60" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">绿色</text>
+<text x="184.0" y="163.9" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">、</text>
+<text x="200.0" y="163.9" font-size="16" fill="#2980b9" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">蓝色</text>
+<text x="232.0" y="163.9" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">。</text>
+</g>
+<g>
+<text x="24.0" y="199.1" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">化学式：H</text>
+<text x="99.640625" y="202.29999999999998" font-size="11.2" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">2</text>
+<text x="105.75" y="199.1" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">O，数学：x</text>
+<text x="189.59375" y="193.5" font-size="11.2" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">2</text>
+<text x="195.703125" y="199.1" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve"> + y</text>
+<text x="220.078125" y="193.5" font-size="11.2" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">2</text>
+<text x="226.1875" y="199.1" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve"> = r</text>
+<text x="248.421875" y="193.5" font-size="11.2" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">2</text>
+</g>
+<g>
+<text x="24.0" y="234.29999999999998" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" text-decoration="underline" xml:space="preserve">下划线文本</text>
+<text x="104.0" y="234.29999999999998" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">，以及 </text>
+<text x="155.578125" y="234.29999999999998" font-size="16" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" text-decoration="line-through" xml:space="preserve">删除线文本</text>
+</g>
+<g>
+<text x="24.0" y="268.4" font-size="15" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">第一行文本</text>
+<text x="24.0" y="286.4" font-size="15" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">第二行文本</text>
+<text x="24.0" y="304.4" font-size="15" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">第三行文本</text>
+</g>
+</g>
+</svg>

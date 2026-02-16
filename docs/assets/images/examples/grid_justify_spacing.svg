@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="520.0" height="1344.4" viewBox="0 0 520.0 1344.4">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="520.0" height="1344.4" fill="#f8fafe" opacity="1.0" />
+<g>
+<text x="120.0390625" y="42.7" font-size="22" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">justify 对齐与字距/词距控制</text>
+</g>
+<g>
+<text x="20.0" y="90.7" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">0. 对比基线（默认 left + normal spacing）</text>
+</g>
+<g>
+<text x="20.0" y="127.2" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">LatticeSVG is a declarative vector layout engine inspired by CSS Grid. It</text>
+<text x="20.0" y="149.60000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">provides precise glyph measurement via FreeType, automatic line</text>
+<text x="20.0" y="172.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">breaking, and rich typographic controls for generating SVG output.</text>
+</g>
+<rect x="19.5" y="109.5" width="481.0" height="68.2" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="210.39999999999998" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">这是一段中文测试文本，用于验证两端对齐在无空格的中日韩文字中的效果。</text>
+<text x="20.0" y="232.8" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">每个字符之间将均匀分布额外的间距，使文本占满整行宽度。</text>
+</g>
+<rect x="19.5" y="192.7" width="481.0" height="45.800000000000004" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="272.3" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">1. text-align: justify</text>
+</g>
+<g>
+<text x="20.0" y="308.8" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="1.8664772727272727">LatticeSVG is a declarative vector layout engine inspired by CSS Grid. It</text>
+<text x="20.0" y="331.2" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="7.334821428571429">provides precise glyph measurement via FreeType, automatic line</text>
+<text x="20.0" y="353.6" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">breaking, and rich typographic controls for generating SVG output.</text>
+</g>
+<rect x="19.5" y="291.1" width="481.0" height="68.2" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">这</text>
+<text x="34.121212121212125" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">是</text>
+<text x="48.24242424242425" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">一</text>
+<text x="62.363636363636374" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">段</text>
+<text x="76.4848484848485" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">中</text>
+<text x="90.60606060606062" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">文</text>
+<text x="104.72727272727275" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">测</text>
+<text x="118.84848484848487" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">试</text>
+<text x="132.969696969697" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">文</text>
+<text x="147.09090909090912" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">本</text>
+<text x="161.21212121212125" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">，</text>
+<text x="175.33333333333337" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">用</text>
+<text x="189.4545454545455" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">于</text>
+<text x="203.57575757575762" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">验</text>
+<text x="217.69696969696975" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">证</text>
+<text x="231.81818181818187" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">两</text>
+<text x="245.939393939394" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">端</text>
+<text x="260.0606060606061" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">对</text>
+<text x="274.18181818181824" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">齐</text>
+<text x="288.30303030303037" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">在</text>
+<text x="302.4242424242425" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">无</text>
+<text x="316.5454545454546" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">空</text>
+<text x="330.66666666666674" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">格</text>
+<text x="344.78787878787887" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">的</text>
+<text x="358.909090909091" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">中</text>
+<text x="373.0303030303031" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">日</text>
+<text x="387.15151515151524" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">韩</text>
+<text x="401.27272727272737" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">文</text>
+<text x="415.3939393939395" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">字</text>
+<text x="429.5151515151516" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">中</text>
+<text x="443.63636363636374" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">的</text>
+<text x="457.75757575757586" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">效</text>
+<text x="471.878787878788" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">果</text>
+<text x="486.0000000000001" y="392.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">。</text>
+<text x="20.0" y="414.4" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">每个字符之间将均匀分布额外的间距，使文本占满整行宽度。</text>
+</g>
+<rect x="19.5" y="374.3" width="481.0" height="45.800000000000004" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="453.90000000000003" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">2. letter-spacing</text>
+</g>
+<g>
+<text x="20.0" y="487.6" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">letter-spacing: normal — The quick brown fox</text>
+</g>
+<rect x="19.5" y="472.70000000000005" width="481.0" height="17.8" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="520.4000000000001" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="1.0">letter-spacing: 1px — The quick brown fox</text>
+</g>
+<rect x="19.5" y="505.50000000000006" width="481.0" height="17.8" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="553.2" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="3.0">letter-spacing: 3px — The quick brown fox</text>
+</g>
+<rect x="19.5" y="538.3000000000001" width="481.0" height="17.8" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="586.0" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="10.0">letter-spacing: 10px — The</text>
+<text x="20.0" y="602.8" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="10.0">quick brown fox</text>
+</g>
+<rect x="19.5" y="571.1" width="481.0" height="34.6" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="639.5" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">3. word-spacing</text>
+</g>
+<g>
+<text x="20.0" y="673.2" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">word-spacing: normal — The quick brown fox x x x x x x x x x x x x x x x x x x</text>
+<text x="20.0" y="690.0" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">x x x x x</text>
+</g>
+<rect x="19.5" y="658.3000000000001" width="481.0" height="34.6" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="722.8000000000001" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">word-spacing: 4px — The quick brown fox x x x x x x x x x x x x x</text>
+<text x="20.0" y="739.6" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">x x x x x x x x x x</text>
+</g>
+<rect x="19.5" y="707.9000000000001" width="481.0" height="34.6" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="772.4000000000001" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="8.0">word-spacing: 8px — The quick brown fox x x x x x x x x</text>
+<text x="20.0" y="789.2" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="8.0">x x x x x x x x x x x x x x x</text>
+</g>
+<rect x="19.5" y="757.5000000000001" width="481.0" height="34.6" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="822.0000000000001" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="16.0">word-spacing: 16px — The quick brown fox x x x x</text>
+<text x="20.0" y="838.8000000000001" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="16.0">x x x x x x x x x x x x x x x x x x x</text>
+</g>
+<rect x="19.5" y="807.1000000000001" width="481.0" height="34.6" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="875.5000000000001" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">4. justify + spacing 组合</text>
+</g>
+<g>
+<text x="20.0" y="910.3000000000002" font-size="15" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">4.1 justify + letter-spacing: 2px</text>
+</g>
+<g>
+<text x="20.0" y="946.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0" word-spacing="11.903125">LatticeSVG is a declarative vector layout</text>
+<text x="20.0" y="968.4000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0" word-spacing="11.380208333333334">engine inspired by CSS Grid. It provides</text>
+<text x="20.0" y="990.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0" word-spacing="14.21484375">precise glyph measurement via FreeType,</text>
+<text x="20.0" y="1013.2000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0" word-spacing="1.23125">automatic line breaking, and rich typographic</text>
+<text x="20.0" y="1035.6000000000001" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">controls for generating SVG output.</text>
+</g>
+<rect x="19.5" y="928.3000000000002" width="481.0" height="113.00000000000001" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">这</text>
+<text x="38.64" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">是</text>
+<text x="57.28" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">一</text>
+<text x="75.92" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">段</text>
+<text x="94.56" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">中</text>
+<text x="113.2" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">文</text>
+<text x="131.84" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">测</text>
+<text x="150.48000000000002" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">试</text>
+<text x="169.12" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">文</text>
+<text x="187.76" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">本</text>
+<text x="206.39999999999998" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">，</text>
+<text x="225.03999999999996" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">用</text>
+<text x="243.67999999999995" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">于</text>
+<text x="262.31999999999994" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">验</text>
+<text x="280.9599999999999" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">证</text>
+<text x="299.5999999999999" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">两</text>
+<text x="318.2399999999999" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">端</text>
+<text x="336.8799999999999" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">对</text>
+<text x="355.51999999999987" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">齐</text>
+<text x="374.15999999999985" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">在</text>
+<text x="392.79999999999984" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">无</text>
+<text x="411.4399999999998" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">空</text>
+<text x="430.0799999999998" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">格</text>
+<text x="448.7199999999998" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">的</text>
+<text x="467.3599999999998" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">中</text>
+<text x="485.9999999999998" y="1074.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">日</text>
+<text x="20.0" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">韩</text>
+<text x="38.64" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">文</text>
+<text x="57.28" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">字</text>
+<text x="75.92" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">中</text>
+<text x="94.56" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">的</text>
+<text x="113.2" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">效</text>
+<text x="131.84" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">果</text>
+<text x="150.48000000000002" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">。</text>
+<text x="169.12" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">每</text>
+<text x="187.76" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">个</text>
+<text x="206.39999999999998" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">字</text>
+<text x="225.03999999999996" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">符</text>
+<text x="243.67999999999995" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">之</text>
+<text x="262.31999999999994" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">间</text>
+<text x="280.9599999999999" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">将</text>
+<text x="299.5999999999999" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">均</text>
+<text x="318.2399999999999" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">匀</text>
+<text x="336.8799999999999" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">分</text>
+<text x="355.51999999999987" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">布</text>
+<text x="374.15999999999985" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">额</text>
+<text x="392.79999999999984" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">外</text>
+<text x="411.4399999999998" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">的</text>
+<text x="430.0799999999998" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">间</text>
+<text x="448.7199999999998" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">距</text>
+<text x="467.3599999999998" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">，</text>
+<text x="485.9999999999998" y="1096.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">使</text>
+<text x="20.0" y="1118.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" letter-spacing="4.0">文本占满整行宽度。</text>
+</g>
+<rect x="19.5" y="1056.3000000000002" width="481.0" height="68.2" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="1155.5000000000002" font-size="15" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">4.2 justify + word-spacing: 4px</text>
+</g>
+<g>
+<text x="20.0" y="1191.2000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="7.522569444444445">LatticeSVG is a declarative vector layout engine inspired by CSS</text>
+<text x="20.0" y="1213.6000000000004" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="14.544642857142858">Grid. It provides precise glyph measurement via FreeType,</text>
+<text x="20.0" y="1236.0000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="14.787946428571429">automatic line breaking, and rich typographic controls for</text>
+<text x="20.0" y="1258.4000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">generating SVG output.</text>
+</g>
+<rect x="19.5" y="1173.5000000000002" width="481.0" height="90.60000000000001" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="20.0" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">这</text>
+<text x="34.121212121212125" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">是</text>
+<text x="48.24242424242425" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">一</text>
+<text x="62.363636363636374" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">段</text>
+<text x="76.4848484848485" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">中</text>
+<text x="90.60606060606062" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">文</text>
+<text x="104.72727272727275" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">测</text>
+<text x="118.84848484848487" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">试</text>
+<text x="132.969696969697" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">文</text>
+<text x="147.09090909090912" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">本</text>
+<text x="161.21212121212125" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">，</text>
+<text x="175.33333333333337" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">用</text>
+<text x="189.4545454545455" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">于</text>
+<text x="203.57575757575762" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">验</text>
+<text x="217.69696969696975" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">证</text>
+<text x="231.81818181818187" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">两</text>
+<text x="245.939393939394" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">端</text>
+<text x="260.0606060606061" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">对</text>
+<text x="274.18181818181824" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">齐</text>
+<text x="288.30303030303037" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">在</text>
+<text x="302.4242424242425" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">无</text>
+<text x="316.5454545454546" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">空</text>
+<text x="330.66666666666674" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">格</text>
+<text x="344.78787878787887" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">的</text>
+<text x="358.909090909091" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">中</text>
+<text x="373.0303030303031" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">日</text>
+<text x="387.15151515151524" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">韩</text>
+<text x="401.27272727272737" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">文</text>
+<text x="415.3939393939395" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">字</text>
+<text x="429.5151515151516" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">中</text>
+<text x="443.63636363636374" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">的</text>
+<text x="457.75757575757586" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">效</text>
+<text x="471.878787878788" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">果</text>
+<text x="486.0000000000001" y="1296.8000000000002" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">。</text>
+<text x="20.0" y="1319.2000000000003" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="4.0">每个字符之间将均匀分布额外的间距，使文本占满整行宽度。</text>
+</g>
+<rect x="19.5" y="1279.1000000000001" width="481.0" height="45.800000000000004" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" />
+</g>
+</svg>

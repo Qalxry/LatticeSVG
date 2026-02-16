@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="400.0" height="184.4" viewBox="0 0 400.0 184.4">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="400.0" height="184.4" fill="#f5f5f5" opacity="1.0" />
+<g>
+<rect x="16.0" y="16.0" width="178.0" height="152.4" fill="#ffffff" opacity="1.0" />
+<path d="M16.0,16.0 L194.0,16.0" stroke="#cccccc" stroke-width="1.0" />
+<path d="M194.0,16.0 L194.0,168.4" stroke="#cccccc" stroke-width="1.0" />
+<path d="M16.0,168.4 L194.0,168.4" stroke="#cccccc" stroke-width="1.0" />
+<path d="M16.0,16.0 L16.0,168.4" stroke="#cccccc" stroke-width="1.0" />
+<text x="25.0" y="39.4" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">默认模式（normal）：当</text>
+<text x="25.0" y="56.199999999999996" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">主字体（PrimaryFont）</text>
+<text x="25.0" y="73.0" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">缺少某个字符的字形（</text>
+<text x="25.0" y="89.80000000000001" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Glyph）时，</text>
+<text x="25.0" y="106.60000000000001" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Pneumonoultramicroscopicsilicovolcanoconiosis</text>
+<text x="25.0" y="123.4" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">不会被截断。</text>
+</g>
+<g>
+<rect x="206.0" y="16.0" width="178.0" height="152.4" fill="#ffffff" opacity="1.0" />
+<path d="M206.0,16.0 L384.0,16.0" stroke="#2ecc71" stroke-width="1.0" />
+<path d="M384.0,16.0 L384.0,168.4" stroke="#2ecc71" stroke-width="1.0" />
+<path d="M206.0,168.4 L384.0,168.4" stroke="#2ecc71" stroke-width="1.0" />
+<path d="M206.0,16.0 L206.0,168.4" stroke="#2ecc71" stroke-width="1.0" />
+<text x="215.0" y="39.4" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">断词模式（break-word</text>
+<text x="215.0" y="56.199999999999996" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">）：当主字体（</text>
+<text x="215.0" y="73.0" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">PrimaryFont）缺少某个</text>
+<text x="215.0" y="89.80000000000001" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">字符的字形（Glyph）时</text>
+<text x="215.0" y="106.60000000000001" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">，</text>
+<text x="215.0" y="123.4" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Pneumonoultramicrosc</text>
+<text x="215.0" y="140.20000000000002" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">opicsilicovolcanoconios</text>
+<text x="215.0" y="157.00000000000003" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">is 会被截断。</text>
+</g>
+</g>
+</svg>

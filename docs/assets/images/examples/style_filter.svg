@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="700.0" height="148.8" viewBox="0 0 700.0 148.8">
+<defs>
+<filter x="-10%" y="-10%" width="120%" height="120%" id="d0">
+<feGaussianBlur in="SourceGraphic" stdDeviation="2.0" result="f0"></feGaussianBlur>
+</filter>
+<filter x="-10%" y="-10%" width="120%" height="120%" id="d1">
+<feColorMatrix in="SourceGraphic" type="saturate" values="0.0" result="f0"></feColorMatrix>
+</filter>
+<filter x="-10%" y="-10%" width="120%" height="120%" id="d2">
+<feColorMatrix in="SourceGraphic" type="matrix" values="0.393 0.769 0.189 0 0 0.349 0.686 0.168 0 0 0.272 0.534 0.131 0 0 0 0 0 1 0" result="f0"></feColorMatrix>
+</filter>
+<filter x="-10%" y="-10%" width="120%" height="120%" id="d3">
+<feComponentTransfer in="SourceGraphic" result="f0">
+<feFuncR type="linear" slope="1.5"></feFuncR>
+<feFuncG type="linear" slope="1.5"></feFuncG>
+<feFuncB type="linear" slope="1.5"></feFuncB>
+</feComponentTransfer>
+</filter>
+<filter x="-10%" y="-10%" width="120%" height="120%" id="d4">
+<feComponentTransfer in="SourceGraphic" result="f0">
+<feFuncR type="linear" slope="2.0" intercept="-0.5"></feFuncR>
+<feFuncG type="linear" slope="2.0" intercept="-0.5"></feFuncG>
+<feFuncB type="linear" slope="2.0" intercept="-0.5"></feFuncB>
+</feComponentTransfer>
+</filter>
+<filter x="-10%" y="-10%" width="120%" height="120%" id="d5">
+<feColorMatrix in="SourceGraphic" type="saturate" values="2.0" result="f0"></feColorMatrix>
+</filter>
+<filter x="-10%" y="-10%" width="120%" height="120%" id="d6">
+<feComponentTransfer in="SourceGraphic" result="f0">
+<feFuncA type="linear" slope="0.5"></feFuncA>
+</feComponentTransfer>
+</filter>
+<filter x="-10%" y="-10%" width="120%" height="120%" id="d7">
+<feColorMatrix in="SourceGraphic" type="saturate" values="0.5" result="f0"></feColorMatrix>
+<feGaussianBlur in="f0" stdDeviation="1.0" result="f1"></feGaussianBlur>
+</filter>
+</defs>
+<use xlink:href="#d0" />
+<use xlink:href="#d1" />
+<use xlink:href="#d2" />
+<use xlink:href="#d3" />
+<use xlink:href="#d4" />
+<use xlink:href="#d5" />
+<use xlink:href="#d6" />
+<use xlink:href="#d7" />
+<g>
+<rect x="0.0" y="0.0" width="700.0" height="148.8" fill="#ffffff" opacity="1.0" />
+<g filter="url(#d0)">
+<rect x="20.0" y="20.0" width="153.0" height="46.4" fill="#3498db" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="71.0234375" y="48.2" font-size="12" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">blur(2px)</text>
+</g>
+</g>
+<g filter="url(#d1)">
+<rect x="189.0" y="20.0" width="153.0" height="46.4" fill="#3498db" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="239.0234375" y="48.2" font-size="12" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">grayscale</text>
+</g>
+</g>
+<g filter="url(#d2)">
+<rect x="358.0" y="20.0" width="153.0" height="46.4" fill="#3498db" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="419.6328125" y="48.2" font-size="12" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">sepia</text>
+</g>
+</g>
+<g filter="url(#d3)">
+<rect x="527.0" y="20.0" width="153.0" height="46.4" fill="#3498db" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="573.9375" y="48.2" font-size="12" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">brightness</text>
+</g>
+</g>
+<g filter="url(#d4)">
+<rect x="20.0" y="82.4" width="153.0" height="46.4" fill="#e74c3c" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="73.109375" y="110.60000000000001" font-size="12" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">contrast</text>
+</g>
+</g>
+<g filter="url(#d5)">
+<rect x="189.0" y="82.4" width="153.0" height="46.4" fill="#e74c3c" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="242.125" y="110.60000000000001" font-size="12" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">saturate</text>
+</g>
+</g>
+<g filter="url(#d6)">
+<rect x="358.0" y="82.4" width="153.0" height="46.4" fill="#e74c3c" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="413.671875" y="110.60000000000001" font-size="12" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">opacity</text>
+</g>
+</g>
+<g filter="url(#d7)">
+<rect x="527.0" y="82.4" width="153.0" height="46.4" fill="#e74c3c" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="591.5" y="110.60000000000001" font-size="12" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">组合</text>
+</g>
+</g>
+</g>
+</svg>

@@ -1,0 +1,80 @@
+/* LatticeSVG docs — custom styles */
+
+/* Code block font fallback for CJK */
+.md-typeset code,
+.md-typeset pre {
+  font-family: "JetBrains Mono", "Fira Code", "Source Code Pro",
+               "Noto Sans Mono CJK SC", monospace;
+}
+
+/* Property reference table */
+.property-table th {
+  white-space: nowrap;
+}
+
+.property-table td:first-child {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.85em;
+  color: var(--md-code-fg-color);
+}
+
+/* Hero section on landing page */
+.hero {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.hero .subtitle {
+  font-size: 1.25rem;
+  color: var(--md-default-fg-color--light);
+  margin-bottom: 1.5rem;
+}
+
+/* Feature grid on landing page */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.feature-card {
+  padding: 1.5rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 8px;
+  transition: box-shadow 0.2s;
+}
+
+.feature-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.feature-card h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+/* API reference: better signature display */
+.doc-object .doc-signature {
+  font-size: 0.9em;
+}
+
+/* Image gallery in tutorials */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.gallery img {
+  width: 100%;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 4px;
+}

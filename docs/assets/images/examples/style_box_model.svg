@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="500.0" height="160.0" viewBox="0 0 500.0 160.0">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="500.0" height="160.0" fill="#fdfefe" opacity="1.0" />
+<path d="M0.0,0.0 L500.0,0.0" stroke="#2c3e50" stroke-width="3.0" />
+<path d="M500.0,0.0 L500.0,160.0" stroke="#2c3e50" stroke-width="3.0" />
+<path d="M0.0,160.0 L500.0,160.0" stroke="#2c3e50" stroke-width="3.0" />
+<path d="M0.0,0.0 L0.0,160.0" stroke="#2c3e50" stroke-width="3.0" />
+<g>
+<rect x="23.0" y="23.0" width="217.0" height="114.0" fill="#e8daef" opacity="1.0" />
+<path d="M23.0,23.0 L240.0,23.0" stroke="#8e44ad" stroke-width="2.0" />
+<path d="M240.0,23.0 L240.0,137.0" stroke="#8e44ad" stroke-width="2.0" />
+<path d="M23.0,137.0 L240.0,137.0" stroke="#8e44ad" stroke-width="2.0" />
+<path d="M23.0,23.0 L23.0,137.0" stroke="#8e44ad" stroke-width="2.0" />
+</g>
+<g>
+<rect x="260.0" y="23.0" width="217.0" height="114.0" fill="#d5f5e3" opacity="1.0" />
+<path d="M260.0,23.0 L477.0,23.0" stroke="#27ae60" stroke-width="1.0" />
+<path d="M477.0,23.0 L477.0,137.0" stroke="#27ae60" stroke-width="1.0" />
+<path d="M260.0,137.0 L477.0,137.0" stroke="#27ae60" stroke-width="1.0" />
+<path d="M260.0,23.0 L260.0,137.0" stroke="#27ae60" stroke-width="1.0" />
+</g>
+</g>
+</svg>

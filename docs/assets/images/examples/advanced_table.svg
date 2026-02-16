@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="700.0" height="475.19999999999993" viewBox="0 0 700.0 475.19999999999993">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="700.0" height="475.19999999999993" fill="#ffffff" opacity="1.0" />
+<g>
+<text x="280.0" y="41.0" font-size="20" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">实验数据记录表</text>
+</g>
+<g>
+<rect x="20.0" y="64.0" width="660.0" height="171.6" fill="#ffffff" opacity="1.0" />
+<path d="M20.0,64.0 L680.0,64.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M680.0,64.0 L680.0,235.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M20.0,235.6 L680.0,235.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M20.0,64.0 L20.0,235.6" stroke="#dee2e6" stroke-width="1.0" />
+<g>
+<rect x="21.0" y="65.0" width="120.0" height="31.6" fill="#f1f3f5" opacity="1.0" />
+<g>
+<text x="33.0" y="86.8" font-size="13" fill="#212529" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">样品编号</text>
+</g>
+</g>
+<g>
+<rect x="141.0" y="65.0" width="179.33333333333331" height="31.6" fill="#f1f3f5" opacity="1.0" />
+<g>
+<text x="153.0" y="86.8" font-size="13" fill="#212529" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">温度 (°C)</text>
+</g>
+</g>
+<g>
+<rect x="320.3333333333333" y="65.0" width="179.33333333333331" height="31.6" fill="#f1f3f5" opacity="1.0" />
+<g>
+<text x="332.3333333333333" y="86.8" font-size="13" fill="#212529" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">压力 (kPa)</text>
+</g>
+</g>
+<g>
+<rect x="499.66666666666663" y="65.0" width="179.33333333333331" height="31.6" fill="#f1f3f5" opacity="1.0" />
+<g>
+<text x="511.66666666666663" y="86.8" font-size="13" fill="#212529" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">产率 (%)</text>
+</g>
+</g>
+<g>
+<g>
+<text x="33.0" y="116.39999999999999" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">S-001</text>
+</g>
+</g>
+<g>
+<g>
+<text x="153.0" y="116.39999999999999" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">25.0</text>
+</g>
+</g>
+<g>
+<g>
+<text x="332.3333333333333" y="116.39999999999999" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">101.3</text>
+</g>
+</g>
+<g>
+<g>
+<text x="511.66666666666663" y="116.39999999999999" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">87.2</text>
+</g>
+</g>
+<g>
+<rect x="21.0" y="124.2" width="120.0" height="27.6" fill="#f8f9fa" opacity="1.0" />
+<g>
+<text x="33.0" y="144.0" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">S-002</text>
+</g>
+</g>
+<g>
+<rect x="141.0" y="124.2" width="179.33333333333331" height="27.6" fill="#f8f9fa" opacity="1.0" />
+<g>
+<text x="153.0" y="144.0" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">30.0</text>
+</g>
+</g>
+<g>
+<rect x="320.3333333333333" y="124.2" width="179.33333333333331" height="27.6" fill="#f8f9fa" opacity="1.0" />
+<g>
+<text x="332.3333333333333" y="144.0" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">101.3</text>
+</g>
+</g>
+<g>
+<rect x="499.66666666666663" y="124.2" width="179.33333333333331" height="27.6" fill="#f8f9fa" opacity="1.0" />
+<g>
+<text x="511.66666666666663" y="144.0" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">91.5</text>
+</g>
+</g>
+<g>
+<g>
+<text x="33.0" y="171.60000000000002" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">S-003</text>
+</g>
+</g>
+<g>
+<g>
+<text x="153.0" y="171.60000000000002" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">35.0</text>
+</g>
+</g>
+<g>
+<g>
+<text x="332.3333333333333" y="171.60000000000002" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">101.3</text>
+</g>
+</g>
+<g>
+<g>
+<text x="511.66666666666663" y="171.60000000000002" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">89.8</text>
+</g>
+</g>
+<g>
+<rect x="21.0" y="179.4" width="120.0" height="27.6" fill="#f8f9fa" opacity="1.0" />
+<g>
+<text x="33.0" y="199.20000000000002" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">S-004</text>
+</g>
+</g>
+<g>
+<rect x="141.0" y="179.4" width="179.33333333333331" height="27.6" fill="#f8f9fa" opacity="1.0" />
+<g>
+<text x="153.0" y="199.20000000000002" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">40.0</text>
+</g>
+</g>
+<g>
+<rect x="320.3333333333333" y="179.4" width="179.33333333333331" height="27.6" fill="#f8f9fa" opacity="1.0" />
+<g>
+<text x="332.3333333333333" y="199.20000000000002" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">101.3</text>
+</g>
+</g>
+<g>
+<rect x="499.66666666666663" y="179.4" width="179.33333333333331" height="27.6" fill="#f8f9fa" opacity="1.0" />
+<g>
+<text x="511.66666666666663" y="199.20000000000002" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">85.3</text>
+</g>
+</g>
+<g>
+<g>
+<text x="33.0" y="226.8" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">S-005</text>
+</g>
+</g>
+<g>
+<g>
+<text x="153.0" y="226.8" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">45.0</text>
+</g>
+</g>
+<g>
+<g>
+<text x="332.3333333333333" y="226.8" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">101.3</text>
+</g>
+</g>
+<g>
+<g>
+<text x="511.66666666666663" y="226.8" font-size="13" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">82.1</text>
+</g>
+</g>
+</g>
+<g>
+<text x="250.0" y="276.6" font-size="20" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">成绩单（自定义样式）</text>
+</g>
+<g>
+<rect x="20.0" y="299.6" width="660.0" height="121.19999999999999" fill="#ffffff" opacity="1.0" />
+<path d="M20.0,299.6 L680.0,299.6" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M680.0,299.6 L680.0,420.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M20.0,420.8 L680.0,420.8" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M20.0,299.6 L20.0,420.8" stroke="#dee2e6" stroke-width="1.0" />
+<g>
+<rect x="21.0" y="300.6" width="120.0" height="32.8" fill="#2c3e50" opacity="1.0" />
+<g>
+<text x="67.0" y="323.0" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">姓名</text>
+</g>
+</g>
+<g>
+<rect x="141.0" y="300.6" width="134.5" height="32.8" fill="#2c3e50" opacity="1.0" />
+<g>
+<text x="194.25" y="323.0" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">数学</text>
+</g>
+</g>
+<g>
+<rect x="275.5" y="300.6" width="134.5" height="32.8" fill="#2c3e50" opacity="1.0" />
+<g>
+<text x="328.75" y="323.0" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">物理</text>
+</g>
+</g>
+<g>
+<rect x="410.0" y="300.6" width="134.5" height="32.8" fill="#2c3e50" opacity="1.0" />
+<g>
+<text x="463.25" y="323.0" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">英语</text>
+</g>
+</g>
+<g>
+<rect x="544.5" y="300.6" width="134.5" height="32.8" fill="#2c3e50" opacity="1.0" />
+<g>
+<text x="597.75" y="323.0" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">总分</text>
+</g>
+</g>
+<g>
+<g>
+<text x="67.0" y="353.8" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">张三</text>
+</g>
+</g>
+<g>
+<g>
+<text x="200.484375" y="353.8" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">92</text>
+</g>
+</g>
+<g>
+<g>
+<text x="334.984375" y="353.8" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">88</text>
+</g>
+</g>
+<g>
+<g>
+<text x="469.484375" y="353.8" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">95</text>
+</g>
+</g>
+<g>
+<g>
+<text x="600.1015625" y="353.8" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">275</text>
+</g>
+</g>
+<g>
+<rect x="21.0" y="362.20000000000005" width="120.0" height="28.8" fill="#eaf2f8" opacity="1.0" />
+<g>
+<text x="67.0" y="382.6" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">李四</text>
+</g>
+</g>
+<g>
+<rect x="141.0" y="362.20000000000005" width="134.5" height="28.8" fill="#eaf2f8" opacity="1.0" />
+<g>
+<text x="200.484375" y="382.6" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">85</text>
+</g>
+</g>
+<g>
+<rect x="275.5" y="362.20000000000005" width="134.5" height="28.8" fill="#eaf2f8" opacity="1.0" />
+<g>
+<text x="334.984375" y="382.6" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">91</text>
+</g>
+</g>
+<g>
+<rect x="410.0" y="362.20000000000005" width="134.5" height="28.8" fill="#eaf2f8" opacity="1.0" />
+<g>
+<text x="469.484375" y="382.6" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">82</text>
+</g>
+</g>
+<g>
+<rect x="544.5" y="362.20000000000005" width="134.5" height="28.8" fill="#eaf2f8" opacity="1.0" />
+<g>
+<text x="600.1015625" y="382.6" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">258</text>
+</g>
+</g>
+<g>
+<g>
+<text x="67.0" y="411.4" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">王五</text>
+</g>
+</g>
+<g>
+<g>
+<text x="200.484375" y="411.4" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">78</text>
+</g>
+</g>
+<g>
+<g>
+<text x="334.984375" y="411.4" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">95</text>
+</g>
+</g>
+<g>
+<g>
+<text x="469.484375" y="411.4" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">88</text>
+</g>
+</g>
+<g>
+<g>
+<text x="600.1015625" y="411.4" font-size="14" fill="#495057" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">261</text>
+</g>
+</g>
+</g>
+<g>
+<text x="20.0" y="453.0" font-size="12" fill="#2ecc71" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">✓ 预期：两张表格 — 上方默认样式数据表（灰色表头 + 条纹），下方深色表头 + 蓝色条纹 + 居中对齐</text>
+</g>
+</g>
+</svg>

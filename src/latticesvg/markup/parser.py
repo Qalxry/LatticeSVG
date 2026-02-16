@@ -245,9 +245,11 @@ def parse_html(text: str) -> List[TextSpan]:
     Unsupported tags are silently ignored (their text content is still
     included as plain text).
 
-    >>> spans = parse_html('Hello <b>world</b>!')
-    >>> [(s.text, s.font_weight) for s in spans]
-    [('Hello ', None), ('world', 'bold'), ('!', None)]
+    Example::
+
+        >>> spans = parse_html('Hello <b>world</b>!')
+        >>> [(s.text, s.font_weight) for s in spans]
+        [('Hello ', None), ('world', 'bold'), ('!', None)]
     """
     parser = _RichHTMLParser()
     parser.feed(text)
@@ -286,9 +288,11 @@ def parse_markdown(text: str) -> List[TextSpan]:
     Supported syntax: ``**bold**``, ``*italic*``, `` `code` ``,
     ``~~strikethrough~~``, ``$latex$`` (inline math).
 
-    >>> spans = parse_markdown('Hello **world**!')
-    >>> [(s.text, s.font_weight) for s in spans]
-    [('Hello ', None), ('world', 'bold'), ('!', None)]
+    Example::
+
+        >>> spans = parse_markdown('Hello **world**!')
+        >>> [(s.text, s.font_weight) for s in spans]
+        [('Hello ', None), ('world', 'bold'), ('!', None)]
     """
     html = _markdown_to_html(text)
     return parse_html(html)

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="600.0" height="186.39999999999998" viewBox="0 0 600.0 186.39999999999998">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="600.0" height="186.39999999999998" fill="#ffffff" opacity="1.0" />
+<g>
+<text x="137.46875" y="48.8" font-size="28" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">LatticeSVG 文本排版演示</text>
+</g>
+<g>
+<text x="20.0" y="84.1" font-size="15" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">LatticeSVG 是一个基于 CSS Grid 的矢量布局引擎。它使用 FreeType 进行精确的字</text>
+<text x="20.0" y="108.1" font-size="15" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">形测量，支持自动换行、多种对齐方式和丰富的排版控制。所有样式属性名称与 CSS</text>
+<text x="20.0" y="132.1" font-size="15" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">标准保持一致，降低学习成本。</text>
+</g>
+<g>
+<text x="453.828125" y="164.0" font-size="14" fill="#7f8c8d" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">—— 右对齐文本示例</text>
+</g>
+</g>
+</svg>

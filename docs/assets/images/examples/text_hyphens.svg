@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="600.0" height="855.2" viewBox="0 0 600.0 855.2">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="600.0" height="855.2" fill="#f4f4f4" opacity="1.0" />
+<g>
+<text x="82.625" y="38.7" font-size="22" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">CSS hyphens 属性：none / manual / auto</text>
+</g>
+<g>
+<text x="16.0" y="86.2" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">English — narrow 100px columns</text>
+</g>
+<g>
+<g>
+<rect x="16.0" y="108.0" width="100.0" height="205.60000000000002" fill="#ffffff" opacity="1.0" rx="6.0" ry="6.0" />
+<rect x="16.0" y="108.0" width="100.0" height="205.60000000000002" fill="none" stroke="#cccccc" stroke-width="1.0" rx="6.0" ry="6.0" />
+<g>
+<text x="27.0" y="130.1" font-size="11" fill="#666666" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">hyphens:</text>
+<text x="27.0" y="143.29999999999998" font-size="11" fill="#666666" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">none</text>
+</g>
+<g>
+<rect x="27.0" y="149.4" width="78.0" height="86.0" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" rx="4.0" ry="4.0" />
+<text x="28.0" y="164.8" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Extraordinary</text>
+<text x="28.0" y="181.60000000000002" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">circumstances</text>
+<text x="28.0" y="198.4" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">necessitate</text>
+<text x="28.0" y="215.20000000000002" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">unconventional</text>
+<text x="28.0" y="232.00000000000003" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">methodologies.</text>
+</g>
+</g>
+<g>
+<rect x="128.0" y="108.0" width="100.0" height="205.60000000000002" fill="#ffffff" opacity="1.0" rx="6.0" ry="6.0" />
+<rect x="128.0" y="108.0" width="100.0" height="205.60000000000002" fill="none" stroke="#cccccc" stroke-width="1.0" rx="6.0" ry="6.0" />
+<g>
+<text x="139.0" y="130.1" font-size="11" fill="#666666" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">hyphens:</text>
+<text x="139.0" y="143.29999999999998" font-size="11" fill="#666666" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">manual</text>
+</g>
+<g>
+<rect x="139.0" y="149.4" width="78.0" height="153.20000000000002" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" rx="4.0" ry="4.0" />
+<text x="140.0" y="164.8" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Extraordi-</text>
+<text x="140.0" y="181.60000000000002" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">nary</text>
+<text x="140.0" y="198.4" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">circum-</text>
+<text x="140.0" y="215.20000000000002" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">stances</text>
+<text x="140.0" y="232.00000000000003" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">necessitate</text>
+<text x="140.0" y="248.8" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">unconven-</text>
+<text x="140.0" y="265.6" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">tional</text>
+<text x="140.0" y="282.4" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">method-</text>
+<text x="140.0" y="299.2" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">ologies.</text>
+</g>
+</g>
+<g>
+<rect x="240.0" y="108.0" width="100.0" height="205.60000000000002" fill="#ffffff" opacity="1.0" rx="6.0" ry="6.0" />
+<rect x="240.0" y="108.0" width="100.0" height="205.60000000000002" fill="none" stroke="#cccccc" stroke-width="1.0" rx="6.0" ry="6.0" />
+<g>
+<text x="251.0" y="130.1" font-size="11" fill="#666666" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">hyphens: auto</text>
+</g>
+<g>
+<rect x="251.0" y="136.2" width="78.0" height="136.4" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" rx="4.0" ry="4.0" />
+<text x="252.0" y="151.6" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Extraordin-</text>
+<text x="252.0" y="168.4" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">ary circum-</text>
+<text x="252.0" y="185.2" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">stances ne-</text>
+<text x="252.0" y="202.0" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">cessitate</text>
+<text x="252.0" y="218.79999999999998" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">unconven-</text>
+<text x="252.0" y="235.6" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">tional</text>
+<text x="252.0" y="252.4" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">methodo-</text>
+<text x="252.0" y="269.2" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">logies.</text>
+</g>
+</g>
+</g>
+<g>
+<text x="16.0" y="347.40000000000003" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">Auto hyphens — multiple languages</text>
+</g>
+<g>
+<g>
+<rect x="16.0" y="369.20000000000005" width="140.0" height="125.2" fill="#ffffff" opacity="1.0" rx="6.0" ry="6.0" />
+<rect x="16.0" y="369.20000000000005" width="140.0" height="125.2" fill="none" stroke="#cccccc" stroke-width="1.0" rx="6.0" ry="6.0" />
+<g>
+<text x="27.0" y="391.30000000000007" font-size="11" fill="#666666" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">English (en)</text>
+</g>
+<g>
+<rect x="27.0" y="397.40000000000003" width="118.0" height="69.2" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" rx="4.0" ry="4.0" />
+<text x="28.0" y="412.8" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Internationaliza-</text>
+<text x="28.0" y="429.6" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">tion and interop-</text>
+<text x="28.0" y="446.40000000000003" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">erability require-</text>
+<text x="28.0" y="463.20000000000005" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">ments.</text>
+</g>
+</g>
+<g>
+<rect x="168.0" y="369.20000000000005" width="140.0" height="125.2" fill="#ffffff" opacity="1.0" rx="6.0" ry="6.0" />
+<rect x="168.0" y="369.20000000000005" width="140.0" height="125.2" fill="none" stroke="#cccccc" stroke-width="1.0" rx="6.0" ry="6.0" />
+<g>
+<text x="179.0" y="391.30000000000007" font-size="11" fill="#666666" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">German (de)</text>
+</g>
+<g>
+<rect x="179.0" y="397.40000000000003" width="118.0" height="86.0" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" rx="4.0" ry="4.0" />
+<text x="180.0" y="412.8" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Donaudampf-</text>
+<text x="180.0" y="429.6" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">schifffahrtsge-</text>
+<text x="180.0" y="446.40000000000003" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">sellschaftskapi-</text>
+<text x="180.0" y="463.20000000000005" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">tän ist ein langes</text>
+<text x="180.0" y="480.0" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Wort.</text>
+</g>
+</g>
+</g>
+<g>
+<text x="16.0" y="528.2" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">Manual mode — soft-hyphens (U+00AD)</text>
+</g>
+<g>
+<g>
+<rect x="16.0" y="550.0" width="150.0" height="91.60000000000001" fill="#ffffff" opacity="1.0" rx="6.0" ry="6.0" />
+<rect x="16.0" y="550.0" width="150.0" height="91.60000000000001" fill="none" stroke="#cccccc" stroke-width="1.0" rx="6.0" ry="6.0" />
+<g>
+<text x="27.0" y="572.1" font-size="11" fill="#666666" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">Without SHY</text>
+</g>
+<g>
+<rect x="27.0" y="578.2" width="128.0" height="35.6" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" rx="4.0" ry="4.0" />
+<text x="28.0" y="593.6" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Supercalifragilisticexpialidocious</text>
+<text x="28.0" y="610.4" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">is a very long word.</text>
+</g>
+</g>
+<g>
+<rect x="178.0" y="550.0" width="150.0" height="91.60000000000001" fill="#ffffff" opacity="1.0" rx="6.0" ry="6.0" />
+<rect x="178.0" y="550.0" width="150.0" height="91.60000000000001" fill="none" stroke="#cccccc" stroke-width="1.0" rx="6.0" ry="6.0" />
+<g>
+<text x="189.0" y="572.1" font-size="11" fill="#666666" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">With SHY markers</text>
+</g>
+<g>
+<rect x="189.0" y="578.2" width="128.0" height="52.400000000000006" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" rx="4.0" ry="4.0" />
+<text x="190.0" y="593.6" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Supercalifragilis-</text>
+<text x="190.0" y="610.4" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">ticexpialidocious is</text>
+<text x="190.0" y="627.2" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">a very long word.</text>
+</g>
+</g>
+</g>
+<g>
+<text x="16.0" y="675.4" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">Justify alignment with auto hyphens</text>
+</g>
+<g>
+<rect x="16.0" y="697.2" width="568.0" height="142.0" fill="#ffffff" opacity="1.0" rx="6.0" ry="6.0" />
+<rect x="16.0" y="697.2" width="568.0" height="142.0" fill="none" stroke="#cccccc" stroke-width="1.0" rx="6.0" ry="6.0" />
+<g>
+<text x="27.0" y="719.3000000000001" font-size="11" fill="#666666" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">Justify + auto hyphens</text>
+</g>
+<g>
+<rect x="27.0" y="725.4000000000001" width="546.0" height="102.80000000000001" fill="none" stroke="#cccccc" stroke-width="1.0" stroke-dasharray="4,2.0" rx="4.0" ry="4.0" />
+<text x="28.0" y="740.8000000000001" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="3.435267857142857">Another paragraph to demonstrate hyphenation: antidisestablishmentalism is a</text>
+<text x="28.0" y="757.6" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="3.26953125">long word that might break with a hyphen. Also, consider the word pneumon-</text>
+<text x="28.0" y="774.4000000000001" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="0.794921875">oultramicroscopicsilicovolcanoconiosis which is even longer. In LaTeX, such words</text>
+<text x="28.0" y="791.2" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="0.9105113636363636">would be hyphenated according to language rules, improving the justified text ap-</text>
+<text x="28.0" y="808.0000000000001" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" word-spacing="1.1875">pearance. The browser's hyphenation engine (when supported) will insert soft hy-</text>
+<text x="28.0" y="824.8000000000001" font-size="14" fill="#222222" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">phens at appropriate syllable boundaries.</text>
+</g>
+</g>
+</g>
+</svg>

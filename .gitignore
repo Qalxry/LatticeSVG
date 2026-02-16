@@ -20,8 +20,10 @@ htmlcov/
 *.png
 !tests/fixtures/*.svg
 !tests/fixtures/*.png
+!docs/assets/images/examples/*.svg
 .old/
 demo_output/
 .vscode/
 .idea/
 examples/demo_output/
+site/

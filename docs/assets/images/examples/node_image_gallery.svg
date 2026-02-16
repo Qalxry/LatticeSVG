@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="859.6000000000001" height="712.0" viewBox="0 0 859.6000000000001 712.0">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="859.6000000000001" height="712.0" fill="#1a1a2e" opacity="1.0" />
+<g>
+<rect x="12.0" y="12.0" width="90.0" height="32.8" fill="#16213e" opacity="1.0" />
+<text x="33.0" y="32.4" font-size="12" fill="#e8e8e8" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="bold" font-style="normal">模型名称</text>
+</g>
+<g>
+<rect x="106.0" y="12.0" width="741.6000000000001" height="32.8" fill="#0f3460" opacity="1.0" />
+<text x="434.80000000000007" y="32.9" font-size="14" fill="#ffffff" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="bold" font-style="normal">生成图片对比</text>
+</g>
+<g>
+<rect x="12.0" y="48.8" width="90.0" height="60.0" fill="#16213e" opacity="1.0" />
+<text x="35.203125" y="81.8" font-size="10" fill="#d0d0d0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">DALL·E 3</text>
+</g>
+<g>
+<rect x="106.0" y="48.8" width="60.0" height="60.0" fill="#7a2828" opacity="1.0" />
+</g>
+<g>
+<rect x="170.0" y="48.8" width="60.0" height="60.0" fill="#a12a2a" opacity="1.0" />
+</g>
+<g>
+<rect x="234.0" y="48.8" width="60.0" height="60.0" fill="#cb2929" opacity="1.0" />
+</g>
+<g>
+<rect x="298.0" y="48.8" width="60.0" height="60.0" fill="#e13b3b" opacity="1.0" />
+</g>
+<g>
+<rect x="362.0" y="48.8" width="80.0" height="60.0" fill="#940e0e" opacity="1.0" />
+</g>
+<g>
+<rect x="446.0" y="48.8" width="80.0" height="60.0" fill="#993232" opacity="1.0" />
+</g>
+<g>
+<rect x="530.0" y="48.8" width="46.1" height="60.0" fill="#c13333" opacity="1.0" />
+</g>
+<g>
+<rect x="580.1" y="48.8" width="46.1" height="60.0" fill="#d84444" opacity="1.0" />
+</g>
+<g>
+<rect x="630.2" y="48.8" width="106.7" height="60.0" fill="#8d1515" opacity="1.0" />
+</g>
+<g>
+<rect x="740.9000000000001" y="48.8" width="106.7" height="60.0" fill="#b91212" opacity="1.0" />
+</g>
+<g>
+<rect x="12.0" y="112.8" width="90.0" height="60.0" fill="#16213e" opacity="1.0" />
+<text x="27.140625" y="145.8" font-size="10" fill="#d0d0d0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">Midjourney v6</text>
+</g>
+<g>
+<rect x="106.0" y="112.8" width="60.0" height="60.0" fill="#7a5f28" opacity="1.0" />
+</g>
+<g>
+<rect x="170.0" y="112.8" width="60.0" height="60.0" fill="#a1792a" opacity="1.0" />
+</g>
+<g>
+<rect x="234.0" y="112.8" width="60.0" height="60.0" fill="#cb9529" opacity="1.0" />
+</g>
+<g>
+<rect x="298.0" y="112.8" width="60.0" height="60.0" fill="#e1aa3b" opacity="1.0" />
+</g>
+<g>
+<rect x="362.0" y="112.8" width="80.0" height="60.0" fill="#94670e" opacity="1.0" />
+</g>
+<g>
+<rect x="446.0" y="112.8" width="80.0" height="60.0" fill="#997732" opacity="1.0" />
+</g>
+<g>
+<rect x="530.0" y="112.8" width="46.1" height="60.0" fill="#c19233" opacity="1.0" />
+</g>
+<g>
+<rect x="580.1" y="112.8" width="46.1" height="60.0" fill="#d8a744" opacity="1.0" />
+</g>
+<g>
+<rect x="630.2" y="112.8" width="106.7" height="60.0" fill="#8d6515" opacity="1.0" />
+</g>
+<g>
+<rect x="740.9000000000001" y="112.8" width="106.7" height="60.0" fill="#b98112" opacity="1.0" />
+</g>
+<g>
+<rect x="12.0" y="176.8" width="90.0" height="60.0" fill="#16213e" opacity="1.0" />
+<text x="35.1953125" y="209.8" font-size="10" fill="#d0d0d0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">SD XL 1.0</text>
+</g>
+<g>
+<rect x="106.0" y="176.8" width="60.0" height="60.0" fill="#5f7a28" opacity="1.0" />
+</g>
+<g>
+<rect x="170.0" y="176.8" width="60.0" height="60.0" fill="#79a12a" opacity="1.0" />
+</g>
+<g>
+<rect x="234.0" y="176.8" width="60.0" height="60.0" fill="#95cb29" opacity="1.0" />
+</g>
+<g>
+<rect x="298.0" y="176.8" width="60.0" height="60.0" fill="#aae13b" opacity="1.0" />
+</g>
+<g>
+<rect x="362.0" y="176.8" width="80.0" height="60.0" fill="#67940e" opacity="1.0" />
+</g>
+<g>
+<rect x="446.0" y="176.8" width="80.0" height="60.0" fill="#769932" opacity="1.0" />
+</g>
+<g>
+<rect x="530.0" y="176.8" width="46.1" height="60.0" fill="#92c133" opacity="1.0" />
+</g>
+<g>
+<rect x="580.1" y="176.8" width="46.1" height="60.0" fill="#a7d844" opacity="1.0" />
+</g>
+<g>
+<rect x="630.2" y="176.8" width="106.7" height="60.0" fill="#658d15" opacity="1.0" />
+</g>
+<g>
+<rect x="740.9000000000001" y="176.8" width="106.7" height="60.0" fill="#81b912" opacity="1.0" />
+</g>
+<g>
+<rect x="12.0" y="240.8" width="90.0" height="60.0" fill="#16213e" opacity="1.0" />
+<text x="35.8828125" y="273.8" font-size="10" fill="#d0d0d0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">Flux.1 Pro</text>
+</g>
+<g>
+<rect x="106.0" y="240.8" width="60.0" height="60.0" fill="#287a28" opacity="1.0" />
+</g>
+<g>
+<rect x="170.0" y="240.8" width="60.0" height="60.0" fill="#2aa12a" opacity="1.0" />
+</g>
+<g>
+<rect x="234.0" y="240.8" width="60.0" height="60.0" fill="#29cb29" opacity="1.0" />
+</g>
+<g>
+<rect x="298.0" y="240.8" width="60.0" height="60.0" fill="#3be13b" opacity="1.0" />
+</g>
+<g>
+<rect x="362.0" y="240.8" width="80.0" height="60.0" fill="#0e940e" opacity="1.0" />
+</g>
+<g>
+<rect x="446.0" y="240.8" width="80.0" height="60.0" fill="#329932" opacity="1.0" />
+</g>
+<g>
+<rect x="530.0" y="240.8" width="46.1" height="60.0" fill="#33c133" opacity="1.0" />
+</g>
+<g>
+<rect x="580.1" y="240.8" width="46.1" height="60.0" fill="#44d844" opacity="1.0" />
+</g>
+<g>
+<rect x="630.2" y="240.8" width="106.7" height="60.0" fill="#158d15" opacity="1.0" />
+</g>
+<g>
+<rect x="740.9000000000001" y="240.8" width="106.7" height="60.0" fill="#12b912" opacity="1.0" />
+</g>
+<g>
+<rect x="12.0" y="304.8" width="90.0" height="60.0" fill="#16213e" opacity="1.0" />
+<text x="38.2578125" y="337.8" font-size="10" fill="#d0d0d0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">Imagen 3</text>
+</g>
+<g>
+<rect x="106.0" y="304.8" width="60.0" height="60.0" fill="#287a5f" opacity="1.0" />
+</g>
+<g>
+<rect x="170.0" y="304.8" width="60.0" height="60.0" fill="#2aa179" opacity="1.0" />
+</g>
+<g>
+<rect x="234.0" y="304.8" width="60.0" height="60.0" fill="#29cb95" opacity="1.0" />
+</g>
+<g>
+<rect x="298.0" y="304.8" width="60.0" height="60.0" fill="#3be1aa" opacity="1.0" />
+</g>
+<g>
+<rect x="362.0" y="304.8" width="80.0" height="60.0" fill="#0e9467" opacity="1.0" />
+</g>
+<g>
+<rect x="446.0" y="304.8" width="80.0" height="60.0" fill="#329977" opacity="1.0" />
+</g>
+<g>
+<rect x="530.0" y="304.8" width="46.1" height="60.0" fill="#33c192" opacity="1.0" />
+</g>
+<g>
+<rect x="580.1" y="304.8" width="46.1" height="60.0" fill="#44d8a7" opacity="1.0" />
+</g>
+<g>
+<rect x="630.2" y="304.8" width="106.7" height="60.0" fill="#158d65" opacity="1.0" />
+</g>
+<g>
+<rect x="740.9000000000001" y="304.8" width="106.7" height="60.0" fill="#12b981" opacity="1.0" />
+</g>
+<g>
+<rect x="12.0" y="368.8" width="90.0" height="60.0" fill="#16213e" opacity="1.0" />
+<text x="28.8125" y="401.8" font-size="10" fill="#d0d0d0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">Adobe Firefly</text>
+</g>
+<g>
+<rect x="106.0" y="368.8" width="60.0" height="60.0" fill="#285f7a" opacity="1.0" />
+</g>
+<g>
+<rect x="170.0" y="368.8" width="60.0" height="60.0" fill="#2a79a1" opacity="1.0" />
+</g>
+<g>
+<rect x="234.0" y="368.8" width="60.0" height="60.0" fill="#2995cb" opacity="1.0" />
+</g>
+<g>
+<rect x="298.0" y="368.8" width="60.0" height="60.0" fill="#3baae1" opacity="1.0" />
+</g>
+<g>
+<rect x="362.0" y="368.8" width="80.0" height="60.0" fill="#0e6794" opacity="1.0" />
+</g>
+<g>
+<rect x="446.0" y="368.8" width="80.0" height="60.0" fill="#327699" opacity="1.0" />
+</g>
+<g>
+<rect x="530.0" y="368.8" width="46.1" height="60.0" fill="#3392c1" opacity="1.0" />
+</g>
+<g>
+<rect x="580.1" y="368.8" width="46.1" height="60.0" fill="#44a7d8" opacity="1.0" />
+</g>
+<g>
+<rect x="630.2" y="368.8" width="106.7" height="60.0" fill="#15658d" opacity="1.0" />
+</g>
+<g>
+<rect x="740.9000000000001" y="368.8" width="106.7" height="60.0" fill="#1281b9" opacity="1.0" />
+</g>
+<g>
+<rect x="12.0" y="432.8" width="90.0" height="60.0" fill="#16213e" opacity="1.0" />
+<text x="31.5859375" y="465.8" font-size="10" fill="#d0d0d0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">Kandinsky 3</text>
+</g>
+<g>
+<rect x="106.0" y="432.8" width="60.0" height="60.0" fill="#28287a" opacity="1.0" />
+</g>
+<g>
+<rect x="170.0" y="432.8" width="60.0" height="60.0" fill="#2a2aa1" opacity="1.0" />
+</g>
+<g>
+<rect x="234.0" y="432.8" width="60.0" height="60.0" fill="#2929cb" opacity="1.0" />
+</g>
+<g>
+<rect x="298.0" y="432.8" width="60.0" height="60.0" fill="#3b3be1" opacity="1.0" />
+</g>
+<g>
+<rect x="362.0" y="432.8" width="80.0" height="60.0" fill="#0e0e94" opacity="1.0" />
+</g>
+<g>
+<rect x="446.0" y="432.8" width="80.0" height="60.0" fill="#323299" opacity="1.0" />
+</g>
+<g>
+<rect x="530.0" y="432.8" width="46.1" height="60.0" fill="#3333c1" opacity="1.0" />
+</g>
+<g>
+<rect x="580.1" y="432.8" width="46.1" height="60.0" fill="#4444d8" opacity="1.0" />
+</g>
+<g>
+<rect x="630.2" y="432.8" width="106.7" height="60.0" fill="#15158d" opacity="1.0" />
+</g>
+<g>
+<rect x="740.9000000000001" y="432.8" width="106.7" height="60.0" fill="#1212b9" opacity="1.0" />
+</g>
+<g>
+<rect x="12.0" y="496.8" width="90.0" height="60.0" fill="#16213e" opacity="1.0" />
+<text x="37.0" y="529.8" font-size="10" fill="#d0d0d0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">通义万相</text>
+</g>
+<g>
+<rect x="106.0" y="496.8" width="60.0" height="60.0" fill="#5f287a" opacity="1.0" />
+</g>
+<g>
+<rect x="170.0" y="496.8" width="60.0" height="60.0" fill="#792aa1" opacity="1.0" />
+</g>
+<g>
+<rect x="234.0" y="496.8" width="60.0" height="60.0" fill="#9529cb" opacity="1.0" />
+</g>
+<g>
+<rect x="298.0" y="496.8" width="60.0" height="60.0" fill="#aa3be1" opacity="1.0" />
+</g>
+<g>
+<rect x="362.0" y="496.8" width="80.0" height="60.0" fill="#670e94" opacity="1.0" />
+</g>
+<g>
+<rect x="446.0" y="496.8" width="80.0" height="60.0" fill="#773299" opacity="1.0" />
+</g>
+<g>
+<rect x="530.0" y="496.8" width="46.1" height="60.0" fill="#9233c1" opacity="1.0" />
+</g>
+<g>
+<rect x="580.1" y="496.8" width="46.1" height="60.0" fill="#a744d8" opacity="1.0" />
+</g>
+<g>
+<rect x="630.2" y="496.8" width="106.7" height="60.0" fill="#65158d" opacity="1.0" />
+</g>
+<g>
+<rect x="740.9000000000001" y="496.8" width="106.7" height="60.0" fill="#8112b9" opacity="1.0" />
+</g>
+<g>
+<rect x="12.0" y="560.8" width="90.0" height="60.0" fill="#16213e" opacity="1.0" />
+<text x="34.09375" y="593.8" font-size="10" fill="#d0d0d0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">Ideogram 2</text>
+</g>
+<g>
+<rect x="106.0" y="560.8" width="60.0" height="60.0" fill="#7a285f" opacity="1.0" />
+</g>
+<g>
+<rect x="170.0" y="560.8" width="60.0" height="60.0" fill="#a12a79" opacity="1.0" />
+</g>
+<g>
+<rect x="234.0" y="560.8" width="60.0" height="60.0" fill="#cb2995" opacity="1.0" />
+</g>
+<g>
+<rect x="298.0" y="560.8" width="60.0" height="60.0" fill="#e13baa" opacity="1.0" />
+</g>
+<g>
+<rect x="362.0" y="560.8" width="80.0" height="60.0" fill="#940e67" opacity="1.0" />
+</g>
+<g>
+<rect x="446.0" y="560.8" width="80.0" height="60.0" fill="#993276" opacity="1.0" />
+</g>
+<g>
+<rect x="530.0" y="560.8" width="46.1" height="60.0" fill="#c13392" opacity="1.0" />
+</g>
+<g>
+<rect x="580.1" y="560.8" width="46.1" height="60.0" fill="#d844a7" opacity="1.0" />
+</g>
+<g>
+<rect x="630.2" y="560.8" width="106.7" height="60.0" fill="#8d1565" opacity="1.0" />
+</g>
+<g>
+<rect x="740.9000000000001" y="560.8" width="106.7" height="60.0" fill="#b91281" opacity="1.0" />
+</g>
+<g>
+<rect x="12.0" y="624.8" width="90.0" height="75.2" fill="#16213e" opacity="1.0" />
+<text x="32.0" y="665.4" font-size="10" fill="#e0e0e0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="bold" font-style="normal">图片参数：</text>
+</g>
+<g>
+<rect x="106.0" y="624.8" width="60.0" height="75.2" fill="#0f3460" opacity="1.0" />
+<text x="108.671875" y="646.1999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">1girl, solo, upper</text>
+<text x="108.8984375" y="655.8" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">body, looking at </text>
+<text x="114.4609375" y="665.4" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">viewer, smile</text>
+<text x="121.7421875" y="674.9999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">512×512</text>
+<text x="130.890625" y="684.5999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">1:1</text>
+</g>
+<g>
+<rect x="170.0" y="624.8" width="60.0" height="75.2" fill="#0f3460" opacity="1.0" />
+<text x="177.0078125" y="646.1999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">1boy, playing </text>
+<text x="173.125" y="655.8" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">guitar, standing, </text>
+<text x="186.0" y="665.4" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">outdoors</text>
+<text x="185.7421875" y="674.9999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">512×512</text>
+<text x="194.890625" y="684.5999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">1:1</text>
+</g>
+<g>
+<rect x="234.0" y="624.8" width="60.0" height="75.2" fill="#0f3460" opacity="1.0" />
+<text x="246.2421875" y="641.3999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">landscape, </text>
+<text x="236.7890625" y="650.9999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">mountains, river,</text>
+<text x="239.6796875" y="660.5999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">sunset, vibrant </text>
+<text x="254.2265625" y="670.1999999999998" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">colors</text>
+<text x="245.7421875" y="679.7999999999998" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">1024×1024</text>
+<text x="258.890625" y="689.3999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">1:1</text>
+</g>
+<g>
+<rect x="298.0" y="624.8" width="60.0" height="75.2" fill="#0f3460" opacity="1.0" />
+<text x="300.9140625" y="646.1999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">cityscape, night, </text>
+<text x="308.34375" y="655.8" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">neon lights, </text>
+<text x="300.90625" y="665.4" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">rainy, reflections</text>
+<text x="309.7421875" y="674.9999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">1024×1024</text>
+<text x="322.890625" y="684.5999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">1:1</text>
+</g>
+<g>
+<rect x="362.0" y="624.8" width="80.0" height="75.2" fill="#0f3460" opacity="1.0" />
+<text x="369.5859375" y="646.1999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">cute cat, sitting, big </text>
+<text x="379.234375" y="655.8" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">eyes, colorful </text>
+<text x="383.1171875" y="665.4" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">background</text>
+<text x="387.7421875" y="674.9999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">512×384</text>
+<text x="396.890625" y="684.5999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">4:3</text>
+</g>
+<g>
+<rect x="446.0" y="624.8" width="80.0" height="75.2" fill="#0f3460" opacity="1.0" />
+<text x="460.1171875" y="646.1999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">futuristic robot, </text>
+<text x="448.921875" y="655.8" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">metallic, glowing eyes,</text>
+<text x="480.0078125" y="665.4" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">city</text>
+<text x="471.7421875" y="674.9999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">512×384</text>
+<text x="480.890625" y="684.5999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">4:3</text>
+</g>
+<g>
+<rect x="530.0" y="624.8" width="46.1" height="75.2" fill="#0f3460" opacity="1.0" />
+<text x="540.503125" y="636.5999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">fantasy </text>
+<text x="541.95625" y="646.1999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">castle, </text>
+<text x="539.6125" y="655.8" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">floating </text>
+<text x="539.9484375" y="665.3999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">islands, </text>
+<text x="536.940625" y="674.9999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">bright sky</text>
+<text x="536.7921875" y="684.5999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">786×1024</text>
+<text x="545.7453125" y="694.1999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">≈3:4</text>
+</g>
+<g>
+<rect x="580.1" y="624.8" width="46.1" height="75.2" fill="#0f3460" opacity="1.0" />
+<text x="583.2671875" y="641.3999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">portrait of a </text>
+<text x="589.3765625" y="650.9999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">woman, </text>
+<text x="582.5015625" y="660.5999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">detailed, soft</text>
+<text x="590.7125" y="670.1999999999998" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">lighting</text>
+<text x="586.8921875" y="679.7999999999998" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">786×1024</text>
+<text x="595.8453125" y="689.3999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">≈3:4</text>
+</g>
+<g>
+<rect x="630.2" y="624.8" width="106.7" height="75.2" fill="#0f3460" opacity="1.0" />
+<text x="640.1515625000001" y="650.9999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">space scene, planets, stars, </text>
+<text x="648.7921875000001" y="660.5999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">nebula, vibrant colors</text>
+<text x="665.2921875000001" y="670.1999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">1920×1080</text>
+<text x="676.4406250000001" y="679.7999999999998" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">16:9</text>
+</g>
+<g>
+<rect x="740.9000000000001" y="624.8" width="106.7" height="75.2" fill="#0f3460" opacity="1.0" />
+<text x="747.9375000000001" y="650.9999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">vintage car, driving on road, </text>
+<text x="764.0390625000001" y="660.5999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">countryside, sunny</text>
+<text x="775.9921875000001" y="670.1999999999999" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">1920×1080</text>
+<text x="787.1406250000001" y="679.7999999999998" font-size="8" fill="#b0b0b0" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal" xml:space="preserve">16:9</text>
+</g>
+</g>
+</svg>

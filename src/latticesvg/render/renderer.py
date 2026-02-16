@@ -53,7 +53,10 @@ class Renderer:
             ``@font-face`` rules inside the SVG, making it fully
             self-contained.  Requires the ``fonttools`` package.
 
-        Returns the ``drawsvg.Drawing`` instance for further use.
+        Returns
+        -------
+        drawsvg.Drawing
+            The drawing instance for further use.
         """
         d = self.render_to_drawing(node, embed_fonts=embed_fonts)
         d.save_svg(output_path)

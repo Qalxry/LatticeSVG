@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="600.0" height="165.0" viewBox="0 0 600.0 165.0">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="600.0" height="165.0" fill="#ecf0f1" opacity="1.0" />
+<g>
+<rect x="15.0" y="15.0" width="150.0" height="60.0" fill="#e74c3c" opacity="1.0" />
+</g>
+<g>
+<rect x="180.0" y="15.0" width="150.0" height="60.0" fill="#3498db" opacity="1.0" />
+</g>
+<g>
+<rect x="345.0" y="15.0" width="150.0" height="60.0" fill="#2ecc71" opacity="1.0" />
+</g>
+<g>
+<rect x="15.0" y="90.0" width="150.0" height="60.0" fill="#f39c12" opacity="1.0" />
+</g>
+<g>
+<rect x="180.0" y="90.0" width="150.0" height="60.0" fill="#9b59b6" opacity="1.0" />
+</g>
+<g>
+<rect x="345.0" y="90.0" width="150.0" height="60.0" fill="#1abc9c" opacity="1.0" />
+</g>
+</g>
+</svg>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="600.0" height="158.4" viewBox="0 0 600.0 158.4">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="600.0" height="158.4" fill="#ffffff" opacity="1.0" />
+<g>
+<text x="165.46875" y="60.8" font-size="28" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">欢迎使用 LatticeSVG</text>
+</g>
+<g>
+<text x="32.0" y="98.8" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">LatticeSVG 是一个基于 CSS Grid 的声明式矢量布局引擎，用 Python 字典描述样式，</text>
+<text x="32.0" y="121.2" font-size="14" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">输出高质量 SVG。</text>
+</g>
+</g>
+</svg>

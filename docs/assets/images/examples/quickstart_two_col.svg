@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="600.0" height="104.4" viewBox="0 0 600.0 104.4">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="600.0" height="104.4" fill="#f8f9fa" opacity="1.0" />
+<g>
+<rect x="24.0" y="24.0" width="268.0" height="56.400000000000006" fill="#ffffff" opacity="1.0" />
+<path d="M24.0,24.0 L292.0,24.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M292.0,24.0 L292.0,80.4" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M24.0,80.4 L292.0,80.4" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M24.0,24.0 L24.0,80.4" stroke="#dee2e6" stroke-width="1.0" />
+<text x="41.0" y="58.2" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">左侧内容 这是左列的示例文本。</text>
+</g>
+<g>
+<rect x="308.0" y="24.0" width="268.0" height="56.400000000000006" fill="#ffffff" opacity="1.0" />
+<path d="M308.0,24.0 L576.0,24.0" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M576.0,24.0 L576.0,80.4" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M308.0,80.4 L576.0,80.4" stroke="#dee2e6" stroke-width="1.0" />
+<path d="M308.0,24.0 L308.0,80.4" stroke="#dee2e6" stroke-width="1.0" />
+<text x="325.0" y="58.2" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">右侧内容 这是右列的示例文本。</text>
+</g>
+</g>
+</svg>
