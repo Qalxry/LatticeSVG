@@ -1502,10 +1502,13 @@ class VerticalRun:
 
     *upright* runs have each character standing upright (CJK style).
     *sideways* (rotated) runs are Latin/digit text rotated 90° CW as a group.
+    *combine* runs are tate-chū-yoko (纵中横): multiple characters compressed
+    horizontally into a single em-square and rendered upright.
     """
     text: str
     upright: bool           # True → upright, False → sideways (rotated CW)
     advance: float = 0.0   # total advance in the block-direction (vertical)
+    combine: bool = False  # True → text-combine-upright (tate-chū-yoko)
 
 
 @dataclass
@@ -1550,6 +1553,174 @@ def _segment_vertical_runs(
     return runs
 
 
+# ---------------------------------------------------------------------------
+# text-combine-upright (tate-chū-yoko / 纵中横)
+# ---------------------------------------------------------------------------
+
+def _parse_tcu(value: str) -> Tuple[str, int]:
+    """Parse a ``text-combine-upright`` value.
+
+    Returns ``(mode, max_digits)`` where *mode* is ``"none"``, ``"all"``,
+    or ``"digits"`` and *max_digits* is the digit count limit (2–4) for
+    the ``digits`` mode.
+    """
+    if not value or value == "none":
+        return ("none", 0)
+    if value == "all":
+        return ("all", 0)
+    # e.g. "digits 2", "digits 3", "digits 4"
+    parts = value.split()
+    if len(parts) == 2 and parts[0] == "digits":
+        try:
+            n = int(parts[1])
+            if 2 <= n <= 4:
+                return ("digits", n)
+        except ValueError:
+            pass
+    return ("none", 0)
+
+
+def _apply_text_combine_upright(
+    runs: List[Tuple[str, bool]],
+    tcu: str,
+) -> List[Tuple[str, bool, bool]]:
+    """Post-process vertical runs to identify text-combine-upright sequences.
+
+    Returns a list of ``(text, is_upright, is_combine)`` triples.  Runs
+    that match the *tcu* criterion are flagged ``is_combine=True`` and
+    should be rendered upright (compressed horizontally into one em).
+
+    In ``all`` mode, any sideways run with ≤ 4 characters is combined.
+    In ``digits N`` mode, only sideways runs that consist of exactly *N*
+    consecutive digits are combined.
+    """
+    mode, max_digits = _parse_tcu(tcu)
+    if mode == "none":
+        return [(t, u, False) for t, u in runs]
+
+    result: List[Tuple[str, bool, bool]] = []
+    for run_text, upright in runs:
+        if upright:
+            result.append((run_text, True, False))
+            continue
+
+        # Sideways run — check for combinable sub-sequences
+        if mode == "all":
+            core = run_text.strip()
+            if len(core) == 1:
+                # Single character: just render upright, no combine needed
+                result.append((run_text, True, False))
+            elif 2 <= len(core) <= 4:
+                result.append((run_text, False, True))
+            else:
+                # Try to split into combinable chunks of ≤ 4 chars
+                _split_combine_all(run_text, result)
+        elif mode == "digits":
+            _split_combine_digits(run_text, max_digits, result)
+        else:
+            result.append((run_text, False, False))
+
+    # Post-pass: merge adjacent combine runs with single-char upright
+    # punctuation (e.g. "98" + "％" → "98％" as one combine).
+    if mode != "none":
+        result = _merge_adjacent_combine(result)
+
+    return result
+
+
+def _merge_adjacent_combine(runs: List[Tuple[str, bool, bool]]) -> List[Tuple[str, bool, bool]]:
+    """Merge single-char upright punctuation into adjacent combine runs.
+
+    For instance, ``[("98", False, True), ("％", True, False)]`` becomes
+    ``[("98％", False, True)]`` so that "98％" is rendered as one
+    combined unit.  Only merges when the combined length ≤ 4.
+    """
+    _COMBINABLE_PUNCT = set('％%°℃＄＃＆！？（）')
+
+    if len(runs) <= 1:
+        return runs
+
+    merged: List[Tuple[str, bool, bool]] = []
+    i = 0
+    while i < len(runs):
+        text_i, up_i, comb_i = runs[i]
+
+        # Try to absorb the following single-char upright punct into combine
+        if comb_i and i + 1 < len(runs):
+            text_next, up_next, comb_next = runs[i + 1]
+            stripped = text_next.strip()
+            if (up_next and not comb_next
+                    and len(stripped) == 1
+                    and stripped in _COMBINABLE_PUNCT
+                    and len(text_i.strip()) + 1 <= 4):
+                merged.append((text_i.rstrip() + stripped, False, True))
+                i += 2
+                continue
+
+        # Try to absorb the preceding single-char upright punct
+        if comb_i and merged:
+            prev_text, prev_up, prev_comb = merged[-1]
+            stripped = prev_text.strip()
+            if (prev_up and not prev_comb
+                    and len(stripped) == 1
+                    and stripped in _COMBINABLE_PUNCT
+                    and len(text_i.strip()) + 1 <= 4):
+                merged[-1] = (stripped + text_i.lstrip(), False, True)
+                i += 1
+                continue
+
+        merged.append((text_i, up_i, comb_i))
+        i += 1
+    return merged
+
+
+def _split_combine_all(
+    run_text: str,
+    result: List[Tuple[str, bool, bool]],
+) -> None:
+    """Split a sideways run for ``text-combine-upright: all``.
+
+    Non-space characters in groups of ≤ 4 become combine runs.
+    Longer stretches remain sideways.
+    """
+    core = run_text.strip()
+    if len(core) <= 4:
+        result.append((run_text, False, True))
+        return
+    # Longer text: keep as sideways (no auto-splitting for 'all' mode,
+    # consistent with browser behaviour — 'all' only applies when the
+    # *entire* element content is ≤ 4 chars).
+    result.append((run_text, False, False))
+
+
+def _split_combine_digits(
+    run_text: str,
+    n: int,
+    result: List[Tuple[str, bool, bool]],
+) -> None:
+    """Split a sideways run for ``text-combine-upright: digits N``.
+
+    Consecutive digit sequences of exactly *n* digits become combine
+    runs; everything else stays sideways.
+    """
+    import re
+    # Match exactly n consecutive ASCII digits (not embedded in longer digit runs)
+    pattern = re.compile(r'\d+')
+    last = 0
+    for m in pattern.finditer(run_text):
+        if m.start() > last:
+            seg = run_text[last:m.start()]
+            result.append((seg, False, False))
+        digits = m.group()
+        if len(digits) == n:
+            result.append((digits, False, True))
+        else:
+            result.append((digits, False, False))
+        last = m.end()
+    if last < len(run_text):
+        result.append((run_text[last:], False, False))
+
+
 def measure_text_vertical(
     text: str,
     font_path,
@@ -1559,6 +1730,7 @@ def measure_text_vertical(
     orientation: str = "mixed",
     letter_spacing: float = 0.0,
     word_spacing: float = 0.0,
+    text_combine_upright: str = "none",
 ) -> float:
     """Return the total advance height of *text* in vertical writing mode.
 
@@ -1566,15 +1738,22 @@ def measure_text_vertical(
     falling back to ``advance_x`` for fonts lacking vertical metrics).
     Sideways (rotated) runs contribute the horizontal width of the run
     as vertical advance (since the run is rotated 90° CW).
+    Combine (纵中横) runs occupy one em-square of vertical advance.
     """
     if fm is None:
         fm = FontManager.instance()
     if not text:
         return 0.0
-    runs = _segment_vertical_runs(text, orientation)
+    raw_runs = _segment_vertical_runs(text, orientation)
+    tcu_runs = _apply_text_combine_upright(raw_runs, text_combine_upright)
     total = 0.0
-    for run_text, upright in runs:
-        if upright:
+    for run_text, upright, combine in tcu_runs:
+        if combine:
+            # Combine run: occupies one em-square vertically
+            gm = fm.glyph_metrics(font_path, size, run_text[0])
+            adv_y = gm.advance_y if gm.advance_y > 0 else gm.advance_x
+            total += adv_y
+        elif upright:
             for i, ch in enumerate(run_text):
                 gm = fm.glyph_metrics(font_path, size, ch)
                 adv_y = gm.advance_y if gm.advance_y > 0 else gm.advance_x
@@ -1593,7 +1772,7 @@ def measure_text_vertical(
         if letter_spacing:
             total += letter_spacing
     # Remove trailing letter-spacing
-    if letter_spacing and runs:
+    if letter_spacing and tcu_runs:
         total -= letter_spacing
     return total
 
@@ -1610,6 +1789,7 @@ def break_columns(
     orientation: str = "mixed",
     letter_spacing: float = 0.0,
     word_spacing: float = 0.0,
+    text_combine_upright: str = "none",
 ) -> List[Column]:
     """Break *text* into columns that fit within *available_height*.
 
@@ -1633,9 +1813,11 @@ def break_columns(
         h = measure_text_vertical(text, font_path, size, fm=fm,
                                   orientation=orientation,
                                   letter_spacing=letter_spacing,
-                                  word_spacing=word_spacing)
+                                  word_spacing=word_spacing,
+                                  text_combine_upright=text_combine_upright)
         runs = _build_vertical_runs(text, font_path, size, fm, orientation,
-                                    letter_spacing, word_spacing)
+                                    letter_spacing, word_spacing,
+                                    text_combine_upright=text_combine_upright)
         return [Column(text=text, height=h, char_count=len(text), runs=runs)]
 
     # Handle pre modes with explicit newlines
@@ -1649,23 +1831,27 @@ def break_columns(
                 h = measure_text_vertical(seg, font_path, size, fm=fm,
                                           orientation=orientation,
                                           letter_spacing=letter_spacing,
-                                          word_spacing=word_spacing)
+                                          word_spacing=word_spacing,
+                                          text_combine_upright=text_combine_upright)
                 runs = _build_vertical_runs(seg, font_path, size, fm,
                                             orientation, letter_spacing,
-                                            word_spacing)
+                                            word_spacing,
+                                            text_combine_upright=text_combine_upright)
                 columns.append(Column(text=seg, height=h,
                                      char_count=len(seg), runs=runs))
             else:
                 sub = _break_column_normal(seg, available_height, font_path,
                                            size, fm, orientation,
-                                           letter_spacing, word_spacing)
+                                           letter_spacing, word_spacing,
+                                           text_combine_upright=text_combine_upright)
                 columns.extend(sub)
         return columns if columns else [Column(text="", height=0.0,
                                                char_count=0)]
 
     # Normal wrapping
     return _break_column_normal(text, available_height, font_path, size, fm,
-                                orientation, letter_spacing, word_spacing)
+                                orientation, letter_spacing, word_spacing,
+                                text_combine_upright=text_combine_upright)
 
 
 def _break_column_normal(
@@ -1677,6 +1863,7 @@ def _break_column_normal(
     orientation: str = "mixed",
     letter_spacing: float = 0.0,
     word_spacing: float = 0.0,
+    text_combine_upright: str = "none",
 ) -> List[Column]:
     """Greedy column-breaking for normal white-space mode (vertical)."""
     tokens = _tokenize_breakable(text)
@@ -1690,7 +1877,8 @@ def _break_column_normal(
         if col_text:
             runs = _build_vertical_runs(col_text, font_path, size, fm,
                                         orientation, letter_spacing,
-                                        word_spacing)
+                                        word_spacing,
+                                        text_combine_upright=text_combine_upright)
             h = sum(r.advance for r in runs)
             columns.append(Column(text=col_text, height=h,
                                  char_count=len(col_text), runs=runs))
@@ -1701,7 +1889,8 @@ def _break_column_normal(
         tok_h = measure_text_vertical(token_text, font_path, size, fm=fm,
                                       orientation=orientation,
                                       letter_spacing=letter_spacing,
-                                      word_spacing=word_spacing)
+                                      word_spacing=word_spacing,
+                                      text_combine_upright=text_combine_upright)
 
         if cur_chars and cur_height + tok_h > available_height:
             if is_space:
@@ -1728,12 +1917,20 @@ def _build_vertical_runs(
     orientation: str = "mixed",
     letter_spacing: float = 0.0,
     word_spacing: float = 0.0,
+    text_combine_upright: str = "none",
 ) -> List[VerticalRun]:
     """Build ``VerticalRun`` list with computed advances."""
     raw_runs = _segment_vertical_runs(text, orientation)
+    tcu_runs = _apply_text_combine_upright(raw_runs, text_combine_upright)
     result: List[VerticalRun] = []
-    for run_text, upright in raw_runs:
-        if upright:
+    for run_text, upright, combine in tcu_runs:
+        if combine:
+            # Combine run occupies one em-square of vertical advance
+            gm = fm.glyph_metrics(font_path, size, run_text[0])
+            adv = gm.advance_y if gm.advance_y > 0 else gm.advance_x
+            result.append(VerticalRun(text=run_text, upright=False,
+                                      advance=adv, combine=True))
+        elif upright:
             adv = 0.0
             for i, ch in enumerate(run_text):
                 gm = fm.glyph_metrics(font_path, size, ch)
@@ -1743,11 +1940,12 @@ def _build_vertical_runs(
                     adv += letter_spacing
                 if word_spacing and ch == ' ':
                     adv += word_spacing
+            result.append(VerticalRun(text=run_text, upright=True, advance=adv))
         else:
             adv = measure_text(run_text, font_path, size, fm=fm,
                                letter_spacing=letter_spacing,
                                word_spacing=word_spacing)
-        result.append(VerticalRun(text=run_text, upright=upright, advance=adv))
+            result.append(VerticalRun(text=run_text, upright=False, advance=adv))
     return result
 
 
@@ -1809,6 +2007,7 @@ def get_min_content_height(
     orientation: str = "mixed",
     letter_spacing: float = 0.0,
     word_spacing: float = 0.0,
+    text_combine_upright: str = "none",
 ) -> float:
     """Return the minimum content height for vertical text.
 
@@ -1821,7 +2020,8 @@ def get_min_content_height(
         return measure_text_vertical(text, font_path, size, fm=fm,
                                      orientation=orientation,
                                      letter_spacing=letter_spacing,
-                                     word_spacing=word_spacing)
+                                     word_spacing=word_spacing,
+                                     text_combine_upright=text_combine_upright)
     collapsed = " ".join(text.split())
     if not collapsed:
         return 0.0
@@ -1832,7 +2032,8 @@ def get_min_content_height(
             h = measure_text_vertical(token_text, font_path, size, fm=fm,
                                       orientation=orientation,
                                       letter_spacing=letter_spacing,
-                                      word_spacing=word_spacing)
+                                      word_spacing=word_spacing,
+                                      text_combine_upright=text_combine_upright)
             max_h = max(max_h, h)
     return max_h
 
@@ -1847,6 +2048,7 @@ def get_max_content_height(
     orientation: str = "mixed",
     letter_spacing: float = 0.0,
     word_spacing: float = 0.0,
+    text_combine_upright: str = "none",
 ) -> float:
     """Return the max-content height for vertical text — all text in one column."""
     if fm is None:
@@ -1857,7 +2059,8 @@ def get_max_content_height(
             (measure_text_vertical(l, font_path, size, fm=fm,
                                    orientation=orientation,
                                    letter_spacing=letter_spacing,
-                                   word_spacing=word_spacing)
+                                   word_spacing=word_spacing,
+                                   text_combine_upright=text_combine_upright)
              for l in lines),
             default=0.0,
         )
@@ -1865,4 +2068,5 @@ def get_max_content_height(
     return measure_text_vertical(collapsed, font_path, size, fm=fm,
                                  orientation=orientation,
                                  letter_spacing=letter_spacing,
-                                 word_spacing=word_spacing)
+                                 word_spacing=word_spacing,
+                                 text_combine_upright=text_combine_upright)

@@ -4,11 +4,13 @@
 Showcases vertical row headers in a table-like layout and all five
 ``writing-mode`` values with three ``text-orientation`` options.
 """
-from utils import save
+from utils import save, heading
 from latticesvg import GridContainer, TextNode
 
 
 def demo_48_writing_mode():
+    heading("Demo 48: CSS Writing Modes and Text Orientation in LatticeSVG")
+    
     root = GridContainer(style={
         "width": "900px",
         "grid-template-columns": "1fr",

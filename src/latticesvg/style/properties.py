@@ -153,6 +153,9 @@ PROPERTY_REGISTRY: dict[str, PropertyDef] = {
     "text-orientation": PropertyDef(
         default="mixed", inheritable=True, parser_hint="keyword"
     ),
+    "text-combine-upright": PropertyDef(
+        default="none", inheritable=True, parser_hint="keyword"
+    ),
 
     # ── Visual ────────────────────────────────────────────────────────
     "background-color": PropertyDef(default="none", parser_hint="color"),

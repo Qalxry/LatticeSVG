@@ -147,6 +147,17 @@ class TextNode(Node):
             return val
         return "mixed"
 
+    def _text_combine_upright(self) -> str:
+        """Return the resolved ``text-combine-upright`` value."""
+        val = self.style.get("text-combine-upright")
+        if isinstance(val, str):
+            val = val.strip().lower()
+            if val == "all":
+                return "all"
+            if val.startswith("digits"):
+                return val  # e.g. "digits 2", "digits 3", "digits 4"
+        return "none"
+
     def _is_vertical(self) -> bool:
         """Return True when writing-mode is vertical or sideways."""
         return self._writing_mode() != "horizontal-tb"
@@ -374,6 +385,8 @@ class TextNode(Node):
             self._rich_lines = None
             self.lines = []
             orient = self._resolved_text_orientation
+            tcu = self._text_combine_upright()
+            self._resolved_text_combine_upright = tcu
 
             # In vertical mode, the available_height constrains the
             # block-direction (top-to-bottom per column).
@@ -389,6 +402,7 @@ class TextNode(Node):
                 self.text, available_col_h, font_chain, size, ws, ow,
                 fm=fm, orientation=orient, letter_spacing=ls_val,
                 word_spacing=ws_val,
+                text_combine_upright=tcu,
             )
             text_align = self.style.get("text-align") or "left"
             self._columns = align_columns(self._columns, available_col_h, text_align)

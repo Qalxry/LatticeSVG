@@ -1540,6 +1540,74 @@ class Renderer:
                         cur_y += adv_y
                         if ls_px:
                             cur_y += ls_px
+                elif run.combine:
+                    # ── text-combine-upright (tate-chū-yoko / 纵中横) ──
+                    # Render horizontal text compressed into one em-square,
+                    # centred on the column axis.
+                    run_text = run.text.strip()
+                    if not run_text:
+                        cur_y += run.advance
+                        continue
+
+                    from ..text.shaper import measure_text as _mt
+                    if fm and fp0:
+                        natural_w = _mt(run_text, fp0, font_size, fm=fm)
+                        _asc = fm.ascender(fp0, font_size)
+                        _desc = fm.descender(fp0, font_size)  # negative
+                    else:
+                        natural_w = len(run_text) * font_size * 0.6
+                        _asc = font_size * 0.85
+                        _desc = -font_size * 0.15
+
+                    # The em-square width that the combined text must fit
+                    em_w = font_size
+                    # Vertical advance = one character cell
+                    adv_y = run.advance
+
+                    # Centre of the combined glyph cell
+                    cell_cx = col_x
+                    cell_cy = cur_y + adv_y / 2.0
+
+                    text_kw = dict(
+                        fill=color,
+                        font_family=font_family,
+                        font_weight=font_weight,
+                        font_style=font_style,
+                    )
+                    if op < 1.0:
+                        text_kw["opacity"] = op
+
+                    # Horizontal scale factor to fit in 1em
+                    if natural_w > em_w and natural_w > 0:
+                        sx = em_w / natural_w
+                    else:
+                        sx = 1.0
+
+                    # Text position: centred horizontally (pre-scale coords)
+                    text_x = cell_cx - natural_w / 2.0
+                    # Baseline: match upright single-char positioning
+                    text_y = cur_y + adv_y * 0.85
+
+                    inner_t = dw.Text(run_text, font_size, text_x, text_y,
+                                      **text_kw)
+
+                    if sx < 1.0:
+                        # Apply horizontal-only scale around column centre
+                        combine_g = dw.Group(
+                            transform=(
+                                f"translate({cell_cx},0) "
+                                f"scale({sx:.6f},1) "
+                                f"translate({-cell_cx},0)"
+                            )
+                        )
+                        combine_g.append(inner_t)
+                        group.append(combine_g)
+                    else:
+                        group.append(inner_t)
+
+                    cur_y += adv_y
+                    if ls_px:
+                        cur_y += ls_px
                 else:
                     # Sideways (rotated) run: render horizontally then
                     # rotate 90° clockwise around the run's centre.
