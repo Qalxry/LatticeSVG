@@ -1,0 +1,2066 @@
+# LatticeSVG — Complete Technical Reference
+
+> **Version:** 0.1.1 | **License:** MIT | **Python:** ≥ 3.8
+>
+> A declarative vector layout engine powered by CSS Grid. Describe layouts with Python dicts, get pixel-perfect SVG/PNG output.
+>
+> - Repository: <https://github.com/Qalxry/LatticeSVG>
+> - Documentation: <https://qalxry.github.io/LatticeSVG/>
+
+---
+
+## Table of Contents
+
+- [1. Installation](#1-installation)
+- [2. Quick Start](#2-quick-start)
+- [3. Architecture Overview](#3-architecture-overview)
+- [4. Public API — Imports & Exports](#4-public-api--imports--exports)
+- [5. Node Types](#5-node-types)
+  - [5.1 Node (base class)](#51-node-abstract-base-class)
+  - [5.2 GridContainer](#52-gridcontainer)
+  - [5.3 TextNode](#53-textnode)
+  - [5.4 ImageNode](#54-imagenode)
+  - [5.5 SVGNode](#55-svgnode)
+  - [5.6 MplNode](#56-mplnode)
+  - [5.7 MathNode](#57-mathnode)
+- [6. Style System](#6-style-system)
+  - [6.1 ComputedStyle](#61-computedstyle)
+  - [6.2 CSS Property Registry (all 63 properties)](#62-css-property-registry-all-63-properties)
+  - [6.3 Value Parser](#63-value-parser-units-colors-keywords)
+  - [6.4 Shorthand Expansion](#64-shorthand-expansion)
+  - [6.5 Special Value Types](#65-special-value-types)
+- [7. CSS Grid Layout Engine](#7-css-grid-layout-engine)
+  - [7.1 Track Definitions](#71-track-definitions)
+  - [7.2 Item Placement](#72-item-placement)
+  - [7.3 Track Sizing Algorithm (5-pass)](#73-track-sizing-algorithm-5-pass)
+  - [7.4 Alignment](#74-alignment)
+  - [7.5 Min/Max Size Clamping](#75-minmax-size-clamping)
+- [8. Text Typesetting](#8-text-typesetting)
+  - [8.1 Font Management](#81-font-management-fontmanager)
+  - [8.2 Line Breaking Algorithm](#82-line-breaking-algorithm)
+  - [8.3 Rich Text (HTML/Markdown)](#83-rich-text-htmlmarkdown-markup)
+  - [8.4 Vertical Writing Modes](#84-vertical-writing-modes)
+  - [8.5 Text-Combine-Upright](#85-text-combine-upright-tate-chū-yoko)
+  - [8.6 Hyphenation](#86-hyphenation)
+  - [8.7 Text Alignment & Justification](#87-text-alignment--justification)
+- [9. Math Formula Rendering](#9-math-formula-rendering)
+  - [9.1 MathBackend Protocol](#91-mathbackend-protocol)
+  - [9.2 QuickJax Backend](#92-quickjax-backend)
+  - [9.3 Custom Backend Registration](#93-custom-backend-registration)
+  - [9.4 Inline Math in Rich Text](#94-inline-math-in-rich-text)
+- [10. Rendering & Output](#10-rendering--output)
+  - [10.1 Renderer API](#101-renderer-api)
+  - [10.2 SVG Output](#102-svg-output)
+  - [10.3 PNG Output](#103-png-output)
+  - [10.4 Drawing Object Access](#104-drawing-object-access)
+  - [10.5 Font Embedding (WOFF2)](#105-font-embedding-woff2)
+- [11. Visual Effects](#11-visual-effects)
+  - [11.1 Background Color & Gradients](#111-background-color--gradients)
+  - [11.2 Border](#112-border-style-radius-per-side)
+  - [11.3 Box Shadow](#113-box-shadow)
+  - [11.4 Opacity](#114-opacity)
+  - [11.5 CSS Transform](#115-css-transform)
+  - [11.6 CSS Filter](#116-css-filter)
+  - [11.7 Clip-Path](#117-clip-path)
+  - [11.8 Overflow Clipping](#118-overflow-clipping)
+  - [11.9 Outline](#119-outline)
+- [12. Templates & Table Builder](#12-templates--table-builder)
+  - [12.1 Predefined Style Templates](#121-predefined-style-templates)
+  - [12.2 build_table() API](#122-build_table-api)
+- [13. Utility Types](#13-utility-types)
+- [14. Examples & Patterns](#14-examples--patterns)
+
+---
+
+## 1. Installation
+
+**Basic:**
+
+```bash
+pip install latticesvg
+```
+
+**Dependencies** (auto-installed):
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `drawsvg` | ≥ 2.0 | SVG generation |
+| `freetype-py` | ≥ 2.3 | Text glyph measurement |
+| `quickjax` | ≥ 0.1.0 | LaTeX math rendering (embedded QuickJS + MathJax v4) |
+
+**Optional extras:**
+
+```bash
+pip install latticesvg[png]       # PNG output via cairosvg >= 2.5
+pip install latticesvg[hyphens]   # Auto-hyphenation via pyphen >= 0.16
+pip install latticesvg[dev]       # All dev tools: pytest, pillow, matplotlib, cairosvg, pyphen
+```
+
+---
+
+## 2. Quick Start
+
+```python
+from latticesvg import GridContainer, TextNode, Renderer
+
+page = GridContainer(style={
+    "width": "600px",
+    "padding": "24px",
+    "grid-template-columns": ["1fr", "1fr"],
+    "gap": "16px",
+    "background-color": "#ffffff",
+})
+
+page.add(TextNode("Hello", style={"font-size": "24px", "color": "#2c3e50"}))
+page.add(TextNode("World", style={"font-size": "24px", "color": "#e74c3c"}))
+
+Renderer().render(page, "hello.svg")
+```
+
+**Workflow:**
+
+1. Create a root `GridContainer` with a style dict.
+2. Create child nodes (`TextNode`, `ImageNode`, etc.).
+3. Add children via `grid.add(child, ...)`.
+4. Call `Renderer().render(root, path)` to output SVG.
+
+> The renderer **automatically** calls `layout()` before rendering. You can also call `layout()` manually to inspect computed box positions.
+
+---
+
+## 3. Architecture Overview
+
+```
+latticesvg/
+├── __init__.py          # Public API exports
+├── nodes/               # All renderable node types
+│   ├── base.py          # Node, Rect, LayoutConstraints
+│   ├── grid.py          # GridContainer → layout/grid_solver.py
+│   ├── text.py          # TextNode → text/shaper.py, markup/parser.py
+│   ├── image.py         # ImageNode → Pillow
+│   ├── mpl.py           # MplNode → matplotlib
+│   ├── svg.py           # SVGNode
+│   └── math.py          # MathNode → math/__init__.py
+├── layout/
+│   └── grid_solver.py   # CSS Grid solving engine
+├── style/
+│   ├── computed.py       # ComputedStyle — cascade, inheritance
+│   ├── parser.py         # CSS value parsing, shorthand expansion
+│   └── properties.py     # Property registry (defaults, inheritance)
+├── markup/
+│   └── parser.py         # HTML/Markdown rich text parsing
+├── math/
+│   ├── __init__.py       # Backend registry
+│   └── backend.py        # QuickJaxBackend, MathBackend protocol
+├── text/
+│   ├── font.py           # FontManager, glyph metrics
+│   ├── shaper.py         # Line breaking, text measurement
+│   └── embed.py          # WOFF2 font embedding
+├── templates.py          # Predefined style dicts + build_table()
+└── py.typed              # PEP 561 type marker
+```
+
+**Data flow:**
+
+```
+Style dict → ComputedStyle (parse + inherit)
+Node tree  → GridSolver (layout) → Rect positions
+Node tree + Rects → Renderer → drawsvg.Drawing → SVG/PNG
+```
+
+---
+
+## 4. Public API — Imports & Exports
+
+```python
+from latticesvg import (
+    Node,               # Abstract base node class
+    Rect,               # Bounding rectangle (x, y, width, height)
+    LayoutConstraints,  # Available space for layout
+    GridContainer,      # CSS Grid container node
+    TextNode,           # Text content node
+    ImageNode,          # Raster image node
+    MplNode,            # Matplotlib figure node
+    SVGNode,            # Embedded SVG node
+    MathNode,           # LaTeX math formula node
+    Renderer,           # SVG/PNG output
+    ComputedStyle,      # Resolved CSS property bag
+    templates,          # Predefined style dicts module
+    build_table,        # Quick table builder function
+)
+
+latticesvg.__version__  # "0.1.1"
+```
+
+**Submodule-level imports** (advanced use):
+
+```python
+from latticesvg.style.parser import parse_value, expand_shorthand
+from latticesvg.style.parser import parse_track_template, parse_grid_template_areas
+from latticesvg.text.font import FontManager
+from latticesvg.math import register_backend, set_default_backend, get_backend, get_default_backend_name
+```
+
+---
+
+## 5. Node Types
+
+All nodes inherit from `Node`. The node tree is the primary data structure. A `GridContainer` holds children; leaf nodes include `TextNode`, `ImageNode`, etc.
+
+### 5.1 Node (Abstract Base Class)
+
+```python
+from latticesvg import Node
+
+node = Node(style=None, parent=None)
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `style` | `Optional[Dict[str, Any]]` | CSS property dict. Parsed into `ComputedStyle`. |
+| `parent` | `Optional[Node]` | Parent node. Usually set by `grid.add()`. |
+
+**Instance attributes** (populated after layout):
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `node.style` | `ComputedStyle` | Resolved style object |
+| `node.parent` | `Optional[Node]` | Parent node reference |
+| `node.children` | `List[Node]` | Child node list |
+| `node.border_box` | `Rect` | Bounding rect including border |
+| `node.padding_box` | `Rect` | Rect inside border, including padding |
+| `node.content_box` | `Rect` | Content area only |
+| `node.placement` | `PlacementHint` | Grid position info |
+
+**Public methods:**
+
+```python
+# Add a child node with optional grid placement (1-based indices)
+node.add(child, *, row=None, col=None, row_span=1, col_span=1, area=None) → Node
+
+# Return content sizing hints (used internally by GridSolver)
+node.measure(constraints) → (min_width, max_width, intrinsic_height)
+
+# Compute border_box, padding_box, content_box
+node.layout(constraints) → None
+```
+
+**`add()` examples:**
+
+```python
+grid.add(child)                           # auto-placement
+grid.add(child, row=1, col=2)             # explicit position
+grid.add(child, row=1, col=1, col_span=2) # span 2 columns
+grid.add(child, row=1, col=3, row_span=2) # span 2 rows
+grid.add(child, area="header")            # named area
+```
+
+**Internal methods** (for subclass authors):
+
+| Method | Description |
+|--------|-------------|
+| `_resolve_box_model(content_w, content_h, x=0, y=0)` | Compute three-layer rects from content size outward |
+| `_resolve_width(constraints) → Optional[float]` | Resolve explicit `width` from style |
+
+---
+
+### 5.2 GridContainer
+
+```python
+from latticesvg import GridContainer
+
+grid = GridContainer(style=None, parent=None)
+```
+
+The `style` dict's `"display"` is forced to `"grid"`.
+
+**Key style properties:**
+
+| Property | Description | Example |
+|----------|-------------|---------|
+| `"width"` | Container width | `"600px"` |
+| `"height"` | Container height (optional) | `"400px"` |
+| `"padding"` | Inner padding | `"24px"` or `"10px 20px"` |
+| `"grid-template-columns"` | Column track definitions | `["1fr", "2fr"]` |
+| `"grid-template-rows"` | Row track definitions | `["50px", "auto"]` |
+| `"grid-template-areas"` | Named areas | `'"header header" "sidebar main"'` |
+| `"gap"` | Track gap (shorthand) | `"16px"` or `"10px 20px"` |
+| `"row-gap"` / `"column-gap"` | Individual gaps | `"10px"` |
+| `"grid-auto-flow"` | Auto-placement direction | `"row"` / `"column"` / `"row dense"` |
+| `"grid-auto-rows"` | Implicit row size | `"80px"` |
+| `"grid-auto-columns"` | Implicit column size | `"120px"` |
+| `"justify-items"` | Default horizontal alignment | `"stretch"` / `"center"` / `"start"` / `"end"` |
+| `"align-items"` | Default vertical alignment | `"stretch"` / `"center"` / `"start"` / `"end"` |
+| `"background-color"` | Container background | `"#ffffff"` |
+
+**Methods:**
+
+```python
+grid.add(child, *, row=None, col=None, row_span=1, col_span=1, area=None) → Node
+grid.layout(constraints=None, *, available_width=None, available_height=None) → None
+grid.measure(constraints) → (min_w, max_w, intrinsic_h)
+```
+
+**Track definition formats:**
+
+```python
+# Fixed pixel widths
+"grid-template-columns": ["150px", "150px", "150px"]
+
+# Fractional units (distribute remaining space proportionally)
+"grid-template-columns": ["1fr", "2fr", "1fr"]
+
+# Mixed
+"grid-template-columns": ["200px", "1fr", "150px"]
+
+# Auto (sizes to content)
+"grid-template-columns": ["auto", "1fr"]
+
+# min-content / max-content
+"grid-template-columns": ["min-content", "1fr"]
+
+# minmax()
+"grid-template-columns": ["minmax(100px, 300px)", "1fr"]
+
+# repeat()
+"grid-template-columns": "repeat(3, 1fr)"          # → 3 equal columns
+"grid-template-columns": "repeat(2, 100px 1fr)"    # → 100px 1fr 100px 1fr
+"grid-template-columns": "repeat(3, minmax(80px, 1fr))"
+
+# String or list syntax both work
+"grid-template-columns": "200px 1fr 150px"         # string
+"grid-template-columns": ["200px", "1fr", "150px"]  # list
+```
+
+**Named areas:**
+
+```python
+grid = GridContainer(style={
+    "grid-template-areas": '"header header" "sidebar main" "footer footer"',
+    "grid-template-columns": ["200px", "1fr"],
+    "grid-template-rows": ["50px", "auto", "40px"],
+})
+grid.add(header_node, area="header")
+grid.add(sidebar_node, area="sidebar")
+grid.add(main_node, area="main")
+grid.add(footer_node, area="footer")
+```
+
+**Nesting:**
+
+```python
+outer = GridContainer(style={"grid-template-columns": ["1fr", "1fr"]})
+inner = GridContainer(style={"grid-template-columns": ["1fr", "1fr"]})
+inner.add(child1)
+inner.add(child2)
+outer.add(inner, row=1, col=2)
+```
+
+---
+
+### 5.3 TextNode
+
+```python
+from latticesvg import TextNode
+
+node = TextNode(text, style=None, parent=None, markup="none")
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `text` | `str` | The text content |
+| `style` | `Optional[Dict[str, Any]]` | CSS properties |
+| `parent` | `Optional[Node]` | Parent node |
+| `markup` | `str` | `"none"` (default) / `"html"` / `"markdown"` |
+
+**Key style properties:**
+
+| Property | Values | Description |
+|----------|--------|-------------|
+| `"font-family"` | `"sans-serif"`, `"Times New Roman, serif"` | Font with fallback chain |
+| `"font-size"` | `"16px"`, `"1.5em"` | Text size |
+| `"font-weight"` | `"normal"` / `"bold"` | Weight |
+| `"font-style"` | `"normal"` / `"italic"` | Style |
+| `"color"` | `"#333"`, `"red"` | Text color |
+| `"text-align"` | `"left"` / `"center"` / `"right"` / `"justify"` | Alignment |
+| `"line-height"` | `"1.6"` (multiplier) or `"24px"` | Line spacing |
+| `"white-space"` | `"normal"` / `"nowrap"` / `"pre"` / `"pre-wrap"` / `"pre-line"` | Whitespace handling |
+| `"overflow-wrap"` | `"normal"` / `"break-word"` | Long word breaking |
+| `"word-break"` | `"normal"` / `"break-all"` | Word break mode |
+| `"text-overflow"` | `"clip"` / `"ellipsis"` | Overflow display |
+| `"overflow"` | `"visible"` / `"hidden"` | Overflow clipping (needed for ellipsis) |
+| `"letter-spacing"` | `"2px"` / `"normal"` | Extra char spacing |
+| `"word-spacing"` | `"4px"` / `"normal"` | Extra word spacing |
+| `"hyphens"` | `"none"` / `"manual"` / `"auto"` | Hyphenation mode |
+| `"lang"` | `"en"`, `"de"`, `"fr"` | Language for auto-hyphens |
+| `"text-decoration"` | `"none"` / `"underline"` / `"line-through"` | Decoration |
+| `"writing-mode"` | `"horizontal-tb"` / `"vertical-rl"` / `"vertical-lr"` / `"sideways-rl"` / `"sideways-lr"` | Writing direction |
+| `"text-orientation"` | `"mixed"` / `"upright"` / `"sideways"` | Vertical char orientation |
+| `"text-combine-upright"` | `"none"` / `"all"` / `"digits 2"` / `"digits 3"` / `"digits 4"` | Tate-chū-yoko |
+
+**Instance attributes** (after layout):
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `node.text` | `str` | Original text string |
+| `node.markup` | `str` | Markup mode |
+| `node.lines` | `List[Line]` | Plain text lines (horizontal) |
+| `node._rich_lines` | `List[RichLine]` | Rich text lines |
+| `node._columns` | `List[Column]` | Vertical writing columns |
+
+**Ellipsis truncation:**
+
+```python
+TextNode(long_text, style={
+    "overflow": "hidden",
+    "text-overflow": "ellipsis",
+    "white-space": "nowrap",
+})
+```
+
+**Font fallback chain:**
+
+```python
+# FreeType checks each font for the required glyph; falls back to next
+TextNode("混合 Mixed", style={"font-family": "Times New Roman, SimSun, serif"})
+```
+
+**Generic font families:**
+
+| Alias | Resolution order |
+|-------|-----------------|
+| `"sans-serif"` | NotoSansCJK → DejaVu Sans → Arial → Helvetica → ... |
+| `"serif"` | NotoSerifCJK → DejaVu Serif → Times New Roman → ... |
+| `"monospace"` | NotoSansMono → DejaVu Sans Mono → Courier New → ... |
+
+**HTML markup** (`markup="html"`) — supported tags:
+
+| Tag | Effect |
+|-----|--------|
+| `<b>`, `<strong>` | Bold |
+| `<i>`, `<em>` | Italic |
+| `<code>` | Monospace font |
+| `<u>` | Underline |
+| `<s>`, `<del>` | Strikethrough |
+| `<sub>` | Subscript (0.7× size, shifted down) |
+| `<sup>` | Superscript (0.7× size, shifted up) |
+| `<br>` | Line break |
+| `<span style="...">` | Inline style (color, background-color, font-size, font-weight, font-style, font-family) |
+| `<math>...</math>` | Inline LaTeX formula |
+
+```python
+TextNode("H<sub>2</sub>O is <b>water</b>", markup="html")
+TextNode('<span style="color: #e74c3c">red text</span>', markup="html")
+TextNode("Energy <math>E = mc^2</math>", markup="html")
+```
+
+**Markdown markup** (`markup="markdown"`) — supported syntax:
+
+| Syntax | Effect |
+|--------|--------|
+| `**bold**` | Bold |
+| `*italic*` | Italic |
+| `` `code` `` | Monospace |
+| `~~strikethrough~~` | Strikethrough |
+| `$latex$` | Inline math formula |
+
+```python
+TextNode("**bold** and *italic* with $E = mc^2$", markup="markdown")
+```
+
+---
+
+### 5.4 ImageNode
+
+```python
+from latticesvg import ImageNode
+
+node = ImageNode(src, style=None, parent=None, object_fit=None)
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `src` | `Union[str, bytes, PIL.Image.Image]` | File path, URL, raw bytes, or PIL Image |
+| `style` | `Optional[Dict[str, Any]]` | CSS properties |
+| `object_fit` | `Optional[str]` | `"fill"` (default) / `"contain"` / `"cover"` / `"none"` |
+
+**`object_fit` modes:**
+
+| Value | Behavior |
+|-------|----------|
+| `"fill"` | Stretch to fill (default) |
+| `"contain"` | Scale down to fit, preserve aspect ratio |
+| `"cover"` | Scale up to fill, preserve ratio (may clip) |
+| `"none"` | Original size, centered |
+
+**Properties & methods:**
+
+| Member | Description |
+|--------|-------------|
+| `node.intrinsic_width` | Original image width (lazy-loaded) |
+| `node.intrinsic_height` | Original image height (lazy-loaded) |
+| `node.get_base64() → str` | Returns `"data:image/png;base64,..."` data URI |
+
+> Image loading is **lazy** — the image is not read until measure/layout/render. If width is constrained but height is not explicit, height is computed from the aspect ratio.
+
+---
+
+### 5.5 SVGNode
+
+```python
+from latticesvg import SVGNode
+
+node = SVGNode(svg, *, style=None, parent=None, is_file=False)
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `svg` | `str` | Inline SVG string, file path (if `is_file=True`), or URL |
+| `style` | `Optional[Dict[str, Any]]` | CSS properties |
+| `is_file` | `bool` | If `True`, treat `svg` as a file path |
+
+**Properties:**
+
+| Member | Description |
+|--------|-------------|
+| `node.svg_content` | Raw SVG string |
+| `node.intrinsic_width` / `intrinsic_height` | From `viewBox` or `width`/`height` attribute |
+| `node.scale_x` / `scale_y` | Computed scale factors after layout |
+| `node.get_inner_svg() → str` | SVG without XML declaration and outer `<svg>` tag |
+
+```python
+# Inline SVG
+svg_str = '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"/></svg>'
+grid.add(SVGNode(svg_str, style={"padding": "10px"}))
+
+# From file
+grid.add(SVGNode("/path/to/icon.svg", is_file=True, style={"width": "24px", "height": "24px"}))
+```
+
+---
+
+### 5.6 MplNode
+
+```python
+from latticesvg import MplNode
+
+node = MplNode(figure, style=None, parent=None)
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `figure` | `matplotlib.figure.Figure` | A Matplotlib figure object |
+
+> Requires `matplotlib` (included in `[dev]` extras).
+
+```python
+import matplotlib.pyplot as plt
+from latticesvg import GridContainer, MplNode, Renderer
+
+fig, ax = plt.subplots(figsize=(4, 3), dpi=100)
+ax.plot([1, 2, 3], [1, 4, 9])
+
+grid = GridContainer(style={"width": "600px", "grid-template-columns": ["1fr"]})
+grid.add(MplNode(fig))
+plt.close("all")
+Renderer().render(grid, "chart.svg")
+```
+
+> The figure is re-sized to fit the allocated grid cell via `figure.set_size_inches()`. Internal DPI constant: `72.0` (SVG coordinate system).
+
+---
+
+### 5.7 MathNode
+
+```python
+from latticesvg import MathNode
+
+node = MathNode(latex, *, style=None, backend=None, display=True, parent=None)
+```
+
+**Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `latex` | `str` | — | LaTeX expression (without `$` delimiters) |
+| `style` | `Optional[Dict]` | `None` | Supports `"font-size"`, `"text-align"` |
+| `backend` | `Optional[str]` | `None` | Backend name (`None` → global default `"quickjax"`) |
+| `display` | `bool` | `True` | `True` = block mode, `False` = inline mode |
+
+```python
+MathNode(r"e^{i\pi} + 1 = 0", style={"font-size": "24px", "text-align": "center"})
+MathNode(r"\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}", style={"font-size": "22px"})
+MathNode(r"\begin{pmatrix} a & b \\ c & d \end{pmatrix}", style={"font-size": "20px"})
+```
+
+> The default backend uses **QuickJax** — an embedded QuickJS engine running MathJax v4. No Node.js or network required.
+
+---
+
+## 6. Style System
+
+All nodes accept a `style` dict mapping CSS property names to values. Styles are parsed at construction into a `ComputedStyle` object.
+
+Style values can be:
+- **Strings:** `"200px"`, `"1.5em"`, `"#ff0000"`, `"bold"`, `"center"`
+- **Numbers:** `200` (→ px), `1.5` (for `line-height`)
+- **Lists:** `["1fr", "2fr"]` (for `grid-template-columns`)
+
+### 6.1 ComputedStyle
+
+```python
+from latticesvg import ComputedStyle
+
+style = ComputedStyle(raw=None, parent_style=None)
+```
+
+**Three-phase initialization:**
+
+1. **Inherit** all inheritable properties from `parent_style`
+2. **Apply** registry defaults for non-inherited properties
+3. **Parse** user-provided `raw` dict (`font-size` is parsed first because `em` units depend on it)
+
+**Attribute access:**
+
+```python
+style.font_size      # reads "font-size" (underscores → hyphens)
+style.padding_top    # reads "padding-top"
+```
+
+**Methods:**
+
+| Method | Description |
+|--------|-------------|
+| `style.get(prop, default=None)` | Get resolved CSS value by name |
+| `style.set(prop, value)` | Set property (shorthand auto-expanded) |
+| `style.resolve_percentages(ref_width, ref_height=None)` | Resolve lazy `%` values to px |
+
+**Box model convenience properties** (all `float`):
+
+| Category | Properties |
+|----------|------------|
+| Margin | `margin_top`, `margin_right`, `margin_bottom`, `margin_left`, `margin_horizontal`, `margin_vertical` |
+| Padding | `padding_top`, `padding_right`, `padding_bottom`, `padding_left`, `padding_horizontal`, `padding_vertical` |
+| Border width | `border_top_width`, `border_right_width`, `border_bottom_width`, `border_left_width`, `border_horizontal`, `border_vertical` |
+| Border radius | `border_top_left_radius`, `border_top_right_radius`, `border_bottom_right_radius`, `border_bottom_left_radius`, `border_radii` (tuple), `has_uniform_radius` (bool) |
+
+**Inheritance example:**
+
+```python
+parent = ComputedStyle({"font-size": "24px", "color": "red", "width": "600px"})
+child = ComputedStyle({"font-size": "14px"}, parent_style=parent)
+
+child.get("color")      # → "#ff0000" (inherited)
+child.get("width")      # → AUTO (not inheritable)
+child.get("font-size")  # → 14.0 (overridden)
+```
+
+> `print(style)` shows only properties differing from their defaults.
+
+---
+
+### 6.2 CSS Property Registry (all 63 properties)
+
+Each property has a default value, inheritable flag, and parser hint.
+
+#### Box Model Properties
+
+| Property | Default | Inheritable | Hint |
+|----------|---------|:-----------:|------|
+| `width` | `"auto"` | No | length |
+| `height` | `"auto"` | No | length |
+| `min-width` | `"0px"` | No | length |
+| `max-width` | `"none"` | No | length |
+| `min-height` | `"0px"` | No | length |
+| `max-height` | `"none"` | No | length |
+| `margin-top` / `right` / `bottom` / `left` | `"0px"` | No | length |
+| `padding-top` / `right` / `bottom` / `left` | `"0px"` | No | length |
+| `border-top-width` / `right-width` / `bottom-width` / `left-width` | `"0px"` | No | length |
+| `border-top-color` / `right-color` / `bottom-color` / `left-color` | `"none"` | No | color |
+| `border-top-style` / `right-style` / `bottom-style` / `left-style` | `"none"` | No | keyword |
+| `border-top-left-radius` / `top-right-radius` / `bottom-right-radius` / `bottom-left-radius` | `"0px"` | No | length |
+| `box-sizing` | `"border-box"` | No | keyword |
+| `outline-width` | `"0px"` | No | length |
+| `outline-color` | `"none"` | No | color |
+| `outline-style` | `"none"` | No | keyword |
+| `outline-offset` | `"0px"` | No | length |
+
+#### Grid Layout Properties
+
+| Property | Default | Inheritable | Hint |
+|----------|---------|:-----------:|------|
+| `display` | `"block"` | No | keyword |
+| `grid-template-columns` | `None` | No | track-list |
+| `grid-template-rows` | `None` | No | track-list |
+| `grid-template-areas` | `None` | No | grid-areas |
+| `row-gap` | `"0px"` | No | length |
+| `column-gap` | `"0px"` | No | length |
+| `justify-items` | `"stretch"` | No | keyword |
+| `align-items` | `"stretch"` | No | keyword |
+| `justify-self` | `"auto"` | No | keyword |
+| `align-self` | `"auto"` | No | keyword |
+| `grid-auto-flow` | `"row"` | No | keyword |
+| `grid-auto-rows` | `"auto"` | No | track-list |
+| `grid-auto-columns` | `"auto"` | No | track-list |
+| `grid-row` | `None` | No | grid-line |
+| `grid-column` | `None` | No | grid-line |
+| `grid-area` | `None` | No | keyword |
+
+#### Text Properties
+
+| Property | Default | Inheritable | Hint |
+|----------|---------|:-----------:|------|
+| `font-family` | `"sans-serif"` | **Yes** | font-family |
+| `font-size` | `"16px"` | **Yes** | length |
+| `font-weight` | `"normal"` | **Yes** | keyword |
+| `font-style` | `"normal"` | **Yes** | keyword |
+| `text-align` | `"left"` | **Yes** | keyword |
+| `line-height` | `"1.2"` | **Yes** | line-height |
+| `white-space` | `"normal"` | **Yes** | keyword |
+| `overflow-wrap` | `"normal"` | **Yes** | keyword |
+| `word-break` | `"normal"` | **Yes** | keyword |
+| `color` | `"#000000"` | **Yes** | color |
+| `letter-spacing` | `"normal"` | **Yes** | length |
+| `word-spacing` | `"normal"` | **Yes** | length |
+| `text-decoration` | `"none"` | No | keyword |
+| `text-overflow` | `"clip"` | No | keyword |
+| `hyphens` | `"none"` | **Yes** | keyword |
+| `lang` | `"en"` | **Yes** | keyword |
+
+#### Writing Mode Properties (all inheritable)
+
+| Property | Default | Hint |
+|----------|---------|------|
+| `writing-mode` | `"horizontal-tb"` | keyword |
+| `text-orientation` | `"mixed"` | keyword |
+| `text-combine-upright` | `"none"` | keyword |
+
+#### Visual Properties
+
+| Property | Default | Inheritable | Hint |
+|----------|---------|:-----------:|------|
+| `background-color` | `"none"` | No | color |
+| `background-image` | `"none"` | No | gradient |
+| `opacity` | `"1"` | No | length |
+| `overflow` | `"visible"` | No | keyword |
+| `clip-path` | `"none"` | No | clip-path |
+| `box-shadow` | `"none"` | No | box-shadow |
+| `transform` | `"none"` | No | transform |
+| `filter` | `"none"` | No | filter |
+
+#### Image Property
+
+| Property | Default | Inheritable | Hint |
+|----------|---------|:-----------:|------|
+| `object-fit` | `"fill"` | No | keyword |
+
+> **Note:** `box-sizing` defaults to `"border-box"` (modern CSS best practice). Specified `width`/`height` includes padding and border.
+
+---
+
+### 6.3 Value Parser (units, colors, keywords)
+
+```python
+from latticesvg.style.parser import parse_value
+```
+
+**Supported units:**
+
+| Input | Output | Description |
+|-------|--------|-------------|
+| `"200px"` | `200.0` | Pixels (default unit) |
+| `200` (int/float) | `200.0` | Plain numbers → px |
+| `"50%"` | `_Percentage(50)` or resolved | Percentage (lazy or immediate) |
+| `"2em"` | `num × font_size` | Relative to font size (default 16) |
+| `"1.5rem"` | `num × root_font_size` | Relative to root font size (default 16) |
+| `"12pt"` | `num × 4/3` | Points (96dpi conversion) |
+| `"1.5fr"` | `FrValue(1.5)` | Grid fractional unit |
+
+**Keywords:**
+
+| Keyword | Result |
+|---------|--------|
+| `"auto"` | `AUTO` (AutoValue singleton, compares equal to `"auto"`) |
+| `"min-content"` | `MIN_CONTENT` sentinel |
+| `"max-content"` | `MAX_CONTENT` sentinel |
+| `"none"`, `"normal"`, `"nowrap"`, `"pre"`, `"pre-wrap"`, `"pre-line"`, `"hidden"`, `"visible"`, `"scroll"`, `"left"`, `"right"`, `"center"`, `"justify"`, `"start"`, `"end"`, `"stretch"`, `"baseline"`, `"bold"`, `"italic"`, `"oblique"`, `"row"`, `"column"`, `"dense"`, `"row dense"`, `"column dense"`, `"contain"`, `"cover"`, `"fill"`, `"ellipsis"`, `"clip"`, `"inherit"`, `"initial"`, `"unset"` | lowercase string |
+
+**Named colors** (30):
+
+| Name | Hex | Name | Hex | Name | Hex |
+|------|-----|------|-----|------|-----|
+| `black` | `#000000` | `white` | `#ffffff` | `red` | `#ff0000` |
+| `green` | `#008000` | `blue` | `#0000ff` | `yellow` | `#ffff00` |
+| `cyan` | `#00ffff` | `magenta` | `#ff00ff` | `gray`/`grey` | `#808080` |
+| `silver` | `#c0c0c0` | `maroon` | `#800000` | `olive` | `#808000` |
+| `lime` | `#00ff00` | `aqua` | `#00ffff` | `teal` | `#008080` |
+| `navy` | `#000080` | `fuchsia` | `#ff00ff` | `purple` | `#800080` |
+| `orange` | `#ffa500` | `pink` | `#ffc0cb` | `brown` | `#a52a2a` |
+| `coral` | `#ff7f50` | `gold` | `#ffd700` | `indigo` | `#4b0082` |
+| `ivory` | `#fffff0` | `khaki` | `#f0e68c` | `lavender` | `#e6e6fa` |
+| `beige` | `#f5f5dc` | `transparent` | `rgba(0,0,0,0)` | | |
+
+**Hex & function colors:**
+
+```python
+"#f00"              → "#ff0000"          # 3-digit
+"#ff0000"           → "#ff0000"          # 6-digit
+"#f00f"             → "#ff0000ff"        # 4-digit with alpha
+"#ff0000ff"         → "#ff0000ff"        # 8-digit with alpha
+"rgb(0, 128, 255)"  → "#0080ff"
+"rgba(0, 0, 0, 0.5)" → "rgba(0,0,0,0.5)"
+```
+
+**Other parsed formats:**
+
+```python
+"1 / span 2"                    → (1, 2)  # grid line spec
+"Arial, Helvetica, sans-serif"  → ["Arial", "Helvetica", "sans-serif"]  # font list
+```
+
+---
+
+### 6.4 Shorthand Expansion
+
+```python
+from latticesvg.style.parser import expand_shorthand
+```
+
+Shorthand properties are **automatically expanded** in style dicts.
+
+**`margin` / `padding` / `border-width` / `border-color`** (1–4 value syntax):
+
+```python
+expand_shorthand("margin", "10px")          # → all 4 sides = 10px
+expand_shorthand("margin", "10px 20px")     # → top/bottom=10, right/left=20
+expand_shorthand("margin", "1px 2px 3px")   # → top=1, right/left=2, bottom=3
+expand_shorthand("margin", "1px 2px 3px 4px")  # → top=1, right=2, bottom=3, left=4
+```
+
+**All supported shorthands:**
+
+| Shorthand | Expands to |
+|-----------|-----------|
+| `"margin"` | `margin-top/right/bottom/left` |
+| `"padding"` | `padding-top/right/bottom/left` |
+| `"border-width"` | `border-{top/right/bottom/left}-width` |
+| `"border-color"` | `border-{top/right/bottom/left}-color` |
+| `"gap"` | `row-gap` + `column-gap` (1 value: same; 2 values: row, col) |
+| `"border"` | width + color + style for all 4 sides (`"2px solid #333"`) |
+| `"border-top"` / `"border-right"` / etc. | Per-side width + color + style |
+| `"outline"` | `outline-width` + `outline-color` + `outline-style` |
+| `"border-radius"` | `border-{tl/tr/br/bl}-radius` (1–4 value syntax) |
+| `"background"` | → `background-image` (if contains `"gradient("`) or `background-color` |
+
+---
+
+### 6.5 Special Value Types
+
+Internal types returned by `parse_value()`:
+
+| Type | Description |
+|------|-------------|
+| `FrValue(value)` | CSS `fr` flexible unit |
+| `AutoValue` / `AUTO` | Singleton for `"auto"` keyword |
+| `LineHeightMultiplier(value)` | Unitless line-height; `.resolve(font_size)` → px |
+| `MinContent` / `MaxContent` | Sentinels for track sizing |
+| `MinMaxValue(min_val, max_val)` | `minmax()` track function |
+| `_Percentage(value)` | Lazy %; `.resolve(reference)` → px |
+| `GradientStop(color, position)` | Gradient color stop |
+| `LinearGradientValue(angle, stops)` | Parsed `linear-gradient()` (angle: CSS degrees, 0°=up) |
+| `RadialGradientValue(shape, cx, cy, stops)` | Parsed `radial-gradient()` (cx/cy: 0–1 fractions) |
+| `BoxShadow(offset_x, offset_y, blur_radius, spread_radius, color, inset)` | Shadow layer |
+| `TransformFunction(name, args)` | CSS transform function |
+| `FilterFunction(name, args)` | CSS filter function |
+| `ClipCircle(radius, cx, cy)` | clip-path circle |
+| `ClipEllipse(rx, ry, cx, cy)` | clip-path ellipse |
+| `ClipPolygon(points)` | clip-path polygon |
+| `ClipInset(top, right, bottom, left, border_radius)` | clip-path inset |
+| `AreaMapping(areas, num_rows, num_cols)` | Parsed `grid-template-areas` (areas: `dict[name → (row, col, rowspan, colspan)]`, **0-based**) |
+
+---
+
+## 7. CSS Grid Layout Engine
+
+The `GridSolver` (`latticesvg.layout.grid_solver`) implements CSS Grid Level 1. Called automatically on `render()` or `layout()`.
+
+### 7.1 Track Definitions
+
+| Type | Syntax | Behavior |
+|------|--------|----------|
+| Fixed | `"150px"` | Exact pixel size |
+| Percentage | `"50%"` | Percentage of available space |
+| Fractional | `"1fr"`, `"2fr"` | Distribute remaining space proportionally |
+| Auto | `"auto"` | Size to content (min-content base, max-content limit) |
+| min-content | `"min-content"` | Smallest width without overflow |
+| max-content | `"max-content"` | Natural width without breaks |
+| minmax | `"minmax(100px, 1fr)"` | Base from min, growth limit from max |
+| repeat | `"repeat(3, 1fr)"` | Expand to N copies of template |
+
+Implicit tracks (auto-created): controlled by `grid-auto-rows` / `grid-auto-columns`.
+
+---
+
+### 7.2 Item Placement
+
+**Explicit:**
+
+```python
+grid.add(child, row=1, col=2)              # row 1, col 2 (1-based)
+grid.add(child, row=1, col=1, col_span=2)  # span 2 columns
+grid.add(child, row=2, col=1, row_span=3)  # span 3 rows
+```
+
+**Named area:**
+
+```python
+grid.add(node, area="header")  # must match grid-template-areas
+```
+
+> Area names define rectangular regions. `.` = empty cell. Each area must form a rectangle.
+
+**Auto-placement** (`grid.add(child)` with no position):
+
+| `grid-auto-flow` | Behavior |
+|-------------------|----------|
+| `"row"` | Fill row by row (default) |
+| `"column"` | Fill column by column |
+| `"row dense"` | Row-first, backfill gaps |
+| `"column dense"` | Column-first, backfill gaps |
+
+**Algorithm (2 passes):**
+
+1. **Pass 1:** Place all explicitly positioned and area-based items.
+2. **Pass 2:** Auto-place remaining items:
+   - **Row flow:** scan `(row, col)` from cursor; wrap at column end.
+   - **Column flow:** scan `(col, row)` from cursor; wrap at row end.
+   - **Dense:** restart from `(0, 0)` each time to fill gaps.
+   - **Partial explicit** (only `row` or `col`): fix known axis, scan the other.
+
+**Style-based placement:**
+
+```python
+child_style = {"grid-row": "1 / span 2", "grid-column": "2 / span 3"}
+child_style = {"grid-area": "header"}
+```
+
+---
+
+### 7.3 Track Sizing Algorithm (5-pass)
+
+Full `solve()` algorithm:
+
+1. Parse container width / gaps
+2. Parse `grid-template-columns` / `grid-template-rows` → `TrackDef` lists
+3. Parse `grid-template-areas` → `AreaMapping`
+4. Expand defs to match area dimensions
+5. Place all items (`_place_items`)
+6. Extend tracks for items exceeding defined grid
+7. **Resolve column tracks** (`_resolve_tracks_axis` with `content_w`)
+8. **Resolve row tracks** (`_resolve_tracks_axis` with final column widths)
+9. Determine total container height
+10. Resolve container box model
+11. Compute child positions
+12. Per child: alignment → layout → apply alignment → clamp min/max
+
+**`_resolve_tracks_axis`** per axis:
+
+| Pass | Name | Action |
+|------|------|--------|
+| 1 | Definite sizes | FIXED → `base = limit = value`; PERCENT → `base = limit = v/100 × available`; MINMAX → min→base, max→limit |
+| 2 | Intrinsic sizes (span=1 items) | Measure items: MIN_CONTENT→base, MAX_CONTENT→base, AUTO→min_w base |
+| 3 | Multi-span distribution | Measure spanning items; distribute excess to FR→AUTO→equal |
+| 3.5 | Maximize non-FR | Grow `base_size` toward `growth_limit` for non-FR tracks (≤20 iterations) |
+| 4 | FR distribution | `remaining = available - non_fr - gaps`; distribute by FR ratio |
+
+> Row heights depend on column widths (text wrapping). The solver temporarily lays out children with resolved column widths.
+
+---
+
+### 7.4 Alignment
+
+**Container-level** (default for all children):
+
+```python
+"justify-items": "stretch"   # horizontal (default)
+"align-items": "stretch"     # vertical (default)
+```
+
+**Per-child override:**
+
+```python
+"justify-self": "center"
+"align-self": "end"
+```
+
+| Value | Behavior |
+|-------|----------|
+| `"stretch"` | Fill entire cell (default) |
+| `"start"` | Child at start edge, natural size |
+| `"center"` | Child centered in cell |
+| `"end"` | Child at end edge |
+
+> If `justify-self`/`align-self` is `"auto"`, falls back to container's `justify-items`/`align-items`.
+
+---
+
+### 7.5 Min/Max Size Clamping
+
+After layout, children are clamped to `min-width`, `max-width`, `min-height`, `max-height`. Respects `box-sizing`:
+- `"border-box"`: min/max applies to border box
+- `"content-box"`: min/max applies to content box
+
+---
+
+## 8. Text Typesetting
+
+### 8.1 Font Management (FontManager)
+
+```python
+from latticesvg.text.font import FontManager
+
+fm = FontManager.instance()   # singleton
+FontManager.reset()           # clear caches (testing)
+```
+
+**Methods:**
+
+| Method | Return | Description |
+|--------|--------|-------------|
+| `fm.add_font_directory(path)` | — | Register extra font directory |
+| `fm.find_font(family_list, weight, style)` | `Optional[str]` | First matching font path |
+| `fm.find_font_chain(family_list, weight, style)` | `List[str]` | Complete fallback chain |
+| `fm.glyph_metrics(font_path, size, char)` | `GlyphMetrics` | Cached glyph measurement |
+| `fm.ascender(font_path, size)` | `float` | Font ascender (px) |
+| `fm.descender(font_path, size)` | `float` | Font descender (px, positive) |
+| `fm.font_family_name(font_path)` | `Optional[str]` | CSS family name from file |
+
+**System font directories** (auto-searched):
+
+| OS | Directories |
+|----|-------------|
+| Linux | `~/.fonts`, `/usr/share/fonts`, `/usr/local/share/fonts` |
+| macOS | `/System/Library/Fonts`, `/Library/Fonts`, `~/Library/Fonts` |
+| Windows | `C:\Windows\Fonts` |
+
+**Backend priority:** FreeType (`freetype-py`) → Pillow fallback.
+
+**`GlyphMetrics` fields:** `advance_x`, `bearing_x`, `bearing_y`, `width`, `height`, `advance_y`, `vert_origin_x`, `vert_origin_y`
+
+---
+
+### 8.2 Line Breaking Algorithm
+
+**Key functions:**
+
+```python
+from latticesvg.text.shaper import (
+    measure_text,              # → float (total width)
+    break_lines,               # → List[Line]
+    align_lines,               # → List[Line] (with x_offset)
+    compute_text_block_size,   # → (width, height)
+    get_min_content_width,     # → float
+    get_max_content_width,     # → float
+)
+```
+
+**`Line` dataclass:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `text` | `str` | Line text |
+| `width` | `float` | Pixel width |
+| `x_offset` | `float` | Alignment offset |
+| `char_count` | `int` | Character count |
+| `justified` | `bool` | `True` if justify mode |
+| `word_spacing_justify` | `float` | Per-word/char gap for justify |
+| `hyphenated` | `bool` | Line ends with hyphen |
+
+**`white-space` modes:**
+
+| Mode | Collapse WS | Line breaks at `\n` | Auto wrap |
+|------|:-----------:|:-------------------:|:---------:|
+| `"normal"` | Yes | No | Yes |
+| `"nowrap"` | Yes | No | No |
+| `"pre"` | No | Yes | No |
+| `"pre-wrap"` | No | Yes | Yes |
+| `"pre-line"` | Yes | Yes | Yes |
+
+**`_break_normal` algorithm:**
+
+1. Collapse whitespace: `" ".join(text.split())`
+2. Tokenize: CJK characters → individual tokens; Latin words stay together; spaces separate.
+3. Greedy fill until overflow.
+4. On overflow:
+   - `overflow-wrap: break-word` + token > available → split character-by-character
+   - `hyphens ≠ none` → try hyphenation (longest prefix + hyphen that fits)
+   - Otherwise → wrap to next line
+
+**CJK handling:** Characters in U+4E00–9FFF, hiragana, katakana, hangul, fullwidth, and 15+ Unicode ranges are individual breakable tokens. Mixed CJK/Latin breaks naturally.
+
+---
+
+### 8.3 Rich Text (HTML/Markdown markup)
+
+```python
+from latticesvg.markup.parser import parse_markup, TextSpan
+
+spans = parse_markup(text, markup="html")    # or "markdown" or "none"
+spans = parse_html(text)
+spans = parse_markdown(text)
+```
+
+**`TextSpan` dataclass:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `text` | `str` | Span text |
+| `font_weight` | `Optional[str]` | `"bold"` / `"normal"` / `None` (inherit) |
+| `font_style` | `Optional[str]` | `"italic"` / `"normal"` / `None` |
+| `font_family` | `Optional[str]` | e.g. `"monospace"` / `None` |
+| `font_size` | `Optional[float]` | px override / `None` |
+| `color` | `Optional[str]` | Color string / `None` |
+| `background_color` | `Optional[str]` | Highlight color / `None` |
+| `baseline_shift` | `Optional[str]` | `"super"` / `"sub"` / `None` |
+| `text_decoration` | `Optional[str]` | `"underline"` / `"line-through"` / `None` |
+| `is_line_break` | `bool` | Represents `<br>` |
+| `is_math` | `bool` | Inline LaTeX content |
+
+**Rich text rendering details:**
+- Adjacent same-span fragments are merged into runs.
+- Math runs → embedded SVG `<g>` with translate.
+- Superscript: y −= font_size × 0.35, size × 0.7.
+- Subscript: y += font_size × 0.2, size × 0.7.
+- Background-color spans: highlight rectangle behind text.
+- `xml:space="preserve"` prevents SVG space collapsing.
+
+---
+
+### 8.4 Vertical Writing Modes
+
+| Value | Description |
+|-------|-------------|
+| `"horizontal-tb"` | Normal LTR top-to-bottom (default) |
+| `"vertical-rl"` | Vertical, columns right-to-left (traditional CJK) |
+| `"vertical-lr"` | Vertical, columns left-to-right |
+| `"sideways-rl"` | Horizontal text rotated 90° CW |
+| `"sideways-lr"` | Horizontal text rotated 90° CCW |
+
+**`text-orientation`** (applies to `vertical-*` modes):
+
+| Value | Behavior |
+|-------|----------|
+| `"mixed"` (default) | CJK/fullwidth upright; Latin/digits rotated 90° CW |
+| `"upright"` | All characters upright |
+| `"sideways"` | All characters rotated 90° CW |
+
+**Vertical layout uses `Column` + `VerticalRun`:**
+
+```
+Column(text, height, y_offset, char_count, runs: List[VerticalRun])
+VerticalRun(text, upright: bool, advance: float, combine: bool)
+```
+
+**Rendering:**
+- `vertical-rl/lr`: Each character in upright runs as separate `<text>`; sideways runs rotated 90°.
+- `sideways-rl/lr`: Render as horizontal text, then rotate the entire group ±90° around center.
+
+---
+
+### 8.5 Text-Combine-Upright (Tate-Chū-Yoko)
+
+In vertical modes, short horizontal sequences (typically numbers) within vertical flow.
+
+| Value | Behavior |
+|-------|----------|
+| `"none"` | No combination (default) |
+| `"all"` | Combine 2–4 char sideways runs horizontally |
+| `"digits 2"` | Combine exactly 2 consecutive digits |
+| `"digits 3"` | Combine exactly 3 consecutive digits |
+| `"digits 4"` | Combine exactly 4 consecutive digits |
+
+```python
+TextNode("令和5年12月25日", style={
+    "writing-mode": "vertical-rl",
+    "text-combine-upright": "all",
+    "font-size": "18px",
+})
+# "12" and "25" displayed horizontally within vertical flow
+```
+
+**Algorithm:**
+1. Build `VerticalRun` list
+2. `"all"`: 2–4 char sideways runs → `combine=True`; 1 char → upright
+3. `"digits N"`: regex match N consecutive digits → `combine=True`
+4. Merge adjacent punctuation (％%°℃ etc.) into combine runs (≤ 4 chars)
+5. Render: combined runs scaled with `SVG scale(sx, 1)` to fit 1em width
+
+---
+
+### 8.6 Hyphenation
+
+| Value | Behavior |
+|-------|----------|
+| `"none"` | No hyphenation (default) |
+| `"manual"` | Break only at U+00AD (soft hyphen) characters |
+| `"auto"` | Automatic via `pyphen` library (requires `pip install pyphen`) |
+
+**`"auto"` mode:**
+- `"lang"` property specifies the language (e.g. `"en"`, `"de"`, `"fr"`).
+- If `pyphen` is not installed, silently degrades to no hyphenation.
+
+**`"manual"` mode:**
+- Insert `\u00AD` at desired break points. Invisible unless break occurs.
+
+**Algorithm:** Find hyphen points → try longest prefix + `"-"` that fits → split word.
+
+```python
+TextNode("Incomprehensibilities...", style={
+    "hyphens": "auto",
+    "lang": "en",
+    "text-align": "justify",
+})
+```
+
+---
+
+### 8.7 Text Alignment & Justification
+
+| `text-align` | Behavior |
+|--------------|----------|
+| `"left"` | Left-aligned (default) |
+| `"center"` | Centered |
+| `"right"` | Right-aligned |
+| `"justify"` | Both edges aligned (last line left-aligned) |
+
+**Justification:**
+- **Western text** (has spaces): extra space distributed between words via `word-spacing`.
+- **CJK text** (no spaces): extra space between characters; each character individually positioned.
+
+**Additional spacing:**
+
+```python
+"letter-spacing": "2px"   # extra space between every character
+"word-spacing": "4px"     # extra space between words
+```
+
+---
+
+## 9. Math Formula Rendering
+
+### 9.1 MathBackend Protocol
+
+```python
+class MathBackend:
+    def render(self, latex: str, font_size: float) -> SVGFragment: ...
+    def available(self) -> bool: ...
+```
+
+```python
+SVGFragment(svg_content: str, width: float, height: float, depth: float = 0.0)
+```
+
+| Field | Description |
+|-------|-------------|
+| `svg_content` | Rendered SVG markup |
+| `width` / `height` | Bounding box (px) |
+| `depth` | Baseline descent (px, for inline alignment) |
+
+---
+
+### 9.2 QuickJax Backend
+
+Default backend. Uses `quickjax` — embedded QuickJS running MathJax v4. No Node.js or network.
+
+```python
+from latticesvg.math.backend import QuickJaxBackend
+
+backend = QuickJaxBackend()
+fragment = backend.render(r"\frac{a}{b}", font_size=16, display=True)
+```
+
+- Internal cache: `{(latex, font_size, display): SVGFragment}`
+- Conversion constant: `_EX_RATIO = 0.4315`
+
+---
+
+### 9.3 Custom Backend Registration
+
+```python
+from latticesvg.math import register_backend, set_default_backend, get_backend, get_default_backend_name
+
+register_backend("my_backend", MyBackendClass)
+set_default_backend("my_backend")
+
+name = get_default_backend_name()   # "quickjax" by default
+be = get_backend()                  # cached instance
+```
+
+---
+
+### 9.4 Inline Math in Rich Text
+
+```python
+# HTML markup
+TextNode("Energy <math>E = mc^2</math> equation", markup="html")
+
+# Markdown markup
+TextNode("Energy $E = mc^2$ equation", markup="markdown")
+```
+
+Inline math is rendered as `SVGFragment` and positioned within the line. The `depth` field ensures baseline alignment.
+
+**Block-level math:**
+
+```python
+MathNode(r"\sum_{k=0}^{n} \binom{n}{k}", style={"font-size": "22px"})
+```
+
+---
+
+## 10. Rendering & Output
+
+### 10.1 Renderer API
+
+```python
+from latticesvg import Renderer
+
+renderer = Renderer()
+```
+
+| Method | Return | Description |
+|--------|--------|-------------|
+| `renderer.render(node, output_path, *, embed_fonts=False)` | `drawsvg.Drawing` | Render to SVG file |
+| `renderer.render_to_drawing(node, *, embed_fonts=False)` | `drawsvg.Drawing` | Render to in-memory Drawing |
+| `renderer.render_to_string(node, *, embed_fonts=False)` | `str` | Render to SVG string |
+| `renderer.render_png(node, output_path, scale=1.0, *, embed_fonts=False)` | — | Render to PNG (requires `cairosvg`) |
+
+| Attribute | Description |
+|-----------|-------------|
+| `renderer.drawing` | Last rendered `drawsvg.Drawing` (or `None`) |
+
+> All render methods **automatically** call `layout()` on the node.
+
+---
+
+### 10.2 SVG Output
+
+```python
+renderer.render(page, "output.svg")
+```
+
+Output contains properly sized `<svg>` element, all visual elements, CSS filter/transform as SVG attributes, and optionally embedded fonts.
+
+---
+
+### 10.3 PNG Output
+
+```python
+renderer.render_png(page, "output.png", scale=2)  # 2x retina
+```
+
+Requires `cairosvg`. `scale=2` recommended for crisp output.
+
+---
+
+### 10.4 Drawing Object Access
+
+```python
+import drawsvg as dw
+
+drawing = Renderer().render_to_drawing(page)
+drawing.append(dw.Text("WATERMARK", 24, 100, 50, fill="gray", opacity=0.3))
+drawing.save_svg("annotated.svg")
+```
+
+---
+
+### 10.5 Font Embedding (WOFF2)
+
+```python
+renderer.render(page, "output.svg", embed_fonts=True)
+```
+
+**Process:**
+
+1. Traverse node tree → collect all used font paths and characters
+2. Subset each font via `fonttools`
+3. Compress to WOFF2 (requires `brotli`; falls back to raw OTF)
+4. Inject `@font-face` CSS rules with base64-encoded data
+5. Each rule includes `unicode-range` descriptor
+
+**Font-aware features:**
+- TTC fonts: correct face index detected
+- Weight/style inferred from metadata or filename
+- Characters deduplicated per font path
+
+---
+
+## 11. Visual Effects
+
+### 11.1 Background Color & Gradients
+
+**Solid:**
+
+```python
+style={"background-color": "#ffffff"}
+```
+
+**Linear gradient:**
+
+```python
+style={"background": "linear-gradient(#e66465, #9198e5)"}
+style={"background": "linear-gradient(to right, #f093fb, #f5576c)"}
+style={"background": "linear-gradient(45deg, #4facfe, #00f2fe)"}
+style={"background": "linear-gradient(to bottom right, #667eea, #764ba2)"}
+style={"background": "linear-gradient(to right, red, orange, yellow, green)"}
+style={"background": "linear-gradient(to right, #2c3e50 0%, #3498db 50%, #2ecc71 100%)"}
+```
+
+| Direction | Description |
+|-----------|-------------|
+| `0deg` | Up |
+| `90deg` | Right |
+| `180deg` | Down (default) |
+| `270deg` | Left |
+| `to top` / `to right` / `to bottom` / `to left` | Keywords |
+| `to top right`, `to bottom left`, etc. | Diagonal keywords |
+
+**Radial gradient:**
+
+```python
+style={"background": "radial-gradient(circle, #f9d423, #ff4e50)"}
+style={"background": "radial-gradient(ellipse, #a8edea, #fed6e3)"}
+style={"background": "radial-gradient(circle at 30% 30%, #ffffff, #000000)"}
+```
+
+> `"background"` shorthand routes to `background-image` (if contains `"gradient("`) or `background-color` otherwise.
+
+---
+
+### 11.2 Border (style, radius, per-side)
+
+**Shorthand:**
+
+```python
+style={"border": "2px solid #333333"}
+style={"border": "1px dashed #999"}
+style={"border": "3px dotted #e74c3c"}
+```
+
+**Supported `border-style` values:** `"solid"`, `"dashed"`, `"dotted"`, `"none"`
+
+**Per-side:**
+
+```python
+style={"border-top": "2px solid red", "border-bottom": "1px dashed blue"}
+```
+
+**Border radius:**
+
+```python
+style={"border-radius": "8px"}                # all corners
+style={"border-radius": "50px"}               # pill shape
+style={"border-radius": "12px 12px 0 0"}      # top only
+style={"border-radius": "20px 0 20px 0"}      # diagonal
+style={"border-radius": "16px 16px 16px 0"}   # chat bubble
+style={"border-top-left-radius": "24px"}       # single corner
+```
+
+> **Radius clamping:** If corner radii sum exceeds side length, proportionally scaled per CSS Backgrounds Level 3 §5.3.
+
+---
+
+### 11.3 Box Shadow
+
+```python
+style={"box-shadow": "0 2px 4px rgba(0,0,0,0.2)"}
+style={"box-shadow": "4px 4px 0px rgba(0,0,0,0.15)"}
+style={"box-shadow": "0 4px 12px rgba(52,152,219,0.4)"}
+
+# Multiple shadows (comma-separated)
+style={"box-shadow": "0 1px 3px rgba(0,0,0,0.12), 0 4px 6px rgba(0,0,0,0.15)"}
+```
+
+**Format:** `offset_x offset_y blur_radius [spread_radius] color`
+
+**Rendering:** Without spread → SVG `feDropShadow`. With spread → full filter pipeline (`feFlood` + `feComposite` + `feMorphology` + `feGaussianBlur` + `feOffset` + `feMerge`). Respects border-radius.
+
+> ⚠️ **Inset shadows are NOT supported** (silently skipped).
+
+---
+
+### 11.4 Opacity
+
+```python
+style={"opacity": "0.5"}   # semi-transparent
+style={"opacity": "1"}     # fully opaque (default)
+style={"opacity": "0"}     # invisible
+```
+
+---
+
+### 11.5 CSS Transform
+
+```python
+style={"transform": "rotate(15deg)"}
+style={"transform": "translate(10px, -5px)"}
+style={"transform": "scale(0.8)"}
+style={"transform": "translate(5px, 5px) scale(1.1)"}   # composable
+```
+
+**Supported functions:**
+
+| Function | Description |
+|----------|-------------|
+| `translate(tx, ty)` | Pixel offset |
+| `translateX(tx)` | Horizontal only |
+| `translateY(ty)` | Vertical only |
+| `rotate(angle)` | Supports `deg`, `rad`, `turn`, `grad` |
+| `scale(sx[, sy])` | Uniform or non-uniform |
+| `scaleX(sx)` | Horizontal only |
+| `scaleY(sy)` | Vertical only |
+
+> Transform origin is the element **center** (CSS default `50% 50%`). Multiple transforms concatenated left-to-right.
+
+---
+
+### 11.6 CSS Filter
+
+```python
+style={"filter": "blur(2px)"}
+style={"filter": "grayscale(100%)"}
+style={"filter": "brightness(150%)"}
+style={"filter": "contrast(200%)"}
+style={"filter": "sepia(100%)"}
+style={"filter": "saturate(200%)"}
+style={"filter": "opacity(50%)"}
+style={"filter": "grayscale(50%) blur(1px)"}   # composable
+```
+
+**Supported functions → SVG equivalents:**
+
+| CSS Function | SVG Implementation |
+|--------------|--------------------|
+| `blur(r)` | `feGaussianBlur(stdDeviation=r)` |
+| `brightness(v)` | `feComponentTransfer(feFuncR/G/B slope=v)` |
+| `contrast(v)` | `feComponentTransfer(slope=v, intercept=-(v-1)/2)` |
+| `grayscale(v)` | `feColorMatrix(type=saturate, values=1-v)` |
+| `saturate(v)` | `feColorMatrix(type=saturate, values=v)` |
+| `sepia(v)` | `feColorMatrix(type=matrix, sepia blend)` |
+| `opacity(v)` | `feComponentTransfer(feFuncA slope=v)` |
+| `drop-shadow(ox,oy,blur,color)` | `feDropShadow` |
+
+> Filters are chained. For blur > 10px, filter region expanded to 200%.
+
+---
+
+### 11.7 Clip-Path
+
+```python
+style={"clip-path": "circle(50% at 50% 50%)"}
+style={"clip-path": "ellipse(50% 25% at 50% 50%)"}
+style={"clip-path": "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)"}
+style={"clip-path": "inset(10px 15px round 8px)"}
+```
+
+**Supported shapes:**
+
+| Shape | Syntax | Notes |
+|-------|--------|-------|
+| Circle | `circle(radius at cx cy)` | Radius %: reference = √(w²+h²)/√2 |
+| Ellipse | `ellipse(rx ry at cx cy)` | rx→width%, ry→height% |
+| Polygon | `polygon(x1 y1, x2 y2, ...)` | Comma-separated points, supports % |
+| Inset | `inset(top right bottom left [round r])` | Optional rounded corners |
+
+> If both `overflow: hidden` and `clip-path` are present, they nest as two clip groups.
+
+---
+
+### 11.8 Overflow Clipping
+
+```python
+style={"overflow": "hidden"}
+```
+
+Content beyond border box is clipped (respects `border-radius`).
+
+**Required for ellipsis:**
+
+```python
+style={"overflow": "hidden", "text-overflow": "ellipsis", "white-space": "nowrap"}
+```
+
+---
+
+### 11.9 Outline
+
+```python
+style={"outline": "1px dashed #ccc"}
+style={"outline": "2px solid red"}
+```
+
+Drawn **outside** the border box, NOT affected by overflow clipping.
+
+Properties: `outline-width`, `outline-color`, `outline-style`, `outline-offset`
+
+---
+
+## 12. Templates & Table Builder
+
+### 12.1 Predefined Style Templates
+
+```python
+from latticesvg import templates
+```
+
+**Container templates:**
+
+| Name | Key styles |
+|------|-----------|
+| `templates.REPORT_PAGE` | `width: 800px`, `padding: 30px`, `background: #ffffff`, `columns: [1fr]`, `gap: 20px` |
+| `templates.TWO_COLUMN` | `columns: [1fr, 1fr]`, `gap: 20px` |
+| `templates.THREE_COLUMN` | `columns: [1fr, 1fr, 1fr]`, `gap: 20px` |
+| `templates.SIDEBAR_LAYOUT` | `columns: [240px, 1fr]`, `gap: 24px` |
+| `templates.CHART_CONTAINER` | `columns: [1fr, 1fr]`, `rows: [1fr, 1fr]`, `gap: 10px` |
+
+**Header/Footer:**
+
+| Name | Key styles |
+|------|-----------|
+| `templates.HEADER` | `padding: 16px 24px`, `bg: #2c3e50`, `color: #fff`, `font-size: 18px`, `bold` |
+| `templates.FOOTER` | `padding: 12px 24px`, `bg: #34495e`, `color: #ecf0f1`, `font-size: 12px`, `center` |
+
+**Typography:**
+
+| Name | font-size | weight | color | Other |
+|------|-----------|--------|-------|-------|
+| `templates.TITLE` | 28px | bold | #1a1a1a | center, line-height: 1.3 |
+| `templates.SUBTITLE` | 20px | bold | #333333 | line-height: 1.4 |
+| `templates.H1` | 24px | bold | #222222 | line-height: 1.3 |
+| `templates.H2` | 20px | bold | #333333 | line-height: 1.4 |
+| `templates.H3` | 16px | bold | #444444 | line-height: 1.4 |
+| `templates.PARAGRAPH` | 14px | — | #333333 | left, line-height: 1.6 |
+| `templates.CAPTION` | 12px | — | #888888 | center, line-height: 1.4 |
+| `templates.CODE` | 13px | — | #d63384 | monospace, bg: #f8f9fa, pre |
+
+**Visual elements:**
+
+| Name | Key styles |
+|------|-----------|
+| `templates.CARD` | `padding: 16px`, `bg: #ffffff`, `border: 1px solid #e0e0e0` |
+| `templates.HIGHLIGHT_BOX` | `padding: 12px 16px`, `bg: #fff3cd`, `border: 1px solid #ffc107`, `color: #856404` |
+
+**Registry:**
+
+```python
+templates.ALL_TEMPLATES  # Dict[str, dict]
+# Keys: "report-page", "two-column", "three-column", "sidebar-layout",
+#        "chart-container", "header", "footer", "title", "subtitle",
+#        "h1", "h2", "h3", "paragraph", "caption", "code", "card", "highlight-box"
+```
+
+**Extending templates:**
+
+```python
+style = {**templates.REPORT_PAGE, "width": "600px"}
+style = {**templates.PARAGRAPH, "white-space": "pre"}
+```
+
+---
+
+### 12.2 build_table() API
+
+```python
+from latticesvg import build_table
+
+table = build_table(
+    headers=["Name", "Score", "Grade"],
+    rows=[
+        ["Alice", "95", "A"],
+        ["Bob", "87", "B+"],
+    ],
+)
+Renderer().render(table, "table.svg")
+```
+
+**Full signature:**
+
+```python
+build_table(
+    headers: Sequence[str],
+    rows: Sequence[Sequence[Any]],
+    *,
+    style: Optional[Dict] = None,            # container style override
+    header_style: Optional[Dict] = None,      # header cell style override
+    cell_style: Optional[Dict] = None,        # body cell style override
+    col_widths: Optional[List[str]] = None,   # default: ["1fr"] × num_cols
+    stripe_color: Optional[str] = "#f8f9fa",  # even-row stripe color
+) → GridContainer
+```
+
+**Default styles:**
+
+| Component | Styles |
+|-----------|--------|
+| Table container | bg: #ffffff, border: 1px solid #dee2e6 |
+| Header cells | bg: #f1f3f5, padding: 8px 12px, border-bottom: 2px solid #dee2e6, 13px bold, #212529, left |
+| Body cells | padding: 6px 12px, border-bottom: 1px solid #dee2e6, 13px, #495057, left |
+
+```python
+# Custom table
+table = build_table(
+    headers=["Product", "Q1", "Q2", "Q3", "Q4"],
+    rows=[["Widget", "100", "120", "80", "150"]],
+    header_style={"background-color": "#2c3e50", "color": "#fff", "text-align": "center"},
+    cell_style={"font-size": "14px", "text-align": "center"},
+    stripe_color="#eaf2f8",
+    col_widths=["120px", "1fr", "1fr", "1fr", "1fr"],
+)
+```
+
+---
+
+## 13. Utility Types
+
+### `Rect`
+
+```python
+from latticesvg import Rect
+
+rect = Rect(x=0.0, y=0.0, width=600.0, height=400.0)
+```
+
+| Member | Type | Description |
+|--------|------|-------------|
+| `rect.x`, `rect.y` | `float` | Top-left corner |
+| `rect.width`, `rect.height` | `float` | Dimensions |
+| `rect.right` | `float` | `x + width` |
+| `rect.bottom` | `float` | `y + height` |
+| `rect.copy()` | `Rect` | Shallow copy |
+
+Used for `node.border_box`, `node.padding_box`, `node.content_box` (populated after `layout()`).
+
+### `LayoutConstraints`
+
+```python
+from latticesvg import LayoutConstraints
+
+constraints = LayoutConstraints(available_width=800.0, available_height=None)
+```
+
+Used internally by the grid solver. For manual layout:
+
+```python
+grid.layout(available_width=800)
+```
+
+---
+
+## 14. Examples & Patterns
+
+### Pattern 1: Basic page with text
+
+```python
+from latticesvg import GridContainer, TextNode, Renderer
+
+page = GridContainer(style={
+    "width": "600px",
+    "padding": "24px",
+    "grid-template-columns": ["1fr"],
+    "gap": "16px",
+    "background-color": "#fff",
+})
+page.add(TextNode("Title", style={"font-size": "28px", "font-weight": "bold"}))
+page.add(TextNode("Body text here.", style={"font-size": "14px", "line-height": "1.6"}))
+Renderer().render(page, "page.svg")
+```
+
+### Pattern 2: Two-column layout
+
+```python
+page = GridContainer(style={
+    "width": "800px",
+    "padding": "20px",
+    "grid-template-columns": ["1fr", "1fr"],
+    "gap": "20px",
+})
+page.add(TextNode("Left column"))
+page.add(TextNode("Right column"))
+```
+
+### Pattern 3: Named areas (Holy Grail)
+
+```python
+page = GridContainer(style={
+    "width": "800px",
+    "grid-template-columns": ["200px", "1fr"],
+    "grid-template-rows": ["60px", "auto", "40px"],
+    "grid-template-areas": '"header header" "sidebar main" "footer footer"',
+})
+page.add(TextNode("Header"), area="header")
+page.add(TextNode("Sidebar"), area="sidebar")
+page.add(TextNode("Main Content"), area="main")
+page.add(TextNode("Footer"), area="footer")
+```
+
+### Pattern 4: Spanning cells
+
+```python
+grid = GridContainer(style={
+    "width": "600px",
+    "grid-template-columns": ["1fr", "1fr", "1fr"],
+    "gap": "8px",
+})
+grid.add(TextNode("Spans 2 cols"), row=1, col=1, col_span=2)
+grid.add(TextNode("Normal"), row=1, col=3)
+grid.add(TextNode("Spans 2 rows"), row=2, col=1, row_span=2)
+```
+
+### Pattern 5: Images
+
+```python
+from latticesvg import ImageNode
+
+grid.add(ImageNode("/path/to/photo.jpg", object_fit="contain",
+                   style={"width": "200px", "height": "150px"}))
+```
+
+### Pattern 6: Matplotlib charts
+
+```python
+import matplotlib.pyplot as plt
+from latticesvg import MplNode
+
+fig, ax = plt.subplots(figsize=(4, 3))
+ax.bar(["A", "B", "C"], [3, 7, 5])
+grid.add(MplNode(fig))
+plt.close("all")
+```
+
+### Pattern 7: Math formulas
+
+```python
+from latticesvg import MathNode
+
+grid.add(MathNode(r"\int_0^1 x^2 dx = \frac{1}{3}", style={"font-size": "20px"}))
+```
+
+### Pattern 8: Rich text (HTML)
+
+```python
+grid.add(TextNode(
+    "This is <b>bold</b> and <i>italic</i> with "
+    '<span style="color: red">color</span>',
+    markup="html",
+))
+```
+
+### Pattern 9: Rich text (Markdown) with inline math
+
+```python
+grid.add(TextNode(
+    "Einstein's equation: $E = mc^2$ is **famous**.",
+    markup="markdown",
+))
+```
+
+### Pattern 10: Template-based report
+
+```python
+from latticesvg import templates
+
+page = GridContainer(style={**templates.REPORT_PAGE})
+page.add(TextNode("Annual Report", style=templates.TITLE))
+page.add(TextNode("Q1 Results", style=templates.H2))
+page.add(TextNode("Revenue increased by 15%.", style=templates.PARAGRAPH))
+```
+
+### Pattern 11: Table
+
+```python
+from latticesvg import build_table
+
+table = build_table(
+    ["Name", "Age", "City"],
+    [["Alice", "30", "NYC"], ["Bob", "25", "LA"]],
+    col_widths=["120px", "80px", "1fr"],
+)
+Renderer().render(table, "table.svg")
+```
+
+### Pattern 12: Visual effects (shadow card)
+
+```python
+grid.add(TextNode("Shadow card", style={
+    "padding": "20px",
+    "background-color": "#fff",
+    "border-radius": "8px",
+    "box-shadow": "0 4px 12px rgba(0,0,0,0.15)",
+}))
+```
+
+### Pattern 13: Gradient background
+
+```python
+page = GridContainer(style={
+    "width": "600px",
+    "padding": "40px",
+    "background": "linear-gradient(135deg, #667eea, #764ba2)",
+    "border-radius": "16px",
+})
+```
+
+### Pattern 14: Vertical CJK text
+
+```python
+grid.add(TextNode("天地玄黄宇宙洪荒", style={
+    "writing-mode": "vertical-rl",
+    "font-size": "24px",
+    "line-height": "2",
+    "height": "300px",
+}))
+```
+
+### Pattern 15: Text ellipsis
+
+```python
+grid.add(TextNode("Very long text that will be truncated...", style={
+    "overflow": "hidden",
+    "text-overflow": "ellipsis",
+    "white-space": "nowrap",
+}))
+```
+
+### Pattern 16: PNG output (retina)
+
+```python
+Renderer().render_png(page, "output.png", scale=2)
+```
+
+### Pattern 17: Post-process drawsvg Drawing
+
+```python
+import drawsvg as dw
+
+drawing = Renderer().render_to_drawing(page)
+drawing.append(dw.Circle(100, 100, 50, fill="red", opacity=0.3))
+drawing.save_svg("annotated.svg")
+```
+
+### Pattern 18: Font embedding
+
+```python
+Renderer().render(page, "portable.svg", embed_fonts=True)
+```
+
+### Pattern 19: Layout inspection
+
+```python
+page.layout(available_width=600)
+print(page.border_box)    # Rect(x=0, y=0, width=600, height=...)
+print(page.content_box)   # Rect(x=24, y=24, width=552, height=...)
+for child in page.children:
+    print(child.border_box)
+```
+
+### Pattern 20: Auto-placement with dense packing
+
+```python
+grid = GridContainer(style={
+    "grid-template-columns": ["1fr", "1fr", "1fr"],
+    "grid-auto-flow": "row dense",
+    "gap": "8px",
+})
+grid.add(large_item, col_span=2)
+grid.add(small_item)
+grid.add(small_item)   # fills gap
+```
+
+### Pattern 21: Implicit auto tracks
+
+```python
+grid = GridContainer(style={
+    "grid-template-columns": ["1fr", "1fr", "1fr"],
+    "grid-auto-rows": "80px",
+})
+for i in range(12):
+    grid.add(TextNode(str(i)))  # creates 4 rows of 3
+```
+
+### Pattern 22: Custom node subclass
+
+```python
+from latticesvg import Node
+
+class ColorBox(Node):
+    def __init__(self, width, height, **style):
+        super().__init__(style={"width": f"{width}px", "height": f"{height}px", **style})
+        self._intrinsic_w = width
+        self._intrinsic_h = height
+
+    def measure(self, constraints):
+        ph = self.style.padding_horizontal + self.style.border_horizontal
+        pv = self.style.padding_vertical + self.style.border_vertical
+        return (self._intrinsic_w + ph, self._intrinsic_w + ph, self._intrinsic_h + pv)
+
+    def layout(self, constraints):
+        self._resolve_box_model(self._intrinsic_w, self._intrinsic_h)
+```
+
+### Pattern 23: SVG node embedding
+
+```python
+from latticesvg import SVGNode
+
+svg_code = '''<svg viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="40" fill="#3498db"/>
+</svg>'''
+grid.add(SVGNode(svg_code, style={"width": "80px", "height": "80px"}))
+```
+
+### Pattern 24: Nested grids
+
+```python
+outer = GridContainer(style={"width": "800px", "grid-template-columns": ["1fr", "1fr"], "gap": "20px"})
+inner = GridContainer(style={"grid-template-columns": ["1fr", "1fr"], "gap": "10px"})
+inner.add(TextNode("A"))
+inner.add(TextNode("B"))
+outer.add(inner)
+outer.add(TextNode("Right side"))
+```
+
+### Pattern 25: repeat() and minmax()
+
+```python
+grid = GridContainer(style={
+    "width": "800px",
+    "grid-template-columns": "repeat(3, minmax(100px, 1fr))",
+    "gap": "16px",
+})
+```
+
+---
+
+## Summary
+
+| Metric | Value |
+|--------|-------|
+| CSS properties | 63 |
+| Node types | 7 (Node, GridContainer, TextNode, ImageNode, SVGNode, MplNode, MathNode) |
+| Writing modes | 5 |
+| Named colors | 30 |
+| Style templates | 17 |
+| CSS filter functions | 8 |
+| CSS transform functions | 7 |
+| Clip-path shapes | 4 |
+| Dependencies | 3 (drawsvg, freetype-py, quickjax) |
+| Python requirement | ≥ 3.8 |
