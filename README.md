@@ -6,7 +6,8 @@ A declarative vector layout engine powered by CSS Grid. Describe layouts with Py
 
 - **Full CSS Grid Level 1** — fixed tracks, `fr` units, `minmax()`, `repeat()`, named areas, auto-placement
 - **Precise text typesetting** — FreeType-based glyph measurement, auto line-breaking, CJK support, rich text (HTML/Markdown), vertical writing
-- **Multiple node types** — `TextNode`, `ImageNode`, `SVGNode`, `MplNode` (Matplotlib), `MathNode` (LaTeX)
+- **Multiple node types** — `TextNode`, `ImageNode`, `SVGNode`, `MplNode` (Matplotlib with auto font sync), `MathNode` (LaTeX)
+- **Font query API** — `get_font_path()`, `list_fonts()` for programmatic font discovery
 - **63 CSS properties** — box model, border-radius, gradients, shadows, transforms, filters, clip-path, opacity
 - **SVG & PNG output** — vector SVG by default, optional high-res PNG via CairoSVG, WOFF2 font embedding
 

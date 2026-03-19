@@ -37,6 +37,7 @@
   - [7.5 Min/Max Size Clamping](#75-minmax-size-clamping)
 - [8. Text Typesetting](#8-text-typesetting)
   - [8.1 Font Management](#81-font-management-fontmanager)
+  - [8.1.1 Font Query API](#811-font-query-api)
   - [8.2 Line Breaking Algorithm](#82-line-breaking-algorithm)
   - [8.3 Rich Text (HTML/Markdown)](#83-rich-text-htmlmarkdown-markup)
   - [8.4 Vertical Writing Modes](#84-vertical-writing-modes)
@@ -69,6 +70,7 @@
   - [12.2 build_table() API](#122-build_table-api)
 - [13. Utility Types](#13-utility-types)
 - [14. Examples & Patterns](#14-examples--patterns)
+  - [...Pattern 26: Font query & MplNode auto-font](#pattern-26-font-query--mplnode-auto-font)
 
 ---
 
@@ -197,7 +199,8 @@ latticesvg.__version__  # "0.1.1"
 ```python
 from latticesvg.style.parser import parse_value, expand_shorthand
 from latticesvg.style.parser import parse_track_template, parse_grid_template_areas
-from latticesvg.text.font import FontManager
+from latticesvg.text.font import FontManager, FontInfo, parse_font_families
+from latticesvg.text import get_font_path, list_fonts   # convenience wrappers
 from latticesvg.math import register_backend, set_default_backend, get_backend, get_default_backend_name
 ```
 
@@ -552,24 +555,40 @@ grid.add(SVGNode("/path/to/icon.svg", is_file=True, style={"width": "24px", "hei
 ```python
 from latticesvg import MplNode
 
-node = MplNode(figure, style=None, parent=None)
+node = MplNode(figure, style=None, parent=None, auto_mpl_font=True, tight_layout=True)
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `figure` | `matplotlib.figure.Figure` | A Matplotlib figure object |
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `figure` | `matplotlib.figure.Figure` | — | A Matplotlib figure object |
+| `auto_mpl_font` | `bool` | `True` | Auto-configure matplotlib fonts from CSS `font-family` |
+| `tight_layout` | `bool` | `True` | Call `figure.tight_layout()` inside font-aware `rc_context` before saving |
 
 > Requires `matplotlib` (included in `[dev]` extras).
+
+**Auto-font mechanism** (`auto_mpl_font=True`):
+
+1. Reads `font-family` from the node's computed style (self → inherited from parent `GridContainer`).
+2. Resolves each family name to a filesystem path via `FontManager`.
+3. Registers discovered fonts with `matplotlib.font_manager.fontManager.addfont()`.
+4. Wraps `savefig()` in `matplotlib.rc_context()` with `font.sans-serif`, `font.serif`, `font.monospace` overrides.
+5. Always sets `svg.fonttype: "path"` so text is converted to vector outlines.
 
 ```python
 import matplotlib.pyplot as plt
 from latticesvg import GridContainer, MplNode, Renderer
 
 fig, ax = plt.subplots(figsize=(4, 3), dpi=100)
-ax.plot([1, 2, 3], [1, 4, 9])
+ax.bar(["春 Spring", "夏 Summer"], [28, 45])
+ax.set_title("Auto-font Demo")
 
-grid = GridContainer(style={"width": "600px", "grid-template-columns": ["1fr"]})
-grid.add(MplNode(fig))
+# font-family on the container is inherited by MplNode
+grid = GridContainer(style={
+    "width": "600px",
+    "grid-template-columns": ["1fr"],
+    "font-family": "Microsoft YaHei, sans-serif",
+})
+grid.add(MplNode(fig))   # auto_mpl_font=True by default
 plt.close("all")
 Renderer().render(grid, "chart.svg")
 ```
@@ -1042,6 +1061,8 @@ FontManager.reset()           # clear caches (testing)
 | `fm.ascender(font_path, size)` | `float` | Font ascender (px) |
 | `fm.descender(font_path, size)` | `float` | Font descender (px, positive) |
 | `fm.font_family_name(font_path)` | `Optional[str]` | CSS family name from file |
+| `fm.get_font_path(family, weight, style)` | `Optional[str]` | Font path without fallback (returns `None` if not found) |
+| `fm.list_fonts()` | `List[FontInfo]` | All indexed fonts as `FontInfo` objects |
 
 **System font directories** (auto-searched):
 
@@ -1054,6 +1075,44 @@ FontManager.reset()           # clear caches (testing)
 **Backend priority:** FreeType (`freetype-py`) → Pillow fallback.
 
 **`GlyphMetrics` fields:** `advance_x`, `bearing_x`, `bearing_y`, `width`, `height`, `advance_y`, `vert_origin_x`, `vert_origin_y`
+
+#### 8.1.1 Font Query API
+
+```python
+from latticesvg.text import get_font_path, list_fonts, FontInfo, parse_font_families
+```
+
+**`get_font_path(family, weight="normal", style="normal")`** — Convenience wrapper around `FontManager.get_font_path()`. Returns `Optional[str]` (filesystem path or `None` if not found). Unlike `find_font`, does **not** fall back to an arbitrary default.
+
+```python
+path = get_font_path("Microsoft YaHei")       # "/usr/share/fonts/.../msyh.ttc" or None
+path = get_font_path("Arial", weight="bold")   # bold variant
+```
+
+**`list_fonts()`** — Returns `List[FontInfo]` for every indexed font, sorted by family name.
+
+```python
+for fi in list_fonts():
+    print(fi.family, fi.path, fi.weight, fi.style, fi.format, fi.face_index)
+```
+
+**`FontInfo`** (frozen dataclass):
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `family` | `str` | CSS font-family name (or filename stem as fallback) |
+| `path` | `str` | Absolute filesystem path |
+| `weight` | `str` | `"normal"` or `"bold"` |
+| `style` | `str` | `"normal"` or `"italic"` |
+| `format` | `str` | `"ttf"`, `"otf"`, or `"ttc"` |
+| `face_index` | `int` | Face index within a TTC collection (0 for single-face) |
+
+**`parse_font_families(value)`** — Parse a CSS `font-family` value (comma-separated string, list, or `None`) into `List[str]`. Falls back to `["sans-serif"]` for `None`.
+
+```python
+parse_font_families('"Noto Sans CJK SC", sans-serif')  # ["Noto Sans CJK SC", "sans-serif"]
+parse_font_families(None)                                # ["sans-serif"]
+```
 
 ---
 
@@ -1838,11 +1897,19 @@ grid.add(ImageNode("/path/to/photo.jpg", object_fit="contain",
 
 ```python
 import matplotlib.pyplot as plt
-from latticesvg import MplNode
+from latticesvg import GridContainer, MplNode
 
 fig, ax = plt.subplots(figsize=(4, 3))
-ax.bar(["A", "B", "C"], [3, 7, 5])
-grid.add(MplNode(fig))
+ax.bar(["春 Spring", "夏 Summer", "秋 Autumn"], [28, 45, 36])
+ax.set_title("季节数据 Season Data")
+
+# MplNode inherits font-family from parent and auto-configures matplotlib
+grid = GridContainer(style={
+    "width": "500px",
+    "grid-template-columns": ["1fr"],
+    "font-family": "Microsoft YaHei, sans-serif",
+})
+grid.add(MplNode(fig))   # auto_mpl_font=True, tight_layout=True (defaults)
 plt.close("all")
 ```
 
@@ -2046,6 +2113,44 @@ grid = GridContainer(style={
     "grid-template-columns": "repeat(3, minmax(100px, 1fr))",
     "gap": "16px",
 })
+```
+
+### Pattern 26: Font query & MplNode auto-font
+
+```python
+from latticesvg.text import get_font_path, list_fonts
+from latticesvg import GridContainer, MplNode, TextNode
+import matplotlib.pyplot as plt
+
+# Query font paths
+path = get_font_path("Microsoft YaHei")
+print(f"YaHei => {path}")
+print(f"Total indexed fonts: {len(list_fonts())}")
+
+# 2×2 multi-font comparison — each cell uses a different font-family
+FONTS = [
+    ("Microsoft YaHei", "Microsoft YaHei, sans-serif"),
+    ("KaiTi",           "KaiTi, serif"),
+]
+grid = GridContainer(style={
+    "width": "860px",
+    "grid-template-columns": ["1fr", "1fr"],
+    "gap": "12px",
+    "padding": "20px",
+    "background-color": "#ffffff",
+})
+for i, (label, css_font) in enumerate(FONTS):
+    fig, ax = plt.subplots(figsize=(4, 3))
+    ax.bar(["春季", "夏季"], [28, 45])
+    ax.set_title(f"{label} Demo")
+    cell = GridContainer(style={
+        "grid-template-columns": ["1fr"],
+        "font-family": css_font,           # inherited by MplNode
+    })
+    cell.add(MplNode(fig))                  # auto_mpl_font picks up css_font
+    cell.add(TextNode(f"Font: {label}", style={"font-size": "12px", "text-align": "center"}))
+    grid.add(cell)
+plt.close("all")
 ```
 
 ---

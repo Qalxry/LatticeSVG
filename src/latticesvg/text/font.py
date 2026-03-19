@@ -13,6 +13,17 @@ from typing import Dict, List, Optional, Tuple
 # ---------------------------------------------------------------------------
 
 @dataclass(frozen=True)
+class FontInfo:
+    """Metadata for an indexed font."""
+    family: str
+    path: str
+    weight: str
+    style: str
+    format: str       # "ttf", "otf", or "ttc"
+    face_index: int
+
+
+@dataclass(frozen=True)
 class GlyphMetrics:
     """Metrics for a single glyph at a given size."""
     advance_x: float   # horizontal advance in px
@@ -152,6 +163,36 @@ elif sys.platform == "win32":
         os.path.join(windir, "Fonts"),
         os.path.expanduser(r"~\AppData\Local\Microsoft\Windows\Fonts"),
     ]
+
+
+# Generic family names recognised by CSS
+_GENERIC_FAMILIES = frozenset({"serif", "sans-serif", "monospace", "cursive", "fantasy"})
+
+
+def parse_font_families(value) -> List[str]:
+    """Parse a CSS ``font-family`` value into a flat list of family names.
+
+    Accepts a comma-separated string, a list of strings, or ``None``
+    (which falls back to ``["sans-serif"]``).
+    """
+    if value is None:
+        return ["sans-serif"]
+    if isinstance(value, list):
+        result: List[str] = []
+        for item in value:
+            if isinstance(item, str):
+                result.extend(
+                    x.strip().strip('"').strip("'")
+                    for x in item.split(",")
+                )
+        return [x for x in result if x] or ["sans-serif"]
+    if isinstance(value, str):
+        return [
+            x.strip().strip('"').strip("'")
+            for x in value.split(",")
+            if x.strip()
+        ] or ["sans-serif"]
+    return ["sans-serif"]
 
 
 # Common font-family aliases
@@ -504,4 +545,91 @@ class FontManager:
             # Fallback: derive from filename stem
             result = Path(font_path).stem.replace('-', ' ').replace('_', ' ')
         self._cache[key] = result
+        return result
+
+    # -----------------------------------------------------------------
+    # Public query API
+    # -----------------------------------------------------------------
+
+    def get_font_path(
+        self,
+        family: str,
+        weight: str = "normal",
+        style: str = "normal",
+    ) -> Optional[str]:
+        """Return the filesystem path for *family*, or ``None`` if not found.
+
+        Unlike :meth:`find_font`, this method does **not** fall back to an
+        arbitrary default font when no match is found.
+        """
+        return self._resolve_single_family(family, weight, style)
+
+    def list_fonts(self) -> List[FontInfo]:
+        """Return a :class:`FontInfo` for every indexed font file."""
+        idx = self._get_font_index()
+        seen_paths: Dict[str, FontInfo] = {}
+        for path in idx.values():
+            if path in seen_paths:
+                continue
+            ext = Path(path).suffix.lower().lstrip(".")
+            fmt = ext if ext in ("ttf", "otf", "ttc") else ext
+            family_name = ""
+            weight = "normal"
+            style_name = "normal"
+            face_index = 0
+            if isinstance(self._backend, _FreeTypeBackend):
+                try:
+                    face = self._backend._freetype.Face(path)
+                    raw_name = face.family_name
+                    if isinstance(raw_name, bytes):
+                        raw_name = raw_name.decode("utf-8", errors="replace")
+                    family_name = raw_name or Path(path).stem
+                    raw_style = face.style_name
+                    if isinstance(raw_style, bytes):
+                        raw_style = raw_style.decode("utf-8", errors="replace")
+                    sl = (raw_style or "").lower()
+                    weight = "bold" if "bold" in sl else "normal"
+                    style_name = "italic" if "italic" in sl or "oblique" in sl else "normal"
+                except Exception:
+                    family_name = Path(path).stem
+            else:
+                family_name = Path(path).stem
+            seen_paths[path] = FontInfo(
+                family=family_name,
+                path=path,
+                weight=weight,
+                style=style_name,
+                format=fmt,
+                face_index=face_index,
+            )
+        # For TTC files, enumerate additional faces
+        ttc_extras: List[FontInfo] = []
+        if isinstance(self._backend, _FreeTypeBackend):
+            for path, info in list(seen_paths.items()):
+                if info.format != "ttc":
+                    continue
+                try:
+                    face = self._backend._freetype.Face(path)
+                    num = face.num_faces
+                    for fi in range(1, num):
+                        face_i = self._backend._freetype.Face(path, fi)
+                        raw_name = face_i.family_name
+                        if isinstance(raw_name, bytes):
+                            raw_name = raw_name.decode("utf-8", errors="replace")
+                        raw_style = face_i.style_name
+                        if isinstance(raw_style, bytes):
+                            raw_style = raw_style.decode("utf-8", errors="replace")
+                        sl = (raw_style or "").lower()
+                        ttc_extras.append(FontInfo(
+                            family=raw_name or family_name,
+                            path=path,
+                            weight="bold" if "bold" in sl else "normal",
+                            style="italic" if "italic" in sl or "oblique" in sl else "normal",
+                            format="ttc",
+                            face_index=fi,
+                        ))
+                except Exception:
+                    pass
+        result = list(seen_paths.values()) + ttc_extras
+        result.sort(key=lambda f: (f.family.lower(), f.weight, f.style))
         return result

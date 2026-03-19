@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import io
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from .base import LayoutConstraints, Node, Rect
 
@@ -14,6 +14,26 @@ class MplNode(Node):
     The figure is rendered to an in-memory SVG buffer during the render
     phase, so all Matplotlib customisation should be done *before*
     creating this node.
+
+    Parameters
+    ----------
+    figure :
+        A ``matplotlib.figure.Figure`` instance.
+    style :
+        Optional CSS-like style dictionary.
+    parent :
+        Optional parent node.
+    auto_mpl_font :
+        When ``True`` (default), the node reads the inherited
+        ``font-family`` CSS property and configures matplotlib's font
+        settings via ``rc_context`` so that text rendered inside the
+        figure uses the same font family as surrounding
+        :class:`TextNode` elements.
+    tight_layout :
+        When ``True`` (default), ``figure.tight_layout()`` is called
+        inside the font ``rc_context`` before exporting, so that text
+        metrics match the final font.  Set to ``False`` if you manage
+        layout yourself or use ``constrained_layout``.
     """
 
     def __init__(
@@ -21,9 +41,13 @@ class MplNode(Node):
         figure: Any,  # matplotlib.figure.Figure
         style: Optional[Dict[str, Any]] = None,
         parent: Optional[Node] = None,
+        auto_mpl_font: bool = True,
+        tight_layout: bool = True,
     ) -> None:
         super().__init__(style=style, parent=parent)
         self.figure = figure
+        self._auto_mpl_font = auto_mpl_font
+        self._tight_layout = tight_layout
         self._svg_cache: Optional[str] = None
 
     # -----------------------------------------------------------------
@@ -92,11 +116,105 @@ class MplNode(Node):
     # SVG export
     # -----------------------------------------------------------------
 
+    def _resolve_mpl_font_rc(self) -> Tuple[Dict[str, Any], List[str]]:
+        """Build matplotlib rcParams overrides and collect font paths.
+
+        Returns ``(rc_dict, font_paths)`` where *font_paths* is a list
+        of filesystem paths that must be registered with matplotlib's
+        ``fontManager`` before the rc overrides take effect.
+        """
+        from ..text.font import (
+            FontManager,
+            _GENERIC_FAMILIES,
+            parse_font_families,
+        )
+
+        families = parse_font_families(self.style.get("font-family"))
+        weight = self.style.get("font-weight") or "normal"
+        fstyle = self.style.get("font-style") or "normal"
+
+        # Detect generic family at the tail of the list
+        generic = "sans-serif"
+        for fam in reversed(families):
+            if fam.lower() in _GENERIC_FAMILIES:
+                generic = fam.lower()
+                break
+
+        fm = FontManager.instance()
+        chain = fm.find_font_chain(families, weight=weight, style=fstyle)
+
+        # Convert file paths to embedded family names for matplotlib,
+        # preserving the user's intended priority order from CSS
+        # font-family.  matplotlib 3.10+ supports per-glyph fallback
+        # across the font list, so CJK characters will still be found
+        # from a later entry if the primary font lacks them.
+        mpl_names: List[str] = []
+        seen: set = set()
+        for path in chain:
+            name = fm.font_family_name(path)
+            if name and name not in seen:
+                seen.add(name)
+                mpl_names.append(name)
+
+        rc: Dict[str, Any] = {"svg.fonttype": "path"}
+        if mpl_names:
+            # Map generic family to the corresponding matplotlib rc key
+            rc_key = f"font.{generic}"
+            rc["font.family"] = generic
+            rc[rc_key] = mpl_names
+            # Also populate the other generic lists so that any
+            # pre-existing text elements (which may default to
+            # sans-serif) can still find the CJK fonts.
+            for alt in ("sans-serif", "serif", "monospace"):
+                alt_key = f"font.{alt}"
+                if alt_key not in rc:
+                    rc[alt_key] = mpl_names
+        return rc, chain
+
+    @staticmethod
+    def _register_fonts_with_mpl(font_paths: List[str]) -> None:
+        """Ensure each font path is known to matplotlib's fontManager.
+
+        LatticeSVG may discover fonts that matplotlib has not indexed.
+        Calling ``fontManager.addfont()`` registers them so that
+        ``findfont()`` can locate them by family name.
+        """
+        from matplotlib.font_manager import fontManager
+
+        known = {fe.fname for fe in fontManager.ttflist}
+        for path in font_paths:
+            if path not in known:
+                try:
+                    fontManager.addfont(path)
+                except Exception:
+                    pass
+
     def get_svg_fragment(self) -> str:
-        """Export the figure to an SVG string (cached)."""
+        """Export the figure to an SVG string (cached).
+
+        When *auto_mpl_font* is enabled the inherited ``font-family``
+        CSS property is translated into matplotlib ``rcParams`` so that
+        text inside the figure uses matching fonts.  ``svg.fonttype`` is
+        always set to ``"path"`` so that glyphs are converted to vector
+        paths for cross-platform consistency.
+        """
         if self._svg_cache is None:
+            import matplotlib as mpl
+
+            rc_overrides: Dict[str, Any] = {"svg.fonttype": "path"}
+            if self._auto_mpl_font:
+                font_rc, font_paths = self._resolve_mpl_font_rc()
+                self._register_fonts_with_mpl(font_paths)
+                rc_overrides.update(font_rc)
+
             buf = io.BytesIO()
-            self.figure.savefig(buf, format="svg", transparent=True)
+            with mpl.rc_context(rc_overrides):
+                if self._tight_layout:
+                    try:
+                        self.figure.tight_layout()
+                    except Exception:
+                        pass
+                self.figure.savefig(buf, format="svg", transparent=True)
             buf.seek(0)
             svg = buf.read().decode("utf-8")
             # Strip the XML declaration and outer <svg> tags for embedding

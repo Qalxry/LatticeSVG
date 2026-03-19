@@ -92,25 +92,8 @@ class TextNode(Node):
 
     def _parse_font_families(self) -> list:
         """Parse the ``font-family`` value into a flat list of family names."""
-        family = self.style.get("font-family")
-        if family is None:
-            return ["sans-serif"]
-        if isinstance(family, list):
-            result = []
-            for f in family:
-                if isinstance(f, str):
-                    result.extend(
-                        x.strip().strip('"').strip("'")
-                        for x in f.split(",")
-                    )
-            return [x for x in result if x] or ["sans-serif"]
-        if isinstance(family, str):
-            return [
-                x.strip().strip('"').strip("'")
-                for x in family.split(",")
-                if x.strip()
-            ] or ["sans-serif"]
-        return ["sans-serif"]
+        from ..text.font import parse_font_families
+        return parse_font_families(self.style.get("font-family"))
 
     def _font_size_int(self) -> int:
         fs = self.style.get("font-size")
