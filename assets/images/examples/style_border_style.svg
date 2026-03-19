@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="700.0" height="214.0" viewBox="0 0 700.0 214.0">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="700.0" height="214.0" fill="#f8f9fa" opacity="1.0" />
+<g>
+<rect x="20.0" y="20.0" width="209.33333333333331" height="60.8" fill="#ffffff" opacity="1.0" />
+<path d="M20.0,20.0 L229.33333333333331,20.0" stroke="#e74c3c" stroke-width="2.0" />
+<path d="M229.33333333333331,20.0 L229.33333333333331,80.8" stroke="#e74c3c" stroke-width="2.0" />
+<path d="M20.0,80.8 L229.33333333333331,80.8" stroke="#e74c3c" stroke-width="2.0" />
+<path d="M20.0,20.0 L20.0,80.8" stroke="#e74c3c" stroke-width="2.0" />
+<g>
+<text x="93.33072916666666" y="56.4" font-size="14" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">solid 边框</text>
+</g>
+</g>
+<g>
+<rect x="245.33333333333331" y="20.0" width="209.33333333333331" height="60.8" fill="#ffffff" opacity="1.0" />
+<path d="M245.33333333333331,20.0 L454.66666666666663,20.0" stroke="#e74c3c" stroke-width="2.0" stroke-dasharray="6.0,4.0" />
+<path d="M454.66666666666663,20.0 L454.66666666666663,80.8" stroke="#e74c3c" stroke-width="2.0" stroke-dasharray="6.0,4.0" />
+<path d="M245.33333333333331,80.8 L454.66666666666663,80.8" stroke="#e74c3c" stroke-width="2.0" stroke-dasharray="6.0,4.0" />
+<path d="M245.33333333333331,20.0 L245.33333333333331,80.8" stroke="#e74c3c" stroke-width="2.0" stroke-dasharray="6.0,4.0" />
+<g>
+<text x="310.40625" y="56.4" font-size="14" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">dashed 虚线</text>
+</g>
+</g>
+<g>
+<rect x="470.66666666666663" y="20.0" width="209.33333333333331" height="60.8" fill="#ffffff" opacity="1.0" />
+<path d="M470.66666666666663,20.0 L680.0,20.0" stroke="#e74c3c" stroke-width="2.0" stroke-dasharray="2.0,2.0" />
+<path d="M680.0,20.0 L680.0,80.8" stroke="#e74c3c" stroke-width="2.0" stroke-dasharray="2.0,2.0" />
+<path d="M470.66666666666663,80.8 L680.0,80.8" stroke="#e74c3c" stroke-width="2.0" stroke-dasharray="2.0,2.0" />
+<path d="M470.66666666666663,20.0 L470.66666666666663,80.8" stroke="#e74c3c" stroke-width="2.0" stroke-dasharray="2.0,2.0" />
+<g>
+<text x="537.6770833333333" y="56.4" font-size="14" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">dotted 点线</text>
+</g>
+</g>
+<g>
+<rect x="20.0" y="96.8" width="209.33333333333331" height="66.8" fill="#fff9e6" opacity="1.0" />
+<path d="M20.0,96.8 L229.33333333333331,96.8" stroke="#f39c12" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<path d="M229.33333333333331,96.8 L229.33333333333331,163.6" stroke="#f39c12" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<path d="M20.0,163.6 L229.33333333333331,163.6" stroke="#f39c12" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<path d="M20.0,96.8 L20.0,163.6" stroke="#f39c12" stroke-width="1.0" stroke-dasharray="4,2.0" />
+<g>
+<text x="87.36197916666666" y="132.2" font-size="14" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">dashed 1px</text>
+</g>
+</g>
+<g>
+<rect x="245.33333333333331" y="96.8" width="209.33333333333331" height="66.8" fill="#fff9e6" opacity="1.0" />
+<path d="M245.33333333333331,96.8 L454.66666666666663,96.8" stroke="#f39c12" stroke-width="3.0" stroke-dasharray="9.0,6.0" />
+<path d="M454.66666666666663,96.8 L454.66666666666663,163.6" stroke="#f39c12" stroke-width="3.0" stroke-dasharray="9.0,6.0" />
+<path d="M245.33333333333331,163.6 L454.66666666666663,163.6" stroke="#f39c12" stroke-width="3.0" stroke-dasharray="9.0,6.0" />
+<path d="M245.33333333333331,96.8 L245.33333333333331,163.6" stroke="#f39c12" stroke-width="3.0" stroke-dasharray="9.0,6.0" />
+<g>
+<text x="312.6953125" y="134.2" font-size="14" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">dashed 3px</text>
+</g>
+</g>
+<g>
+<rect x="470.66666666666663" y="96.8" width="209.33333333333331" height="66.8" fill="#fff9e6" opacity="1.0" />
+<path d="M470.66666666666663,96.8 L680.0,96.8" stroke="#f39c12" stroke-width="5.0" stroke-dasharray="15.0,10.0" />
+<path d="M680.0,96.8 L680.0,163.6" stroke="#f39c12" stroke-width="5.0" stroke-dasharray="15.0,10.0" />
+<path d="M470.66666666666663,163.6 L680.0,163.6" stroke="#f39c12" stroke-width="5.0" stroke-dasharray="15.0,10.0" />
+<path d="M470.66666666666663,96.8 L470.66666666666663,163.6" stroke="#f39c12" stroke-width="5.0" stroke-dasharray="15.0,10.0" />
+<g>
+<text x="538.0286458333333" y="136.2" font-size="14" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">dashed 5px</text>
+</g>
+</g>
+<g>
+<text x="20.0" y="191.79999999999998" font-size="12" fill="#2ecc71" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">✓ 预期：第一行三种边框样式对比；第二行虚线粗细递增</text>
+</g>
+</g>
+</svg>

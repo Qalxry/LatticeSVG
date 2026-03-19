@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="600.0" height="294.0" viewBox="0 0 600.0 294.0">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="600.0" height="294.0" fill="#fdf6e3" opacity="1.0" />
+<g>
+<rect x="20.0" y="20.0" width="560.0" height="52.8" fill="#eee8d5" opacity="1.0" />
+<text x="66.34375" y="54.4" font-size="24" fill="#073642" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">LatticeSVG：CSS Grid Layout Engine for SVG</text>
+</g>
+<g>
+<rect x="20.0" y="88.8" width="560.0" height="98.8" fill="#ffffff" opacity="1.0" />
+<path d="M20.0,88.8 L580.0,88.8" stroke="#93a1a1" stroke-width="1.0" />
+<path d="M580.0,88.8 L580.0,187.6" stroke="#93a1a1" stroke-width="1.0" />
+<path d="M20.0,187.6 L580.0,187.6" stroke="#93a1a1" stroke-width="1.0" />
+<path d="M20.0,88.8 L20.0,187.6" stroke="#93a1a1" stroke-width="1.0" />
+<text x="31.0" y="114.89999999999999" font-size="16" fill="#586e75" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">字体回退链（Font Fallback Chain）是一种常见的排版策略。当主字体（</text>
+<text x="31.0" y="134.1" font-size="16" fill="#586e75" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">Primary Font）缺少某个字符的字形（Glyph）时，引擎会自动尝试回退链中</text>
+<text x="31.0" y="153.29999999999998" font-size="16" fill="#586e75" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">的下一个字体。例如：英文使用 Times New Roman，中文使用 SimSun（宋体</text>
+<text x="31.0" y="172.49999999999997" font-size="16" fill="#586e75" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">）。</text>
+</g>
+<g>
+<rect x="20.0" y="203.6" width="560.0" height="70.4" fill="#fefbf1" opacity="1.0" />
+<text x="30.0" y="226.5" font-size="14" fill="#657b83" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">实现原理：FontManager.glyph_metrics() 接受字体路径列表，对每个字符调用 FreeType</text>
+<text x="30.0" y="243.3" font-size="14" fill="#657b83" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">的 get_char_index() 判断字形覆盖，选择第一个能提供该字符字形的字体进行度量。SVG</text>
+<text x="30.0" y="260.09999999999997" font-size="14" fill="#657b83" font-family="Times New Roman, SimSun, Noto Serif CJK JP, Noto Serif, DejaVu Serif, Liberation Serif, FreeSerif, serif" font-weight="normal" font-style="normal">输出使用 font-family 属性列出完整回退链。</text>
+</g>
+</g>
+</svg>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="840.0" height="560.0" viewBox="0 0 840.0 560.0">
+<defs>
+<clipPath id="d0">
+<circle cx="145.0" cy="145.0" r="125.0" />
+</clipPath>
+<clipPath id="d1">
+<ellipse cx="415.0" cy="145.0" rx="125.0" ry="62.5" />
+</clipPath>
+<clipPath id="d2">
+<path d="M685.0,38.0 L810.0,254.5 L560.0,254.5 Z" />
+</clipPath>
+<clipPath id="d3">
+<path d="M145.0,290.0 L270.0,415.0 L145.0,540.0 L20.0,415.0 Z" />
+</clipPath>
+<clipPath id="d4">
+<path d="M313.0,300.0 L517.0,300.0 A8.0,8.0,0,0,1,525.0,308.0 L525.0,522.0 A8.0,8.0,0,0,1,517.0,530.0 L313.0,530.0 A8.0,8.0,0,0,1,305.0,522.0 L305.0,308.0 A8.0,8.0,0,0,1,313.0,300.0 Z" />
+</clipPath>
+<clipPath id="d5">
+<path d="M685.0,290.0 L793.25,352.5 L793.25,477.5 L685.0,540.0 L576.75,477.5 L576.75,352.5 Z" />
+</clipPath>
+</defs>
+<use xlink:href="#d0" />
+<use xlink:href="#d1" />
+<use xlink:href="#d2" />
+<use xlink:href="#d3" />
+<use xlink:href="#d4" />
+<use xlink:href="#d5" />
+<g>
+<rect x="0.0" y="0.0" width="840.0" height="560.0" fill="#f0f0f0" opacity="1.0" />
+<g clip-path="url(#d0)">
+<rect x="20.0" y="20.0" width="250.0" height="250.0" fill="#3498db" opacity="1.0" />
+<g>
+<text x="108.4140625" y="114.4" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">circle(50%)</text>
+</g>
+</g>
+<g clip-path="url(#d1)">
+<rect x="290.0" y="20.0" width="250.0" height="250.0" fill="#e74c3c" opacity="1.0" />
+<g>
+<text x="359.015625" y="114.4" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">ellipse(50% 45%)</text>
+</g>
+</g>
+<g clip-path="url(#d2)">
+<rect x="560.0" y="20.0" width="250.0" height="250.0" fill="#2ecc71" opacity="1.0" />
+<g>
+<text x="651.1328125" y="114.4" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">△ triangle</text>
+</g>
+</g>
+<g clip-path="url(#d3)">
+<rect x="20.0" y="290.0" width="250.0" height="250.0" fill="#f39c12" opacity="1.0" />
+<g>
+<text x="106.8828125" y="384.4" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">◇ diamond</text>
+</g>
+</g>
+<g clip-path="url(#d4)">
+<rect x="290.0" y="290.0" width="250.0" height="250.0" fill="#9b59b6" opacity="1.0" />
+<g>
+<text x="354.9453125" y="383.8" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">inset(10 15 round 8)</text>
+</g>
+</g>
+<g clip-path="url(#d5)">
+<rect x="560.0" y="290.0" width="250.0" height="250.0" fill="#1abc9c" opacity="1.0" />
+<g>
+<text x="649.3125" y="384.4" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">⬡ hexagon</text>
+</g>
+</g>
+</g>
+</svg>

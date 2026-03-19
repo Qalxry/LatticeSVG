@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="800.0" height="335.2" viewBox="0 0 800.0 335.2">
+<defs>
+<clipPath id="d0">
+<rect x="108.0" y="57.599999999999994" width="300.0" height="30.8" />
+</clipPath>
+<clipPath id="d1">
+<rect x="108.0" y="116.39999999999999" width="300.0" height="30.8" />
+</clipPath>
+<clipPath id="d2">
+<rect x="108.0" y="175.2" width="300.0" height="30.8" />
+</clipPath>
+<clipPath id="d3">
+<rect x="108.0" y="233.99999999999997" width="300.0" height="30.8" />
+</clipPath>
+</defs>
+<use xlink:href="#d0" />
+<use xlink:href="#d1" />
+<use xlink:href="#d2" />
+<use xlink:href="#d3" />
+<g>
+<rect x="0.0" y="0.0" width="800.0" height="335.2" fill="#ffffff" opacity="1.0" />
+<g>
+<text x="20.0" y="38.3" font-size="18" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">Demo 24: text-overflow: ellipsis 精确截断</text>
+</g>
+<g>
+<g>
+<text x="20.0" y="78.0" font-size="12" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">英文窄盒</text>
+</g>
+<g clip-path="url(#d0)">
+<rect x="108.0" y="57.599999999999994" width="300.0" height="30.8" fill="#f0f4f8" opacity="1.0" />
+<path d="M108.0,57.599999999999994 L408.0,57.599999999999994" stroke="#d0d8e0" stroke-width="1.0" />
+<path d="M408.0,57.599999999999994 L408.0,88.39999999999999" stroke="#d0d8e0" stroke-width="1.0" />
+<path d="M108.0,88.39999999999999 L408.0,88.39999999999999" stroke="#d0d8e0" stroke-width="1.0" />
+<path d="M108.0,57.599999999999994 L108.0,88.39999999999999" stroke="#d0d8e0" stroke-width="1.0" />
+<text x="117.0" y="79.0" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">The quick brown fox jumps over the lazy …</text>
+</g>
+<g>
+<text x="20.0" y="100.3" font-size="4" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal"></text>
+</g>
+<g>
+<text x="116.0" y="106.89999999999999" font-size="10" fill="#999999" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">原文：The quick brown fox jumps over the lazy dog and keeps running forever and ever</text>
+</g>
+<g>
+<text x="20.0" y="136.79999999999998" font-size="12" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">中文窄盒</text>
+</g>
+<g clip-path="url(#d1)">
+<rect x="108.0" y="116.39999999999999" width="300.0" height="30.8" fill="#f0f4f8" opacity="1.0" />
+<path d="M108.0,116.39999999999999 L408.0,116.39999999999999" stroke="#d0d8e0" stroke-width="1.0" />
+<path d="M408.0,116.39999999999999 L408.0,147.2" stroke="#d0d8e0" stroke-width="1.0" />
+<path d="M108.0,147.2 L408.0,147.2" stroke="#d0d8e0" stroke-width="1.0" />
+<path d="M108.0,116.39999999999999 L108.0,147.2" stroke="#d0d8e0" stroke-width="1.0" />
+<text x="117.0" y="137.79999999999998" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">这是一段很长的中文测试文本，用于验证省…</text>
+</g>
+<g>
+<text x="20.0" y="159.1" font-size="4" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal"></text>
+</g>
+<g>
+<text x="116.0" y="165.7" font-size="10" fill="#999999" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">原文：这是一段很长的中文测试文本，用于验证省略号截断在中日韩字符下的精确度和边界表现如何</text>
+</g>
+<g>
+<text x="20.0" y="195.59999999999997" font-size="12" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">中英混合</text>
+</g>
+<g clip-path="url(#d2)">
+<rect x="108.0" y="175.2" width="300.0" height="30.8" fill="#f0f4f8" opacity="1.0" />
+<path d="M108.0,175.2 L408.0,175.2" stroke="#d0d8e0" stroke-width="1.0" />
+<path d="M408.0,175.2 L408.0,206.0" stroke="#d0d8e0" stroke-width="1.0" />
+<path d="M108.0,206.0 L408.0,206.0" stroke="#d0d8e0" stroke-width="1.0" />
+<path d="M108.0,175.2 L108.0,206.0" stroke="#d0d8e0" stroke-width="1.0" />
+<text x="117.0" y="196.6" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Hello世界！This is a mixed中英文text for …</text>
+</g>
+<g>
+<text x="20.0" y="217.89999999999998" font-size="4" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal"></text>
+</g>
+<g>
+<text x="116.0" y="224.49999999999997" font-size="10" fill="#999999" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">原文：Hello世界！This is a mixed中英文text for ellipsis精度测试，看看效果如何呢</text>
+</g>
+<g>
+<text x="20.0" y="254.39999999999995" font-size="12" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">数字密集</text>
+</g>
+<g clip-path="url(#d3)">
+<rect x="108.0" y="233.99999999999997" width="300.0" height="30.8" fill="#f0f4f8" opacity="1.0" />
+<path d="M108.0,233.99999999999997 L408.0,233.99999999999997" stroke="#d0d8e0" stroke-width="1.0" />
+<path d="M408.0,233.99999999999997 L408.0,264.79999999999995" stroke="#d0d8e0" stroke-width="1.0" />
+<path d="M108.0,264.79999999999995 L408.0,264.79999999999995" stroke="#d0d8e0" stroke-width="1.0" />
+<path d="M108.0,233.99999999999997 L108.0,264.79999999999995" stroke="#d0d8e0" stroke-width="1.0" />
+<text x="117.0" y="255.39999999999998" font-size="14" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">3.141592653589793238462643383279502…</text>
+</g>
+<g>
+<text x="20.0" y="276.69999999999993" font-size="4" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal"></text>
+</g>
+<g>
+<text x="116.0" y="283.29999999999995" font-size="10" fill="#999999" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">原文：3.141592653589793238462643383279502884197169399375105820974944592307816</text>
+</g>
+</g>
+<g>
+<text x="20.0" y="312.99999999999994" font-size="12" fill="#27ae60" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">✓ 预期：文本应在 300px 框内被截断并以「…」结尾，截断位置紧贴右边界</text>
+</g>
+</g>
+</svg>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="700.0" height="344.0" viewBox="0 0 700.0 344.0">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="700.0" height="344.0" fill="#f8f9fa" opacity="1.0" />
+<g transform="translate(135.33333333333331,100.0) rotate(15.0) translate(-135.33333333333331,-100.0)">
+<rect x="40.0" y="40.0" width="190.66666666666666" height="120.0" fill="#3498db" opacity="1.0" rx="4.0" ry="4.0" />
+<g>
+<text x="102.69270833333333" y="65.8" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">rotate(15°)</text>
+</g>
+</g>
+<g transform="translate(350.0,100.0) rotate(45.0) translate(-350.0,-100.0)">
+<rect x="254.66666666666666" y="40.0" width="190.66666666666666" height="120.0" fill="#3498db" opacity="1.0" rx="4.0" ry="4.0" />
+<g>
+<text x="317.35937499999994" y="65.8" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">rotate(45°)</text>
+</g>
+</g>
+<g transform="translate(564.6666666666666,100.0) rotate(-30.0) translate(-564.6666666666666,-100.0)">
+<rect x="469.3333333333333" y="40.0" width="190.66666666666666" height="120.0" fill="#3498db" opacity="1.0" rx="4.0" ry="4.0" />
+<g>
+<text x="529.7682291666666" y="65.8" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">rotate(-30°)</text>
+</g>
+</g>
+<g transform="translate(10.0,-5.0)">
+<rect x="40.0" y="184.0" width="190.66666666666666" height="120.0" fill="#e74c3c" opacity="1.0" rx="4.0" ry="4.0" />
+<g>
+<text x="108.13802083333333" y="209.8" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">translate</text>
+</g>
+</g>
+<g transform="translate(350.0,244.0) scale(0.8,0.8) translate(-350.0,-244.0)">
+<rect x="254.66666666666666" y="184.0" width="190.66666666666666" height="120.0" fill="#e74c3c" opacity="1.0" rx="4.0" ry="4.0" />
+<g>
+<text x="321.13281249999994" y="209.8" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">scale(0.8)</text>
+</g>
+</g>
+<g transform="translate(5.0,5.0) translate(564.6666666666666,244.0) scale(1.1,1.1) translate(-564.6666666666666,-244.0)">
+<rect x="469.3333333333333" y="184.0" width="190.66666666666666" height="120.0" fill="#e74c3c" opacity="1.0" rx="4.0" ry="4.0" />
+<g>
+<text x="538.6666666666666" y="209.8" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">组合变换</text>
+</g>
+</g>
+</g>
+</svg>

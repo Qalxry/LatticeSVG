@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="700.0" height="197.6" viewBox="0 0 700.0 197.6">
+<defs>
+<filter x="-50%" y="-50%" width="200%" height="200%" id="d0">
+<feDropShadow dx="0.0" dy="2.0" stdDeviation="2.0" flood-color="rgb(0,0,0)" flood-opacity="0.2"></feDropShadow>
+</filter>
+<filter x="-50%" y="-50%" width="200%" height="200%" id="d1">
+<feDropShadow dx="0.0" dy="4.0" stdDeviation="4.0" flood-color="rgb(0,0,0)" flood-opacity="0.3"></feDropShadow>
+</filter>
+<filter x="-50%" y="-50%" width="200%" height="200%" id="d2">
+<feDropShadow dx="0.0" dy="8.0" stdDeviation="8.0" flood-color="rgb(0,0,0)" flood-opacity="0.4"></feDropShadow>
+</filter>
+<filter x="-50%" y="-50%" width="200%" height="200%" id="d3">
+<feDropShadow dx="4.0" dy="4.0" stdDeviation="0.0" flood-color="rgb(0,0,0)" flood-opacity="0.15"></feDropShadow>
+</filter>
+<filter x="-50%" y="-50%" width="200%" height="200%" id="d4">
+<feDropShadow dx="0.0" dy="1.0" stdDeviation="1.5" flood-color="rgb(0,0,0)" flood-opacity="0.12"></feDropShadow>
+</filter>
+<filter x="-50%" y="-50%" width="200%" height="200%" id="d5">
+<feDropShadow dx="0.0" dy="4.0" stdDeviation="3.0" flood-color="rgb(0,0,0)" flood-opacity="0.15"></feDropShadow>
+</filter>
+<filter x="-50%" y="-50%" width="200%" height="200%" id="d6">
+<feDropShadow dx="0.0" dy="4.0" stdDeviation="6.0" flood-color="rgb(52,152,219)" flood-opacity="0.4"></feDropShadow>
+</filter>
+</defs>
+<use xlink:href="#d0" />
+<use xlink:href="#d1" />
+<use xlink:href="#d2" />
+<use xlink:href="#d3" />
+<use xlink:href="#d4" />
+<use xlink:href="#d5" />
+<use xlink:href="#d6" />
+<g>
+<rect x="0.0" y="0.0" width="700.0" height="197.6" fill="#f0f0f0" opacity="1.0" />
+<g>
+<rect x="30.0" y="30.0" width="197.33333333333331" height="56.8" rx="8.0" ry="8.0" fill="rgb(0,0,0)" fill-opacity="1" filter="url(#d0)" />
+<rect x="30.0" y="30.0" width="197.33333333333331" height="56.8" fill="#ffffff" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="100.66666666666666" y="64.4" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">轻柔阴影</text>
+</g>
+</g>
+<g>
+<rect x="251.33333333333331" y="30.0" width="197.33333333333331" height="56.8" rx="8.0" ry="8.0" fill="rgb(0,0,0)" fill-opacity="1" filter="url(#d1)" />
+<rect x="251.33333333333331" y="30.0" width="197.33333333333331" height="56.8" fill="#ffffff" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="322.0" y="64.4" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">中等阴影</text>
+</g>
+</g>
+<g>
+<rect x="472.66666666666663" y="30.0" width="197.33333333333331" height="56.8" rx="8.0" ry="8.0" fill="rgb(0,0,0)" fill-opacity="1" filter="url(#d2)" />
+<rect x="472.66666666666663" y="30.0" width="197.33333333333331" height="56.8" fill="#ffffff" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="543.3333333333333" y="64.4" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">深度阴影</text>
+</g>
+</g>
+<g>
+<rect x="30.0" y="110.8" width="197.33333333333331" height="56.8" rx="8.0" ry="8.0" fill="rgb(0,0,0)" fill-opacity="1" filter="url(#d3)" />
+<rect x="30.0" y="110.8" width="197.33333333333331" height="56.8" fill="#ffffff" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="100.66666666666666" y="145.20000000000002" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">偏移阴影</text>
+</g>
+</g>
+<g>
+<rect x="251.33333333333331" y="110.8" width="197.33333333333331" height="56.8" rx="8.0" ry="8.0" fill="rgb(0,0,0)" fill-opacity="1" filter="url(#d4)" />
+<rect x="251.33333333333331" y="110.8" width="197.33333333333331" height="56.8" rx="8.0" ry="8.0" fill="rgb(0,0,0)" fill-opacity="1" filter="url(#d5)" />
+<rect x="251.33333333333331" y="110.8" width="197.33333333333331" height="56.8" fill="#ffffff" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="322.0" y="145.20000000000002" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">多重阴影</text>
+</g>
+</g>
+<g>
+<rect x="472.66666666666663" y="110.8" width="197.33333333333331" height="56.8" rx="8.0" ry="8.0" fill="rgb(52,152,219)" fill-opacity="1" filter="url(#d6)" />
+<rect x="472.66666666666663" y="110.8" width="197.33333333333331" height="56.8" fill="#ffffff" opacity="1.0" rx="8.0" ry="8.0" />
+<g>
+<text x="543.3333333333333" y="145.20000000000002" font-size="14" fill="#000000" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">彩色阴影</text>
+</g>
+</g>
+</g>
+</svg>

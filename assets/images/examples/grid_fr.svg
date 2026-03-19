@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="700.0" height="90.0" viewBox="0 0 700.0 90.0">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="700.0" height="90.0" fill="#ecf0f1" opacity="1.0" />
+<g>
+<rect x="15.0" y="15.0" width="162.5" height="60.0" fill="#e74c3c" opacity="1.0" />
+</g>
+<g>
+<rect x="187.5" y="15.0" width="325.0" height="60.0" fill="#3498db" opacity="1.0" />
+</g>
+<g>
+<rect x="522.5" y="15.0" width="162.5" height="60.0" fill="#2ecc71" opacity="1.0" />
+</g>
+</g>
+</svg>

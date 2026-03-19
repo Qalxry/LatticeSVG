@@ -1,0 +1,3543 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Grid-based vector layout engine — CSS Grid layout to SVG/PNG">
+      
+      
+      
+        <link rel="canonical" href="https://Qalxry.github.io/LatticeSVG/_build/features/">
+      
+      
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../../zh/_build/features/" hreflang="zh">
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+    
+    
+      
+        <title>LatticeSVG 功能全景 - LatticeSVG</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+SC:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Noto Sans SC";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#latticesvg" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="LatticeSVG" class="md-header__button md-logo" aria-label="LatticeSVG" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LatticeSVG
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              LatticeSVG 功能全景
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"></path></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../../zh/_build/features/" hreflang="zh" class="md-select__link">
+              简体中文
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Qalxry/LatticeSVG" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    LatticeSVG
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/grid-layout/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Tutorials
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/css-properties/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="LatticeSVG" class="md-nav__button md-logo" aria-label="LatticeSVG" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"></path></svg>
+
+    </a>
+    LatticeSVG
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Qalxry/LatticeSVG" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    LatticeSVG
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Core Concepts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/grid-layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grid Layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/text-typography/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Text &amp; Typography
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/node-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Node Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/styling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Styling &amp; Visuals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/rich-text/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rich Text &amp; Markup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/css-properties/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CSS Properties
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Built-in Templates
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3">
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../reference/api/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/nodes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nodes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Style System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/text/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Text Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/layout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Layout Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/markup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markup Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/math/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Math
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 项目定位
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. 项目定位">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        依赖
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        公开 API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 架构总览
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 样式系统
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 样式系统">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-css" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 CSS 属性注册表
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.1 CSS 属性注册表">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        盒模型（不可继承）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grid 布局（不可继承）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文本（可继承）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        文本装饰（不可继承）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        视觉（不可继承）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 值解析
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-computedstyle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 ComputedStyle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 节点类型
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 节点类型">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Node（抽象基类）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-gridcontainer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 GridContainer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-textnode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 TextNode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-imagenode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 ImageNode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-svgnode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 SVGNode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-mplnode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 MplNode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-mathnode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 MathNode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.7 MathNode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        后端架构
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#48-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.8 自定义 Node
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 标记与富文本
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. 标记与富文本">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-markupparserpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 标记解析器（markup/parser.py）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1 标记解析器（markup/parser.py）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#html" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTML 子集
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#markdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Markdown 子集
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-textspan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 TextSpan 数据结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 文本引擎
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 文本引擎">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-fontmanager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 字体管理（FontManager）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 字体回退链
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-shaper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 文本排版（shaper）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3 文本排版（shaper）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        普通文本 API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        富文本 API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-textembedpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 字体嵌入与子集化（text/embed.py）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-gridsolver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. 布局引擎（GridSolver）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. 布局引擎（GridSolver）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 算法流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 关键特性
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. 渲染器
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. 渲染器">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 输出格式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 渲染细节
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 高级渲染特性
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. 内置样式模板
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. 内置样式模板">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#92" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 表格便捷构建
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. 已知限制
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 演示覆盖
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. 测试覆盖
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. 项目规模
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="latticesvg">LatticeSVG 功能全景<a class="headerlink" href="#latticesvg" title="Permanent link">¶</a></h1>
+<blockquote>
+<p>版本 0.1.0 · 基于 CSS Grid 的矢量布局引擎，输出高质量 SVG / PNG</p>
+</blockquote>
+<hr>
+<h2 id="1">1. 项目定位<a class="headerlink" href="#1" title="Permanent link">¶</a></h2>
+<p>LatticeSVG 是一个 <strong>Python 声明式矢量布局引擎</strong>——用户以类似 CSS 的 <code>dict</code> 描述布局意图，引擎完成测量、排版、渲染全流水线，输出精确到像素的 SVG（可选 PNG）。</p>
+<p>核心场景：程序化生成实验报告、数据可视化排版、论文图表拼接等需要精确控制位置和字体的静态矢量文档。</p>
+<h3 id="_1">依赖<a class="headerlink" href="#_1" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>依赖</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>drawsvg ≥ 2.0</code></td>
+<td>SVG 文档生成（元素创建、序列化）</td>
+</tr>
+<tr>
+<td><code>freetype-py ≥ 2.3</code></td>
+<td>FreeType 绑定，精确字形度量</td>
+</tr>
+<tr>
+<td><code>quickjax ≥ 0.1.0</code></td>
+<td>MathJax v4 via QuickJS，LaTeX 数学公式渲染</td>
+</tr>
+<tr>
+<td><code>cairosvg ≥ 2.5</code>（可选）</td>
+<td>SVG → PNG 转换</td>
+</tr>
+<tr>
+<td><code>Pillow</code>（可选）</td>
+<td>字形度量后备 + 图片尺寸探测</td>
+</tr>
+<tr>
+<td><code>matplotlib</code>（可选）</td>
+<td><code>MplNode</code> 图表嵌入</td>
+</tr>
+<tr>
+<td><code>fonttools</code>（可选）</td>
+<td>字体子集化嵌入（WOFF2）</td>
+</tr>
+<tr>
+<td><code>pyphen</code>（可选）</td>
+<td>自动断词（<code>hyphens: auto</code>）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="api">公开 API<a class="headerlink" href="#api" title="Permanent link">¶</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">latticesvg</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">GridContainer</span><span class="p">,</span>   <span class="c1"># Grid 容器节点</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">TextNode</span><span class="p">,</span>        <span class="c1"># 文本节点（支持富文本标记）</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">ImageNode</span><span class="p">,</span>       <span class="c1"># 光栅图片节点</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">SVGNode</span><span class="p">,</span>         <span class="c1"># 嵌入 SVG 节点</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">MplNode</span><span class="p">,</span>         <span class="c1"># 嵌入 Matplotlib 图表节点</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">MathNode</span><span class="p">,</span>        <span class="c1"># LaTeX 数学公式节点</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">Renderer</span><span class="p">,</span>        <span class="c1"># 渲染器（支持字体嵌入）</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">Node</span><span class="p">,</span>            <span class="c1"># 抽象基类（可继承扩展）</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">Rect</span><span class="p">,</span>            <span class="c1"># 轴对齐矩形</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">LayoutConstraints</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">ComputedStyle</span><span class="p">,</span>   <span class="c1"># 计算后的样式对象</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">templates</span><span class="p">,</span>       <span class="c1"># 17 个内置样式模板</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">build_table</span><span class="p">,</span>     <span class="c1"># 表格便捷构建函数</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">)</span>
+</span></code></pre></div>
+<hr>
+<h2 id="2">2. 架构总览<a class="headerlink" href="#2" title="Permanent link">¶</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>                 User Code
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>                     │
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>                     ▼
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>┌──────────────────────────────────────────────┐
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  Public API Layer  (__init__.py)             │
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  GridContainer, TextNode, ImageNode,         │
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  MplNode, SVGNode, MathNode, Renderer, ...   │
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>└────────────────────┬─────────────────────────┘
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>                     │
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>     ┌───────┬───────┼───────┬───────┐
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>     ▼       ▼       ▼       ▼       ▼
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>   style/  nodes/   text/  markup/  math/
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>   parser  base     font   parser   backend
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>   props   grid     shaper          __init__
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>   computed text    embed
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            image
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>            svg/mpl
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>            math
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>                     │
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>             ┌───────┴───────┐
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>             ▼               ▼
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>          layout/          render/
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>          grid_solver      renderer
+</span></code></pre></div>
+<p><strong>数据流</strong>：构建节点树 → 标记解析（HTML / Markdown）→ <code>ComputedStyle</code> 解析样式 → <code>GridSolver</code> 执行布局（measure + solve）→ <code>Renderer</code> 生成 SVG / PNG → 可选字体嵌入。</p>
+<hr>
+<h2 id="3">3. 样式系统<a class="headerlink" href="#3" title="Permanent link">¶</a></h2>
+<h3 id="31-css">3.1 CSS 属性注册表<a class="headerlink" href="#31-css" title="Permanent link">¶</a></h3>
+<p>共注册 <strong>63 个属性</strong>，分为五大类：</p>
+<h4 id="_2">盒模型（不可继承）<a class="headerlink" href="#_2" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>width</code> / <code>height</code></td>
+<td><code>auto</code></td>
+<td>显式尺寸</td>
+</tr>
+<tr>
+<td><code>min-width</code> / <code>max-width</code></td>
+<td><code>0px</code> / <code>none</code></td>
+<td>尺寸约束</td>
+</tr>
+<tr>
+<td><code>min-height</code> / <code>max-height</code></td>
+<td><code>0px</code> / <code>none</code></td>
+<td>尺寸约束</td>
+</tr>
+<tr>
+<td><code>margin-top/right/bottom/left</code></td>
+<td><code>0px</code></td>
+<td>外边距（支持 <code>margin</code> 简写）</td>
+</tr>
+<tr>
+<td><code>padding-top/right/bottom/left</code></td>
+<td><code>0px</code></td>
+<td>内边距（支持 <code>padding</code> 简写）</td>
+</tr>
+<tr>
+<td><code>border-*-width</code></td>
+<td><code>0px</code></td>
+<td>边框宽度（支持 <code>border-width</code> / <code>border</code> 简写）</td>
+</tr>
+<tr>
+<td><code>border-*-color</code></td>
+<td><code>none</code></td>
+<td>边框颜色</td>
+</tr>
+<tr>
+<td><code>border-*-style</code></td>
+<td><code>none</code></td>
+<td>边框样式（<code>solid</code> / <code>dashed</code> / <code>dotted</code>）</td>
+</tr>
+<tr>
+<td><code>border-radius</code></td>
+<td><code>0px</code></td>
+<td>圆角半径统一值（支持 <code>border-radius</code> 简写展开）</td>
+</tr>
+<tr>
+<td><code>border-top-left-radius</code></td>
+<td><code>0px</code></td>
+<td>左上圆角（四角独立）</td>
+</tr>
+<tr>
+<td><code>border-top-right-radius</code></td>
+<td><code>0px</code></td>
+<td>右上圆角（四角独立）</td>
+</tr>
+<tr>
+<td><code>border-bottom-right-radius</code></td>
+<td><code>0px</code></td>
+<td>右下圆角（四角独立）</td>
+</tr>
+<tr>
+<td><code>border-bottom-left-radius</code></td>
+<td><code>0px</code></td>
+<td>左下圆角（四角独立）</td>
+</tr>
+<tr>
+<td><code>box-sizing</code></td>
+<td><code>border-box</code></td>
+<td>盒尺寸模型（<code>border-box</code> / <code>content-box</code>）</td>
+</tr>
+<tr>
+<td><code>outline-width</code> / <code>outline-color</code></td>
+<td><code>0px</code> / <code>none</code></td>
+<td>外轮廓宽度和颜色</td>
+</tr>
+<tr>
+<td><code>outline-style</code></td>
+<td><code>none</code></td>
+<td>外轮廓样式（<code>solid</code> / <code>dashed</code> / <code>dotted</code>）</td>
+</tr>
+<tr>
+<td><code>outline-offset</code></td>
+<td><code>0px</code></td>
+<td>外轮廓与边框的间距</td>
+</tr>
+</tbody>
+</table>
+<h4 id="grid">Grid 布局（不可继承）<a class="headerlink" href="#grid" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>display</code></td>
+<td><code>block</code></td>
+<td>仅 <code>grid</code> 有效</td>
+</tr>
+<tr>
+<td><code>grid-template-columns</code></td>
+<td><code>None</code></td>
+<td>列轨道模板（支持 <code>repeat()</code> / <code>minmax()</code>）</td>
+</tr>
+<tr>
+<td><code>grid-template-rows</code></td>
+<td><code>None</code></td>
+<td>行轨道模板（支持 <code>repeat()</code> / <code>minmax()</code>）</td>
+</tr>
+<tr>
+<td><code>grid-template-areas</code></td>
+<td><code>None</code></td>
+<td>命名区域模板</td>
+</tr>
+<tr>
+<td><code>row-gap</code> / <code>column-gap</code></td>
+<td><code>0px</code></td>
+<td>轨道间距（支持 <code>gap</code> 简写）</td>
+</tr>
+<tr>
+<td><code>justify-items</code> / <code>align-items</code></td>
+<td><code>stretch</code></td>
+<td>网格项默认对齐</td>
+</tr>
+<tr>
+<td><code>justify-self</code> / <code>align-self</code></td>
+<td><code>auto</code></td>
+<td>网格项个体对齐</td>
+</tr>
+<tr>
+<td><code>grid-auto-flow</code></td>
+<td><code>row</code></td>
+<td>自动放置方向（<code>row</code> / <code>column</code> / <code>row dense</code> / <code>column dense</code>）</td>
+</tr>
+<tr>
+<td><code>grid-auto-rows</code></td>
+<td><code>auto</code></td>
+<td>隐式行轨道默认尺寸</td>
+</tr>
+<tr>
+<td><code>grid-auto-columns</code></td>
+<td><code>auto</code></td>
+<td>隐式列轨道默认尺寸</td>
+</tr>
+<tr>
+<td><code>grid-row</code> / <code>grid-column</code></td>
+<td><code>None</code></td>
+<td>显式行/列位置</td>
+</tr>
+<tr>
+<td><code>grid-area</code></td>
+<td><code>None</code></td>
+<td>命名区域放置（配合 <code>grid-template-areas</code>）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_3">文本（可继承）<a class="headerlink" href="#_3" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>font-family</code></td>
+<td><code>sans-serif</code></td>
+<td>字体族（支持回退链）</td>
+</tr>
+<tr>
+<td><code>font-size</code></td>
+<td><code>16px</code></td>
+<td>字号</td>
+</tr>
+<tr>
+<td><code>font-weight</code></td>
+<td><code>normal</code></td>
+<td>字重（<code>normal</code> / <code>bold</code>）</td>
+</tr>
+<tr>
+<td><code>font-style</code></td>
+<td><code>normal</code></td>
+<td>字形（<code>normal</code> / <code>italic</code>）</td>
+</tr>
+<tr>
+<td><code>text-align</code></td>
+<td><code>left</code></td>
+<td>水平对齐（<code>left</code> / <code>center</code> / <code>right</code> / <code>justify</code>）</td>
+</tr>
+<tr>
+<td><code>line-height</code></td>
+<td><code>1.2</code></td>
+<td>行高（≤ 5.0 视为倍数，否则为绝对值）</td>
+</tr>
+<tr>
+<td><code>white-space</code></td>
+<td><code>normal</code></td>
+<td>空白处理（<code>normal</code> / <code>nowrap</code> / <code>pre</code> / <code>pre-wrap</code> / <code>pre-line</code>）</td>
+</tr>
+<tr>
+<td><code>overflow-wrap</code></td>
+<td><code>normal</code></td>
+<td>溢出折行（<code>normal</code> / <code>break-word</code> / <code>anywhere</code>）</td>
+</tr>
+<tr>
+<td><code>word-break</code></td>
+<td><code>normal</code></td>
+<td>单词断行策略</td>
+</tr>
+<tr>
+<td><code>color</code></td>
+<td><code>#000000</code></td>
+<td>文本颜色</td>
+</tr>
+<tr>
+<td><code>letter-spacing</code></td>
+<td><code>normal</code></td>
+<td>字符间距（支持长度值，<code>normal</code> 等同于 <code>0</code>）</td>
+</tr>
+<tr>
+<td><code>word-spacing</code></td>
+<td><code>normal</code></td>
+<td>单词间距（支持长度值，<code>normal</code> 等同于 <code>0</code>）</td>
+</tr>
+<tr>
+<td><code>hyphens</code></td>
+<td><code>none</code></td>
+<td>断词策略（<code>none</code> / <code>manual</code> / <code>auto</code>）</td>
+</tr>
+<tr>
+<td><code>lang</code></td>
+<td><code>en</code></td>
+<td>语言标识（用于 <code>hyphens: auto</code> 的字典查找）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_4">文本装饰（不可继承）<a class="headerlink" href="#_4" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text-decoration</code></td>
+<td><code>none</code></td>
+<td>文本装饰（<code>underline</code> / <code>line-through</code>）</td>
+</tr>
+<tr>
+<td><code>text-overflow</code></td>
+<td><code>clip</code></td>
+<td>文本溢出（<code>clip</code> / <code>ellipsis</code>）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_5">视觉（不可继承）<a class="headerlink" href="#_5" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>background-color</code></td>
+<td><code>none</code></td>
+<td>背景色</td>
+</tr>
+<tr>
+<td><code>background-image</code></td>
+<td><code>none</code></td>
+<td>渐变背景（<code>linear-gradient()</code> / <code>radial-gradient()</code>）</td>
+</tr>
+<tr>
+<td><code>opacity</code></td>
+<td><code>1</code></td>
+<td>不透明度</td>
+</tr>
+<tr>
+<td><code>overflow</code></td>
+<td><code>visible</code></td>
+<td>溢出处理（<code>visible</code> / <code>hidden</code>）</td>
+</tr>
+<tr>
+<td><code>clip-path</code></td>
+<td><code>none</code></td>
+<td>裁剪路径（<code>circle()</code> / <code>ellipse()</code> / <code>polygon()</code> / <code>inset()</code>）</td>
+</tr>
+<tr>
+<td><code>object-fit</code></td>
+<td><code>fill</code></td>
+<td>图片适配（<code>fill</code> / <code>contain</code> / <code>cover</code> / <code>none</code>）</td>
+</tr>
+<tr>
+<td><code>box-shadow</code></td>
+<td><code>none</code></td>
+<td>盒阴影（支持多重阴影，逗号分隔）</td>
+</tr>
+<tr>
+<td><code>transform</code></td>
+<td><code>none</code></td>
+<td>变换函数链（<code>translate()</code> / <code>rotate()</code> / <code>scale()</code>）</td>
+</tr>
+<tr>
+<td><code>filter</code></td>
+<td><code>none</code></td>
+<td>滤镜函数链（<code>blur()</code> / <code>grayscale()</code> / <code>sepia()</code> 等）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32">3.2 值解析<a class="headerlink" href="#32" title="Permanent link">¶</a></h3>
+<p><strong>支持的长度单位</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>单位</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>px</code></td>
+<td>像素（默认）</td>
+</tr>
+<tr>
+<td><code>%</code></td>
+<td>百分比（相对父级对应轴尺寸，延迟解析）</td>
+</tr>
+<tr>
+<td><code>em</code></td>
+<td>相对当前元素 <code>font-size</code></td>
+</tr>
+<tr>
+<td><code>rem</code></td>
+<td>相对根元素 <code>font-size</code>（默认 16px）</td>
+</tr>
+<tr>
+<td><code>fr</code></td>
+<td>Grid 弹性单位</td>
+</tr>
+<tr>
+<td><code>pt</code></td>
+<td>磅（1pt = 4/3 px @96dpi）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>颜色格式</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#hex</code> (3/4/6/8 位)</td>
+<td><code>#f00</code>, <code>#ff0000</code>, <code>#ff000080</code></td>
+</tr>
+<tr>
+<td><code>rgb()</code></td>
+<td><code>rgb(255, 0, 0)</code></td>
+</tr>
+<tr>
+<td><code>rgba()</code></td>
+<td><code>rgba(255, 0, 0, 0.5)</code></td>
+</tr>
+<tr>
+<td>命名颜色</td>
+<td><code>red</code>, <code>blue</code>, <code>transparent</code> 等 28 种</td>
+</tr>
+</tbody>
+</table>
+<p><strong>简写展开</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>简写</th>
+<th>展开为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>margin</code></td>
+<td><code>margin-top/right/bottom/left</code>（1→4 值规则）</td>
+</tr>
+<tr>
+<td><code>padding</code></td>
+<td><code>padding-top/right/bottom/left</code></td>
+</tr>
+<tr>
+<td><code>border-width</code></td>
+<td><code>border-top/right/bottom/left-width</code></td>
+</tr>
+<tr>
+<td><code>border-color</code></td>
+<td><code>border-top/right/bottom/left-color</code></td>
+</tr>
+<tr>
+<td><code>border-radius</code></td>
+<td><code>border-top-left/top-right/bottom-right/bottom-left-radius</code>（1→4 值规则）</td>
+</tr>
+<tr>
+<td><code>gap</code></td>
+<td><code>row-gap</code> + <code>column-gap</code></td>
+</tr>
+<tr>
+<td><code>border</code></td>
+<td>拆解为 <code>width</code> + <code>style</code> + <code>color</code></td>
+</tr>
+<tr>
+<td><code>outline</code></td>
+<td>拆解为 <code>outline-width</code> + <code>outline-style</code> + <code>outline-color</code></td>
+</tr>
+<tr>
+<td><code>background</code></td>
+<td>拆解为 <code>background-color</code> 或渐变值</td>
+</tr>
+</tbody>
+</table>
+<p><strong>渐变语法</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>linear-gradient()</code></td>
+<td><code>linear-gradient(to right, #e66465, #9198e5)</code></td>
+</tr>
+<tr>
+<td><code>radial-gradient()</code></td>
+<td><code>radial-gradient(circle, #fff, #000)</code></td>
+</tr>
+</tbody>
+</table>
+<p>支持角度（<code>45deg</code>）、方向关键词（<code>to right</code>、<code>to bottom left</code>）、多色停和百分比位置。</p>
+<p><strong>裁剪路径语法</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>circle()</code></td>
+<td><code>circle(50%)</code></td>
+</tr>
+<tr>
+<td><code>ellipse()</code></td>
+<td><code>ellipse(50% 40%)</code></td>
+</tr>
+<tr>
+<td><code>polygon()</code></td>
+<td><code>polygon(50% 0%, 100% 100%, 0% 100%)</code></td>
+</tr>
+<tr>
+<td><code>inset()</code></td>
+<td><code>inset(10px 20px 30px 40px round 5px)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>轨道函数</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>repeat()</code></td>
+<td><code>repeat(3, 1fr)</code> / <code>repeat(2, 100px 1fr)</code></td>
+</tr>
+<tr>
+<td><code>minmax()</code></td>
+<td><code>minmax(100px, 1fr)</code> / <code>minmax(min-content, 300px)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Grid 行列线规范</strong>：支持 <code>"2 / span 3"</code> 语法，解析为 <code>(start, span)</code> 元组。</p>
+<p><strong>盒阴影语法</strong>：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>box-shadow: offset-x offset-y [blur-radius] [spread-radius] [color]
+</span></code></pre></div>
+<ul>
+<li>支持 2~4 个长度值：<code>offset-x offset-y [blur [spread]]</code></li>
+<li>颜色可在任意位置指定（支持 <code>#hex</code> / <code>rgb()</code> / <code>rgba()</code> / 命名颜色）</li>
+<li>多重阴影以逗号分隔：<code>"0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)"</code></li>
+<li>数据结构：<code>BoxShadow(offset_x, offset_y, blur_radius, spread_radius, color, inset)</code></li>
+</ul>
+<p><strong>变换函数语法</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>语法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>translate()</code></td>
+<td><code>translate(x, y)</code> / <code>translateX(x)</code> / <code>translateY(y)</code></td>
+<td>平移</td>
+</tr>
+<tr>
+<td><code>rotate()</code></td>
+<td><code>rotate(angle)</code></td>
+<td>旋转（支持 <code>deg</code> / <code>rad</code> / <code>turn</code> / <code>grad</code>）</td>
+</tr>
+<tr>
+<td><code>scale()</code></td>
+<td><code>scale(x, y)</code> / <code>scale(x)</code> / <code>scaleX(x)</code> / <code>scaleY(y)</code></td>
+<td>缩放</td>
+</tr>
+</tbody>
+</table>
+<p>支持多函数串联：<code>"translate(10px, -5px) scale(0.8) rotate(45deg)"</code>。变换不影响布局，仅影响视觉渲染。变换原点默认为元素中心（等同于 CSS <code>transform-origin: 50% 50%</code>）。</p>
+<p><strong>滤镜函数语法</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blur()</code></td>
+<td><code>blur(5px)</code></td>
+<td>高斯模糊</td>
+</tr>
+<tr>
+<td><code>brightness()</code></td>
+<td><code>brightness(150%)</code> / <code>brightness(1.5)</code></td>
+<td>亮度调节</td>
+</tr>
+<tr>
+<td><code>contrast()</code></td>
+<td><code>contrast(200%)</code> / <code>contrast(2)</code></td>
+<td>对比度调节</td>
+</tr>
+<tr>
+<td><code>grayscale()</code></td>
+<td><code>grayscale(100%)</code> / <code>grayscale(1)</code></td>
+<td>灰度化</td>
+</tr>
+<tr>
+<td><code>saturate()</code></td>
+<td><code>saturate(200%)</code> / <code>saturate(2)</code></td>
+<td>饱和度调节</td>
+</tr>
+<tr>
+<td><code>sepia()</code></td>
+<td><code>sepia(100%)</code> / <code>sepia(1)</code></td>
+<td>棕褐色调</td>
+</tr>
+<tr>
+<td><code>opacity()</code></td>
+<td><code>opacity(50%)</code> / <code>opacity(0.5)</code></td>
+<td>透明度</td>
+</tr>
+<tr>
+<td><code>drop-shadow()</code></td>
+<td><code>drop-shadow(4px 4px 6px rgba(0,0,0,0.3))</code></td>
+<td>投影</td>
+</tr>
+</tbody>
+</table>
+<p>支持多滤镜串联：<code>"blur(2px) grayscale(50%)"</code>。参数支持百分比和小数两种写法。</p>
+<h3 id="33-computedstyle">3.3 ComputedStyle<a class="headerlink" href="#33-computedstyle" title="Permanent link">¶</a></h3>
+<ul>
+<li>合并父级样式（可继承属性自动继承）→ 填充默认值 → 解析用户声明值</li>
+<li>优先解析 <code>font-size</code>（因为 <code>em</code> 单位依赖它）</li>
+<li>按 <code>parser_hint</code> 分派到专用解析器（轨道模板 / 命名区域 / 裁剪路径 / 渐变 / 盒阴影 / 变换 / 滤镜）</li>
+<li>支持 Python 属性风格访问：<code>style.font_size</code> ⇔ <code>style.get("font-size")</code></li>
+<li>便利属性：<code>margin_horizontal</code>、<code>padding_vertical</code>、<code>border_horizontal</code> 等聚合访问器</li>
+<li><code>border_radii</code> 属性：返回四角圆角值元组</li>
+<li><code>has_uniform_radius</code>：判断是否为统一圆角</li>
+<li><code>resolve_percentages(ref_width, ref_height)</code> 延迟解析百分比</li>
+</ul>
+<hr>
+<h2 id="4">4. 节点类型<a class="headerlink" href="#4" title="Permanent link">¶</a></h2>
+<h3 id="41-node">4.1 Node（抽象基类）<a class="headerlink" href="#41-node" title="Permanent link">¶</a></h3>
+<p>所有节点的公共接口：</p>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.style: ComputedStyle</code></td>
+<td>计算后的样式</td>
+</tr>
+<tr>
+<td><code>.children: List[Node]</code></td>
+<td>子节点</td>
+</tr>
+<tr>
+<td><code>.border_box</code> / <code>.padding_box</code> / <code>.content_box</code></td>
+<td>三层盒模型矩形（布局后填充）</td>
+</tr>
+<tr>
+<td><code>.placement: PlacementHint</code></td>
+<td>Grid 放置信息（行/列起始 + 跨度 + 命名区域）</td>
+</tr>
+<tr>
+<td><code>.add(child, *, row, col, row_span, col_span, area)</code></td>
+<td>添加子节点并设置 Grid 位置或命名区域</td>
+</tr>
+<tr>
+<td><code>.measure(constraints) → (min_w, max_w, h)</code></td>
+<td>测量（子类实现）</td>
+</tr>
+<tr>
+<td><code>.layout(constraints)</code></td>
+<td>执行布局（子类实现）</td>
+</tr>
+</tbody>
+</table>
+<p><code>Rect(x, y, width, height)</code> 是轴对齐矩形，提供 <code>.right</code>、<code>.bottom</code>、<code>.copy()</code> 便利方法。</p>
+<h3 id="42-gridcontainer">4.2 GridContainer<a class="headerlink" href="#42-gridcontainer" title="Permanent link">¶</a></h3>
+<p>CSS Grid 布局容器。所有 Grid 算法委托给 <code>GridSolver</code>。</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">grid</span> <span class="o">=</span> <span class="n">GridContainer</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">"width"</span><span class="p">:</span> <span class="s2">"800px"</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s2">"grid-template-columns"</span><span class="p">:</span> <span class="s2">"repeat(3, 1fr)"</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="s2">"grid-template-rows"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"auto"</span><span class="p">,</span> <span class="s2">"1fr"</span><span class="p">],</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="s2">"grid-auto-rows"</span><span class="p">:</span> <span class="s2">"150px"</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="s2">"gap"</span><span class="p">:</span> <span class="s2">"10px"</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">})</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">grid</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col_span</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">grid</span><span class="o">.</span><span class="n">layout</span><span class="p">(</span><span class="n">available_width</span><span class="o">=</span><span class="mi">800</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>支持的轨道类型</strong>：<code>&lt;length&gt;</code> / <code>&lt;percentage&gt;</code> / <code>fr</code> / <code>auto</code> / <code>min-content</code> / <code>max-content</code> / <code>minmax()</code> / <code>repeat()</code></p>
+<p><strong>命名区域</strong>：<code>grid-template-areas</code> 支持语义化布局声明，如 <code>"header header" "sidebar main" "footer footer"</code>。使用 <code>.add(child, area="header")</code> 将子节点放置到命名区域。</p>
+<p><strong>隐式轨道</strong>：<code>grid-auto-rows</code> / <code>grid-auto-columns</code> 控制隐式轨道尺寸，支持固定值、百分比、<code>fr</code> 等轨道类型。</p>
+<p><strong>自动放置</strong>：<code>grid-auto-flow: row | column | row dense | column dense</code></p>
+<p><strong>对齐</strong>：<code>justify-items/self</code> + <code>align-items/self</code>，值可为 <code>stretch</code>（默认）/ <code>start</code> / <code>center</code> / <code>end</code></p>
+<p><strong>嵌套</strong>：Grid 可作为另一个 Grid 的子项，递归布局。</p>
+<h3 id="43-textnode">4.3 TextNode<a class="headerlink" href="#43-textnode" title="Permanent link">¶</a></h3>
+<p>精确排版的文本叶节点，支持纯文本和富文本标记：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 纯文本</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">text</span> <span class="o">=</span> <span class="n">TextNode</span><span class="p">(</span><span class="s2">"Hello, 世界！"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="s2">"font-family"</span><span class="p">:</span> <span class="s2">"Times, SimSun, serif"</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="s2">"font-size"</span><span class="p">:</span> <span class="s2">"14px"</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="s2">"text-align"</span><span class="p">:</span> <span class="s2">"center"</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="s2">"white-space"</span><span class="p">:</span> <span class="s2">"normal"</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="s2">"overflow-wrap"</span><span class="p">:</span> <span class="s2">"break-word"</span><span class="p">,</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">})</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># HTML 富文本</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">text</span> <span class="o">=</span> <span class="n">TextNode</span><span class="p">(</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="s1">'这是&lt;b&gt;加粗&lt;/b&gt;和&lt;i&gt;斜体&lt;/i&gt;以及&lt;span style="color:red"&gt;红色&lt;/span&gt;文字'</span><span class="p">,</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">"font-size"</span><span class="p">:</span> <span class="s2">"14px"</span><span class="p">},</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="n">markup</span><span class="o">=</span><span class="s2">"html"</span><span class="p">,</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">)</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Markdown 富文本</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="n">text</span> <span class="o">=</span> <span class="n">TextNode</span><span class="p">(</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="s2">"这是**加粗**和*斜体*以及`代码`文字"</span><span class="p">,</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>    <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">"font-size"</span><span class="p">:</span> <span class="s2">"14px"</span><span class="p">},</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    <span class="n">markup</span><span class="o">=</span><span class="s2">"markdown"</span><span class="p">,</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="p">)</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="c1"># 内联数学公式（HTML）</span>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="n">text</span> <span class="o">=</span> <span class="n">TextNode</span><span class="p">(</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>    <span class="sa">r</span><span class="s1">'由欧拉公式 &lt;math&gt;e^{i\pi} + 1 = 0&lt;/math&gt; 可知...'</span><span class="p">,</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>    <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">"font-size"</span><span class="p">:</span> <span class="s2">"14px"</span><span class="p">},</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>    <span class="n">markup</span><span class="o">=</span><span class="s2">"html"</span><span class="p">,</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="p">)</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="c1"># 内联数学公式（Markdown）</span>
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="n">text</span> <span class="o">=</span> <span class="n">TextNode</span><span class="p">(</span>
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>    <span class="sa">r</span><span class="s1">'由欧拉公式 $e^{i\pi} + 1 = 0$ 可知...'</span><span class="p">,</span>
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>    <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">"font-size"</span><span class="p">:</span> <span class="s2">"14px"</span><span class="p">},</span>
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>    <span class="n">markup</span><span class="o">=</span><span class="s2">"markdown"</span><span class="p">,</span>
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>特性</strong>：</p>
+<ul>
+<li><strong>字体回退链</strong>：按 <code>font-family</code> 列表顺序逐字符查找可用字形</li>
+<li><strong>CJK 混排</strong>：中日韩字符逐字可断行，与西文自然混排</li>
+<li><strong>white-space 模式</strong>：<code>normal</code>（折行+折叠空白）、<code>nowrap</code>（不折行）、<code>pre</code>（保留换行和空白）、<code>pre-wrap</code>（保留空白但可折行）、<code>pre-line</code>（折叠空白但保留显式换行）</li>
+<li><strong>overflow-wrap</strong>：<code>normal</code> / <code>break-word</code>（超宽单词逐字符拆分）/ <code>anywhere</code></li>
+<li><strong>text-align</strong>：<code>left</code> / <code>center</code> / <code>right</code> / <code>justify</code>（两端对齐，末行保持左对齐）</li>
+<li><strong>line-height</strong>：支持倍数和绝对值</li>
+<li><strong>text-decoration</strong>：<code>underline</code> / <code>line-through</code></li>
+<li><strong>富文本标记</strong>：<code>markup="html"</code> 或 <code>markup="markdown"</code>，在单个文本块内混合多种样式</li>
+<li><strong>内联数学公式</strong>：通过 <code>&lt;math&gt;</code> 标签（HTML）或 <code>$...$</code> 语法（Markdown）嵌入 LaTeX 公式</li>
+<li><strong>letter-spacing</strong>：字符间距调节，影响度量、折行和渲染</li>
+<li><strong>word-spacing</strong>：单词间距调节，同步影响排版全流程</li>
+<li><strong>hyphens</strong>：断词支持——<code>none</code>（不断词）、<code>manual</code>（仅在软连字符 U+00AD 处断词）、<code>auto</code>（基于 <code>pyphen</code> 字典自动断词，由 <code>lang</code> 属性指定语言）</li>
+</ul>
+<h3 id="44-imagenode">4.4 ImageNode<a class="headerlink" href="#44-imagenode" title="Permanent link">¶</a></h3>
+<p>光栅图片嵌入：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">img</span> <span class="o">=</span> <span class="n">ImageNode</span><span class="p">(</span><span class="s2">"photo.png"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">"width"</span><span class="p">:</span> <span class="s2">"200px"</span><span class="p">})</span>
+</span></code></pre></div>
+<ul>
+<li><strong>支持格式</strong>：PNG、JPEG、GIF、WebP、SVG</li>
+<li><strong>源类型</strong>：文件路径 / URL（<code>http://</code> / <code>https://</code>）/ 原始 bytes / PIL Image 对象</li>
+<li><strong>object-fit</strong>：<code>fill</code>（拉伸）/ <code>contain</code>（等比缩小）/ <code>cover</code>（等比放大裁切）/ <code>none</code>（原尺寸居中）</li>
+<li><strong>嵌入方式</strong>：base64 编码为 data URI</li>
+</ul>
+<h3 id="45-svgnode">4.5 SVGNode<a class="headerlink" href="#45-svgnode" title="Permanent link">¶</a></h3>
+<p>嵌入外部或内联 SVG：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 从文件</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">svg</span> <span class="o">=</span> <span class="n">SVGNode</span><span class="p">(</span><span class="s2">"diagram.svg"</span><span class="p">,</span> <span class="n">is_file</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># 从字符串</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">svg</span> <span class="o">=</span> <span class="n">SVGNode</span><span class="p">(</span><span class="s1">'&lt;circle cx="50" cy="50" r="40" fill="red"/&gt;'</span><span class="p">)</span>
+</span></code></pre></div>
+<ul>
+<li>自动从 <code>viewBox</code> 或 <code>width/height</code> 解析固有尺寸</li>
+<li>布局后计算缩放因子，等比适配分配空间</li>
+<li>剥离外层 <code>&lt;svg&gt;</code> 标签，作为子内容嵌入，保留表现属性</li>
+</ul>
+<h3 id="46-mplnode">4.6 MplNode<a class="headerlink" href="#46-mplnode" title="Permanent link">¶</a></h3>
+<p>嵌入 Matplotlib Figure：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">node</span> <span class="o">=</span> <span class="n">MplNode</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">"width"</span><span class="p">:</span> <span class="s2">"400px"</span><span class="p">,</span> <span class="s2">"height"</span><span class="p">:</span> <span class="s2">"300px"</span><span class="p">})</span>
+</span></code></pre></div>
+<ul>
+<li>使用 72 DPI 作为 SVG 坐标系基准</li>
+<li>布局时自动调用 <code>figure.set_size_inches()</code> 使输出精确匹配分配空间</li>
+<li>SVG 片段缓存，避免重复导出</li>
+</ul>
+<h3 id="47-mathnode">4.7 MathNode<a class="headerlink" href="#47-mathnode" title="Permanent link">¶</a></h3>
+<p>LaTeX 数学公式节点，通过可插拔后端渲染为 SVG 路径：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 独立公式块</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">formula</span> <span class="o">=</span> <span class="n">MathNode</span><span class="p">(</span><span class="sa">r</span><span class="s2">"E = mc^2"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">"font-size"</span><span class="p">:</span> <span class="s2">"20px"</span><span class="p">})</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># 指定后端</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">formula</span> <span class="o">=</span> <span class="n">MathNode</span><span class="p">(</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="sa">r</span><span class="s2">"\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}"</span><span class="p">,</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">"font-size"</span><span class="p">:</span> <span class="s2">"18px"</span><span class="p">},</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">backend</span><span class="o">=</span><span class="s2">"quickjax"</span><span class="p">,</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="p">)</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># 展示模式 vs 行内模式</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="n">block</span> <span class="o">=</span> <span class="n">MathNode</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\sum_{i=1}^</span><span class="si">{n}</span><span class="s2"> i = \frac{n(n+1)}</span><span class="si">{2}</span><span class="s2">"</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="n">inline</span> <span class="o">=</span> <span class="n">MathNode</span><span class="p">(</span><span class="sa">r</span><span class="s2">"x^2"</span><span class="p">,</span> <span class="n">display</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># 全局配置默认后端</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="kn">from</span><span class="w"> </span><span class="nn">latticesvg.math</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_default_backend</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="n">set_default_backend</span><span class="p">(</span><span class="s2">"quickjax"</span><span class="p">)</span>
+</span></code></pre></div>
+<h4 id="_6">后端架构<a class="headerlink" href="#_6" title="Permanent link">¶</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>MathNode
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  │
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  ▼
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>MathBackend (Protocol)          # 抽象接口
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  ├── .render(latex, font_size) → SVGFragment(svg_content, width, height, depth)
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  └── .available() → bool       # 检查后端是否可用
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  │
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  ├── QuickJaxBackend (默认)    # MathJax v4 via QuickJS，无需 Node.js
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  └── (用户可自定义后端)
+</span></code></pre></div>
+<p><strong>后端管理 API</strong>：
+- <code>register_backend(name, cls)</code> — 注册新后端
+- <code>set_default_backend(name)</code> — 设定全局默认
+- <code>get_backend(name)</code> — 获取后端实例（带缓存）</p>
+<h3 id="48-node">4.8 自定义 Node<a class="headerlink" href="#48-node" title="Permanent link">¶</a></h3>
+<p>继承 <code>Node</code> 并实现 <code>measure()</code> + <code>layout()</code> 即可创建自定义节点：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ColorBox</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="n">style</span> <span class="ow">or</span> <span class="p">{},</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constraints</span><span class="p">):</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_width</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">100</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        <span class="k">return</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_height</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">100</span><span class="p">)</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constraints</span><span class="p">):</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_width</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">100</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_height</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">100</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_box_model</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></code></pre></div>
+<hr>
+<h2 id="5">5. 标记与富文本<a class="headerlink" href="#5" title="Permanent link">¶</a></h2>
+<h3 id="51-markupparserpy">5.1 标记解析器（markup/parser.py）<a class="headerlink" href="#51-markupparserpy" title="Permanent link">¶</a></h3>
+<p>统一入口函数 <code>parse_markup(text, markup)</code> 将标记文本解析为 <code>List[TextSpan]</code>，每个 span 携带独立样式覆盖。</p>
+<h4 id="html">HTML 子集<a class="headerlink" href="#html" title="Permanent link">¶</a></h4>
+<p><code>parse_html(text)</code> 支持以下标签：</p>
+<table>
+<thead>
+<tr>
+<th>HTML 标签</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;b&gt;</code> / <code>&lt;strong&gt;</code></td>
+<td>加粗</td>
+</tr>
+<tr>
+<td><code>&lt;i&gt;</code> / <code>&lt;em&gt;</code></td>
+<td>斜体</td>
+</tr>
+<tr>
+<td><code>&lt;code&gt;</code></td>
+<td>等宽字体 + 可选背景色</td>
+</tr>
+<tr>
+<td><code>&lt;u&gt;</code></td>
+<td>下划线</td>
+</tr>
+<tr>
+<td><code>&lt;s&gt;</code> / <code>&lt;del&gt;</code></td>
+<td>删除线</td>
+</tr>
+<tr>
+<td><code>&lt;sub&gt;</code> / <code>&lt;sup&gt;</code></td>
+<td>下标 / 上标（缩小字号 + 偏移 baseline）</td>
+</tr>
+<tr>
+<td><code>&lt;br&gt;</code></td>
+<td>强制换行</td>
+</tr>
+<tr>
+<td><code>&lt;span style="..."&gt;</code></td>
+<td>内联样式覆盖</td>
+</tr>
+<tr>
+<td><code>&lt;math&gt;</code></td>
+<td>内联 LaTeX 数学公式</td>
+</tr>
+</tbody>
+</table>
+<p><code>&lt;span style="..."&gt;</code> 支持的内联 CSS 属性：<code>color</code>、<code>font-size</code>、<code>font-family</code>、<code>font-weight</code>、<code>font-style</code>、<code>background-color</code>、<code>text-decoration</code>。</p>
+<h4 id="markdown">Markdown 子集<a class="headerlink" href="#markdown" title="Permanent link">¶</a></h4>
+<p><code>parse_markdown(text)</code> 支持以下语法：</p>
+<table>
+<thead>
+<tr>
+<th>Markdown 语法</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>**text**</code></td>
+<td>加粗</td>
+</tr>
+<tr>
+<td><code>*text*</code></td>
+<td>斜体</td>
+</tr>
+<tr>
+<td><code>`text`</code></td>
+<td>等宽代码</td>
+</tr>
+<tr>
+<td><code>~~text~~</code></td>
+<td>删除线</td>
+</tr>
+<tr>
+<td><code>$latex$</code></td>
+<td>内联数学公式</td>
+</tr>
+</tbody>
+</table>
+<p>Markdown 内部转换为 HTML 后复用 HTML 解析器。</p>
+<h3 id="52-textspan">5.2 TextSpan 数据结构<a class="headerlink" href="#52-textspan" title="Permanent link">¶</a></h3>
+<p>每个 <code>TextSpan</code> 携带以下可选样式覆盖字段：</p>
+<ul>
+<li><code>text</code> — 文本内容</li>
+<li><code>font_weight</code> / <code>font_style</code> / <code>font_family</code> / <code>font_size</code> — 字体覆盖</li>
+<li><code>color</code> / <code>background_color</code> — 颜色覆盖</li>
+<li><code>baseline_shift</code> — 基线偏移（<code>super</code> / <code>sub</code>）</li>
+<li><code>text_decoration</code> — 文本装饰（<code>underline</code> / <code>line-through</code>）</li>
+<li><code>is_line_break</code> — 强制换行标记</li>
+<li><code>is_math</code> — 数学公式标记</li>
+</ul>
+<hr>
+<h2 id="6">6. 文本引擎<a class="headerlink" href="#6" title="Permanent link">¶</a></h2>
+<h3 id="61-fontmanager">6.1 字体管理（FontManager）<a class="headerlink" href="#61-fontmanager" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>单例模式</strong>：<code>FontManager.instance()</code></li>
+<li><strong>双后端</strong>：<code>_FreeTypeBackend</code>（首选，NO_HINTING 模式精确度量）/ <code>_PillowBackend</code>（后备）</li>
+<li><strong>系统字体发现</strong>：自动扫描 Linux / macOS / Windows 系统字体目录</li>
+<li><strong>自定义字体目录</strong>：<code>fm.add_font_directory(path)</code></li>
+<li><strong>索引方式</strong>：按文件名 stem + FreeType 嵌入的 family name 双重索引</li>
+<li><strong>generic family 别名</strong>：</li>
+<li><code>sans-serif</code> → Noto Sans CJK / DejaVu Sans / Arial / …</li>
+<li><code>serif</code> → Noto Serif CJK / DejaVu Serif / Times New Roman / …</li>
+<li><code>monospace</code> → DejaVu Sans Mono / Courier New / …</li>
+<li><strong>weight/style 匹配</strong>：拼接 <code>bold</code> / <code>italic</code> 后缀检索候选字体</li>
+<li><strong>字形检测</strong>：<code>_has_glyph(font_path, char)</code> 使用 FreeType 判断字体是否覆盖目标字符</li>
+<li><strong>字体元数据</strong>：<code>font_family_name(font_path)</code> 从字体文件读取 CSS font-family 名称</li>
+</ul>
+<h3 id="62">6.2 字体回退链<a class="headerlink" href="#62" title="Permanent link">¶</a></h3>
+<p>对每个字符，按 <code>font-family</code> 列表顺序查找第一个拥有该字形的字体：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>font-family: "Times New Roman, SimSun, serif"
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  → 'A' 使用 Times New Roman
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  → '中' Times 无此字形 → 回退到 SimSun
+</span></code></pre></div>
+<p><code>find_font_chain()</code> 返回有序回退链（所有匹配的字体路径列表），确保宽 Unicode 覆盖。</p>
+<h3 id="63-shaper">6.3 文本排版（shaper）<a class="headerlink" href="#63-shaper" title="Permanent link">¶</a></h3>
+<h4 id="api_1">普通文本 API<a class="headerlink" href="#api_1" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>measure_text()</code></td>
+<td>测量文本总 advance 宽度</td>
+</tr>
+<tr>
+<td><code>break_lines()</code></td>
+<td>核心折行算法</td>
+</tr>
+<tr>
+<td><code>align_lines()</code></td>
+<td>设置行内水平偏移（<code>left</code> / <code>center</code> / <code>right</code> / <code>justify</code>），justify 模式计算逐词间隙</td>
+</tr>
+<tr>
+<td><code>compute_text_block_size()</code></td>
+<td>计算折行后的文本块尺寸</td>
+</tr>
+<tr>
+<td><code>get_min_content_width()</code></td>
+<td>最小内容宽度（最宽单词 / CJK 单字）</td>
+</tr>
+<tr>
+<td><code>get_max_content_width()</code></td>
+<td>最大内容宽度（不折行的单行宽度）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="api_2">富文本 API<a class="headerlink" href="#api_2" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>break_lines_rich()</code></td>
+<td>跨 span 的富文本折行算法</td>
+</tr>
+<tr>
+<td><code>align_lines_rich()</code></td>
+<td>富文本行对齐</td>
+</tr>
+<tr>
+<td><code>compute_rich_block_size()</code></td>
+<td>富文本块尺寸计算</td>
+</tr>
+<tr>
+<td><code>get_min_content_width_rich()</code></td>
+<td>富文本最小内容宽度</td>
+</tr>
+<tr>
+<td><code>get_max_content_width_rich()</code></td>
+<td>富文本最大内容宽度</td>
+</tr>
+</tbody>
+</table>
+<p><strong>CJK 支持细节</strong>：覆盖 CJK 统一汉字、扩展 A/B、兼容、日文假名、韩文音节、全角字符等 15+ Unicode 区块。CJK 字符逐字拆分为独立可断行 token，与西文空格分词自然混排。</p>
+<p><strong>折行算法</strong>：贪心行填充，<code>overflow-wrap: break-word</code> 时超宽 token 逐字符拆分。富文本模式下支持跨 span 空白折叠，符合 CSS 行内空白处理规范。</p>
+<p><strong>两端对齐（justify）</strong>：非末行计算额外间距——西文按 <code>(extra_space) / (word_count - 1)</code> 分配到词间隙，CJK 无空格文本按字符间隙均匀分散。<code>Line</code> 数据类包含 <code>justified: bool</code> 和 <code>word_spacing_justify: float</code> 字段。渲染时西文通过 SVG <code>word-spacing</code> 属性实现，CJK 文本逐字符输出独立 <code>&lt;text&gt;</code> 元素并手动计算每个字符的 x 偏移。末行保持左对齐（符合 CSS 标准）。</p>
+<p><strong>字符间距与词间距</strong>：<code>letter-spacing</code> 和 <code>word-spacing</code> 参数贯穿度量（<code>measure_text()</code>）、折行（<code>break_lines()</code>）和渲染全流程。<code>letter-spacing</code> 加在非末字符后，<code>word-spacing</code> 加在空格字符上，影响行宽计算和断行判断。渲染时输出为 SVG <code>&lt;text&gt;</code> 元素的 <code>letter-spacing</code> / <code>word-spacing</code> 属性。</p>
+<p><strong>断词（hyphens）</strong>：三种模式——<code>none</code>（不断词）、<code>manual</code>（仅在软连字符 U+00AD 处断词）、<code>auto</code>（基于 <code>pyphen</code> 字典自动查找断词位置）。断词逻辑集成在折行算法中：当 token 溢出当前行时，先尝试在剩余空间内找最长可断前缀；若失败则换行后继续迭代断词。断词产生的行标记 <code>hyphenated=True</code>，渲染时末尾追加连字符 <code>-</code>。<code>auto</code> 模式通过 <code>lang</code> 属性（默认 <code>en</code>）确定语言字典，支持多语言断词。</p>
+<h3 id="64-textembedpy">6.4 字体嵌入与子集化（text/embed.py）<a class="headerlink" href="#64-textembedpy" title="Permanent link">¶</a></h3>
+<p>将 SVG 输出中使用的字体子集化后嵌入，实现完全自包含的 SVG 文件：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">renderer</span> <span class="o">=</span> <span class="n">Renderer</span><span class="p">()</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">renderer</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="s2">"output.svg"</span><span class="p">,</span> <span class="n">embed_fonts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>实现细节</strong>：</p>
+<ul>
+<li>遍历节点树收集每个字体路径的字符使用集</li>
+<li>使用 <code>fonttools</code> 进行字体子集化，仅保留实际使用的字形</li>
+<li>输出格式为 <strong>WOFF2</strong>（高压缩率），回退到 OTF</li>
+<li>生成 <code>@font-face</code> CSS 规则（含 base64 data URI + <code>unicode-range</code>）</li>
+<li>按 <code>(font-family, font-weight, font-style)</code> 三元组合并字体规则</li>
+<li>支持 TTC 字体面索引检测</li>
+<li>富文本模式下逐 fragment 分析字体/粗细/斜体</li>
+</ul>
+<hr>
+<h2 id="7-gridsolver">7. 布局引擎（GridSolver）<a class="headerlink" href="#7-gridsolver" title="Permanent link">¶</a></h2>
+<p>实现 CSS Grid Level 1 布局算法，约 985 行代码，是项目最核心的模块。</p>
+<h3 id="71">7.1 算法流程<a class="headerlink" href="#71" title="Permanent link">¶</a></h3>
+<ol>
+<li><strong>容器宽度解析</strong>：显式 <code>width</code> 或 <code>available_width</code></li>
+<li><strong>轨道模板解析</strong>：样式值 → <code>TrackDef</code> 列表（支持 <code>repeat()</code> 展开、<code>minmax()</code> 解析）</li>
+<li><strong>项目放置</strong>：</li>
+<li>Pass 1：显式放置（<code>row</code> + <code>col</code> 均指定）+ 命名区域放置</li>
+<li>Pass 2：自动放置（<code>grid-auto-flow</code>，支持 <code>dense</code>）</li>
+<li><strong>列轨道尺寸计算</strong>：</li>
+<li>固定/百分比轨道直接设置</li>
+<li>内在轨道（auto/min-content/max-content）用子项 measure 结果</li>
+<li><code>minmax()</code> 轨道的 min 侧和 max 侧分别处理</li>
+<li>跨越项空间分配（<code>_distribute_spanning</code>）</li>
+<li>"最大化轨道"阶段：非 fr 轨道向 growth_limit 增长</li>
+<li><code>fr</code> 轨道按比例分配剩余空间</li>
+<li><strong>行轨道尺寸计算</strong>：类似列，但依赖列宽做文本回流</li>
+<li><strong>容器盒模型</strong>：三层 Rect 计算</li>
+<li><strong>子位置计算 + 递归子布局</strong></li>
+<li><strong>对齐</strong>：<code>justify-self</code> / <code>align-self</code>（<code>stretch</code> / <code>start</code> / <code>center</code> / <code>end</code>）</li>
+</ol>
+<h3 id="72">7.2 关键特性<a class="headerlink" href="#72" title="Permanent link">¶</a></h3>
+<ul>
+<li><strong>轨道类型</strong>：<code>FIXED</code> / <code>PERCENT</code> / <code>FR</code> / <code>AUTO</code> / <code>MIN_CONTENT</code> / <code>MAX_CONTENT</code> / <code>MINMAX</code></li>
+<li><strong>隐式轨道</strong>：<code>grid-auto-rows</code> / <code>grid-auto-columns</code> 控制隐式创建的轨道尺寸</li>
+<li><strong><code>repeat()</code> 函数</strong>：<code>repeat(3, 1fr)</code> 展开为三列 <code>1fr</code>，支持多轨道模式 <code>repeat(2, 100px 1fr)</code></li>
+<li><strong><code>minmax()</code> 函数</strong>：<code>minmax(100px, 1fr)</code> — min 侧支持固定值/auto/min-content/max-content，max 侧额外支持 fr</li>
+<li><strong>跨行列</strong>：<code>row_span</code> / <code>col_span</code>，跨越项空间按轨道比例分配</li>
+<li><strong>嵌套 Grid</strong>：对齐后通过 <code>_shift_descendants()</code> 递归偏移所有后代坐标</li>
+<li><strong>两遍布局</strong>：先 measure 收集尺寸约束，再 solve 分配空间</li>
+<li><strong>三层盒模型</strong>：content → padding → border，精确处理各层边距</li>
+<li><strong>尺寸约束</strong>：<code>min-width</code> / <code>max-width</code> / <code>min-height</code> / <code>max-height</code> 通过 <code>_clamp_min_max()</code> 钳位</li>
+</ul>
+<hr>
+<h2 id="8">8. 渲染器<a class="headerlink" href="#8" title="Permanent link">¶</a></h2>
+<h3 id="81">8.1 输出格式<a class="headerlink" href="#81" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>输出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>renderer.render(node, "out.svg")</code></td>
+<td>SVG 文件（返回 <code>drawsvg.Drawing</code>）</td>
+</tr>
+<tr>
+<td><code>renderer.render(node, "out.svg", embed_fonts=True)</code></td>
+<td>SVG 文件 + 字体嵌入</td>
+</tr>
+<tr>
+<td><code>renderer.render_to_drawing(node)</code></td>
+<td><code>drawsvg.Drawing</code> 对象（不写文件）</td>
+</tr>
+<tr>
+<td><code>renderer.render_to_string(node)</code></td>
+<td>SVG 字符串</td>
+</tr>
+<tr>
+<td><code>renderer.render_png(node, "out.png", scale=2)</code></td>
+<td>PNG 文件（依赖 cairosvg）</td>
+</tr>
+</tbody>
+</table>
+<p>所有渲染方法均支持 <code>embed_fonts</code> 参数，开启后自动进行字体子集化嵌入。</p>
+<h3 id="82">8.2 渲染细节<a class="headerlink" href="#82" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>节点类型</th>
+<th>渲染方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GridContainer</code></td>
+<td>背景（实色/渐变） + 四角圆角矩形 + 四条边框线 → 递归子节点</td>
+</tr>
+<tr>
+<td><code>TextNode</code>（纯文本）</td>
+<td>逐行 <code>&lt;text&gt;</code> 元素，含字体族、颜色、对齐偏移</td>
+</tr>
+<tr>
+<td><code>TextNode</code>（富文本）</td>
+<td>逐 span 独立 <code>&lt;text&gt;</code> 元素 + 绝对定位 + 背景高亮矩形</td>
+</tr>
+<tr>
+<td><code>ImageNode</code></td>
+<td>base64 <code>&lt;image&gt;</code> 元素</td>
+</tr>
+<tr>
+<td><code>SVGNode</code></td>
+<td><code>&lt;g transform="translate(x,y) scale(sx,sy)"&gt;</code> 包裹内部 SVG</td>
+</tr>
+<tr>
+<td><code>MplNode</code></td>
+<td><code>&lt;g transform&gt;</code> 包裹 Matplotlib SVG 片段</td>
+</tr>
+<tr>
+<td><code>MathNode</code></td>
+<td>SVG fragment 嵌入 + 缩放 transform</td>
+</tr>
+<tr>
+<td>自定义 <code>Node</code></td>
+<td>仅背景 + 边框</td>
+</tr>
+</tbody>
+</table>
+<h3 id="83">8.3 高级渲染特性<a class="headerlink" href="#83" title="Permanent link">¶</a></h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>实现方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>四角独立圆角</strong></td>
+<td><code>_rounded_rect_path()</code> 使用 SVG <code>&lt;path&gt;</code> + 弧段 + CSS 角重叠算法</td>
+</tr>
+<tr>
+<td><strong>渐变背景</strong></td>
+<td><code>&lt;linearGradient&gt;</code> / <code>&lt;radialGradient&gt;</code> 定义在 <code>&lt;defs&gt;</code> 中，<code>fill="url(#grad)"</code> 引用</td>
+</tr>
+<tr>
+<td><strong>clip-path</strong></td>
+<td><code>circle()</code> / <code>ellipse()</code> / <code>polygon()</code> / <code>inset()</code> → SVG <code>&lt;clipPath&gt;</code> 元素</td>
+</tr>
+<tr>
+<td><strong>overflow: hidden</strong></td>
+<td>生成 <code>&lt;clipPath&gt;</code> 裁切溢出内容</td>
+</tr>
+<tr>
+<td><strong>text-overflow: ellipsis</strong></td>
+<td>精确到字符的截断 + <code>…</code> 追加（基于字形测量）</td>
+</tr>
+<tr>
+<td><strong>text-decoration</strong></td>
+<td>SVG <code>text-decoration</code> 属性（<code>underline</code> / <code>line-through</code>）</td>
+</tr>
+<tr>
+<td><strong>border-style</strong></td>
+<td><code>dashed</code> / <code>dotted</code> 通过 <code>stroke-dasharray</code> 实现</td>
+</tr>
+<tr>
+<td><strong>opacity</strong></td>
+<td>背景和文本透明度</td>
+</tr>
+<tr>
+<td><strong>outline</strong></td>
+<td>不占布局空间的外部描边（<code>solid</code> / <code>dashed</code> / <code>dotted</code> + 圆角外扩 + offset）</td>
+</tr>
+<tr>
+<td><strong>baseline-shift</strong></td>
+<td>上标 / 下标（0.7× 字号偏移）</td>
+</tr>
+<tr>
+<td><strong>字体嵌入</strong></td>
+<td>WOFF2 子集化 → <code>@font-face</code> CSS → SVG <code>&lt;defs&gt;&lt;style&gt;</code></td>
+</tr>
+<tr>
+<td><strong>空格保留</strong></td>
+<td><code>white-space: pre/pre-wrap</code> → <code>xml:space="preserve"</code></td>
+</tr>
+<tr>
+<td><strong>text-align: justify</strong></td>
+<td>西文通过 SVG <code>word-spacing</code> 属性实现逐词间距分散；CJK 文本逐字符绝对定位</td>
+</tr>
+<tr>
+<td><strong>letter-spacing / word-spacing</strong></td>
+<td>直接输出为 SVG <code>&lt;text&gt;</code> 元素的同名属性</td>
+</tr>
+<tr>
+<td><strong>hyphens</strong></td>
+<td>断词行末尾追加连字符 <code>-</code>，支持 <code>none</code> / <code>manual</code> / <code>auto</code></td>
+</tr>
+<tr>
+<td><strong>box-shadow</strong></td>
+<td>每层阴影生成独立 SVG <code>&lt;filter&gt;</code>：无 spread 用 <code>&lt;feDropShadow&gt;</code>，有 spread 用 <code>&lt;feFlood&gt;</code> + <code>&lt;feMorphology&gt;</code> + <code>&lt;feGaussianBlur&gt;</code> + <code>&lt;feOffset&gt;</code> + <code>&lt;feMerge&gt;</code> 管线；支持圆角矩形形状</td>
+</tr>
+<tr>
+<td><strong>transform</strong></td>
+<td>CSS 变换函数链转为 SVG <code>transform</code> 属性；<code>rotate</code> / <code>scale</code> 通过 translate-to-center 补偿变换原点（CSS 默认 50% 50%）</td>
+</tr>
+<tr>
+<td><strong>filter</strong></td>
+<td>各滤镜映射为对应 SVG filter primitive：<code>blur</code> → <code>feGaussianBlur</code>，<code>brightness</code>/<code>contrast</code> → <code>feComponentTransfer</code>，<code>grayscale</code>/<code>saturate</code> → <code>feColorMatrix</code>，<code>sepia</code> → <code>feColorMatrix</code>（标准矩阵），<code>opacity</code> → <code>feComponentTransfer</code>，<code>drop-shadow</code> → <code>feDropShadow</code>；多滤镜链式连接</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="9">9. 内置样式模板<a class="headerlink" href="#9" title="Permanent link">¶</a></h2>
+<p>17 个预设 <code>dict</code>，可直接传入 <code>style</code> 参数或合并自定义：</p>
+<table>
+<thead>
+<tr>
+<th>模板</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>REPORT_PAGE</code></td>
+<td>800px 白底报告页面</td>
+</tr>
+<tr>
+<td><code>TWO_COLUMN</code> / <code>THREE_COLUMN</code></td>
+<td>等宽多列布局</td>
+</tr>
+<tr>
+<td><code>SIDEBAR_LAYOUT</code></td>
+<td>240px 侧栏 + 1fr 主区</td>
+</tr>
+<tr>
+<td><code>CHART_CONTAINER</code></td>
+<td>2×2 图表网格</td>
+</tr>
+<tr>
+<td><code>HEADER</code> / <code>FOOTER</code></td>
+<td>深色页眉 / 页脚</td>
+</tr>
+<tr>
+<td><code>TITLE</code> / <code>SUBTITLE</code></td>
+<td>大标题 / 副标题</td>
+</tr>
+<tr>
+<td><code>H1</code> / <code>H2</code> / <code>H3</code></td>
+<td>标题层级</td>
+</tr>
+<tr>
+<td><code>PARAGRAPH</code></td>
+<td>正文段落</td>
+</tr>
+<tr>
+<td><code>CAPTION</code></td>
+<td>图表说明文字</td>
+</tr>
+<tr>
+<td><code>CODE</code></td>
+<td>等宽代码块</td>
+</tr>
+<tr>
+<td><code>CARD</code></td>
+<td>带边框白底卡片</td>
+</tr>
+<tr>
+<td><code>HIGHLIGHT_BOX</code></td>
+<td>黄色高亮提示框</td>
+</tr>
+</tbody>
+</table>
+<p>使用方式：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">latticesvg.templates</span><span class="w"> </span><span class="kn">import</span> <span class="n">REPORT_PAGE</span><span class="p">,</span> <span class="n">TITLE</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">grid</span> <span class="o">=</span> <span class="n">GridContainer</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="o">**</span><span class="n">REPORT_PAGE</span><span class="p">,</span> <span class="s2">"width"</span><span class="p">:</span> <span class="s2">"1000px"</span><span class="p">})</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">title</span> <span class="o">=</span> <span class="n">TextNode</span><span class="p">(</span><span class="s2">"标题"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">TITLE</span><span class="p">)</span>
+</span></code></pre></div>
+<p><code>ALL_TEMPLATES</code> 字典提供按名称的程序化访问。</p>
+<h3 id="92">9.2 表格便捷构建<a class="headerlink" href="#92" title="Permanent link">¶</a></h3>
+<p><code>build_table()</code> 函数提供快速创建表格的便捷 API：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">latticesvg</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_table</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="n">table</span> <span class="o">=</span> <span class="n">build_table</span><span class="p">(</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="s2">"编号"</span><span class="p">,</span> <span class="s2">"名称"</span><span class="p">,</span> <span class="s2">"数值"</span><span class="p">],</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="n">rows</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>        <span class="p">[</span><span class="s2">"001"</span><span class="p">,</span> <span class="s2">"Alpha"</span><span class="p">,</span> <span class="s2">"1.23"</span><span class="p">],</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>        <span class="p">[</span><span class="s2">"002"</span><span class="p">,</span> <span class="s2">"Beta"</span><span class="p">,</span> <span class="s2">"4.56"</span><span class="p">],</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>        <span class="p">[</span><span class="s2">"003"</span><span class="p">,</span> <span class="s2">"Gamma"</span><span class="p">,</span> <span class="s2">"7.89"</span><span class="p">],</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>    <span class="p">],</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>    <span class="n">col_widths</span><span class="o">=</span><span class="p">[</span><span class="s2">"100px"</span><span class="p">,</span> <span class="s2">"1fr"</span><span class="p">,</span> <span class="s2">"1fr"</span><span class="p">],</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>    <span class="n">stripe_color</span><span class="o">=</span><span class="s2">"#f8f9fa"</span><span class="p">,</span>  <span class="c1"># 斑马纹背景色</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>参数</strong>：
+- <code>headers</code>: 列标题
+- <code>rows</code>: 数据行（每行为一个序列）
+- <code>style</code>: 覆盖表格容器样式
+- <code>header_style</code>: 覆盖表头单元格样式
+- <code>cell_style</code>: 覆盖数据单元格样式
+- <code>col_widths</code>: 列宽度列表（默认全部 <code>1fr</code>）
+- <code>stripe_color</code>: 偶数行背景色（设为 <code>None</code> 禁用斑马纹）</p>
+<p>返回一个完全构建好的 <code>GridContainer</code> 节点树，可直接布局和渲染。</p>
+<hr>
+<h2 id="10">10. 已知限制<a class="headerlink" href="#10" title="Permanent link">¶</a></h2>
+<p>以下是当前版本中已知的限制：</p>
+<ol>
+<li><strong>无 <code>z-index</code> / 叠放控制</strong>：渲染顺序固定为节点添加顺序</li>
+<li><strong>Pillow 后备的字形检测</strong>：<code>_has_glyph()</code> 始终返回 <code>True</code>，无法真正判断字体覆盖（仅影响 Pillow 后备路径）</li>
+<li><strong>自动放置搜索上限</strong>：行上限硬编码为 200，迭代上限 10000 次</li>
+<li><strong><code>fonttools</code> 为可选依赖</strong>：字体嵌入功能需手动安装 <code>fonttools[woff]</code></li>
+<li><strong><code>pyphen</code> 为可选依赖</strong>：<code>hyphens: auto</code> 需手动安装 <code>pyphen</code>，未安装时优雅降级</li>
+<li><strong><code>box-shadow</code> inset 阴影</strong>：<code>inset</code> 关键字已解析但渲染暂未支持</li>
+</ol>
+<hr>
+<h2 id="11">11. 演示覆盖<a class="headerlink" href="#11" title="Permanent link">¶</a></h2>
+<p><code>examples/</code> 包含 <strong>47 个演示</strong>（demo_01 ~ demo_47），覆盖：</p>
+<ul>
+<li>CSS 值解析、简写展开、样式继承</li>
+<li>固定列 / fr 弹性列 / 混合轨道</li>
+<li>自动放置、跨行列、对齐</li>
+<li>嵌套 Grid、padding + border 盒模型</li>
+<li>TextNode 排版、white-space 模式（包括 <code>pre-line</code>）、overflow-wrap</li>
+<li>SVGNode / MplNode / ImageNode 嵌入</li>
+<li>内置模板、PNG 输出</li>
+<li><code>min-width</code> / <code>max-width</code> / <code>min-height</code> / <code>max-height</code> 尺寸约束</li>
+<li><code>text-overflow: ellipsis</code> 精确截断</li>
+<li><code>opacity</code> 透明度渲染</li>
+<li><code>border-radius</code> 圆角矩形（统一值 + 四角独立）</li>
+<li><code>border-style: dashed / dotted</code> 虚线边框</li>
+<li><code>render_to_drawing()</code> 无文件写入渲染</li>
+<li><code>grid-template-areas</code> 命名区域布局</li>
+<li><code>build_table()</code> 表格便捷 API</li>
+<li>综合报告页面、中英文混排</li>
+<li>复杂画廊表格（9×10 矩阵，11 行 11 列）</li>
+<li>多级嵌套卡片式布局（瀑布流风格）</li>
+<li>HTML 标记富文本</li>
+<li>Markdown 标记富文本</li>
+<li>MathNode LaTeX 数学公式（独立 + 行内）</li>
+<li>字体嵌入 / 子集化</li>
+<li><code>grid-auto-rows</code> / <code>grid-auto-columns</code> 隐式轨道</li>
+<li><code>clip-path</code> 裁剪路径</li>
+<li><code>repeat()</code> / <code>minmax()</code> 轨道函数</li>
+<li>渐变背景（线性 / 径向）</li>
+<li><code>text-align: justify</code> 两端对齐（中英文）</li>
+<li><code>letter-spacing</code> / <code>word-spacing</code> 字符间距与词间距</li>
+<li><code>hyphens</code> 断词（none / manual / auto，多语言支持）</li>
+<li><code>box-shadow</code> 盒阴影（轻柔 / 中等 / 深度 / 多重 / 彩色）</li>
+<li><code>transform</code> 变换（旋转 / 平移 / 缩放 / 组合）</li>
+<li>CSS <code>filter</code> 滤镜（blur / grayscale / sepia / brightness / contrast / saturate / 组合）</li>
+</ul>
+<hr>
+<h2 id="12">12. 测试覆盖<a class="headerlink" href="#12" title="Permanent link">¶</a></h2>
+<p>10 个测试文件，<strong>352 个测试函数</strong>，使用 pytest：</p>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>覆盖范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test_style_parser.py</code></td>
+<td>值解析、颜色、简写展开、轨道模板、clip-path、渐变、<code>repeat()</code> / <code>minmax()</code>、box-shadow、transform、filter</td>
+</tr>
+<tr>
+<td><code>test_computed_style.py</code></td>
+<td>ComputedStyle 创建、继承、便利属性、百分比解析</td>
+</tr>
+<tr>
+<td><code>test_grid_solver.py</code></td>
+<td>固定/fr/混合轨道、gap、自动放置、跨列、对齐、<code>minmax()</code>/<code>repeat()</code>、隐式轨道</td>
+</tr>
+<tr>
+<td><code>test_nodes.py</code></td>
+<td>节点基类、SVGNode / ImageNode 尺寸解析与 object-fit</td>
+</tr>
+<tr>
+<td><code>test_renderer.py</code></td>
+<td>SVG 输出、背景色、渐变、边框、圆角（含四角独立）、clip-path、文本装饰、字体嵌入、box-shadow、transform、filter、justify</td>
+</tr>
+<tr>
+<td><code>test_text_shaper.py</code></td>
+<td>文本度量、折行、空白处理、break-word、对齐、富文本断行、letter-spacing、word-spacing、hyphens、justify</td>
+</tr>
+<tr>
+<td><code>test_markup_parser.py</code></td>
+<td>HTML / Markdown 解析、内联样式、数学标记、嵌套标签</td>
+</tr>
+<tr>
+<td><code>test_math.py</code></td>
+<td>数学后端协议、SVGFragment、MathNode、后端注册</td>
+</tr>
+<tr>
+<td><code>test_integration.py</code></td>
+<td>端到端：两栏布局、嵌套 Grid、自动放置、SVG 嵌入</td>
+</tr>
+<tr>
+<td><code>test_table_builder.py</code></td>
+<td>表格便捷构建函数</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="13">13. 项目规模<a class="headerlink" href="#13" title="Permanent link">¶</a></h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>核心源码</td>
+<td><strong>~8,900 行</strong>（26 个 <code>.py</code> 文件）</td>
+</tr>
+<tr>
+<td>测试代码</td>
+<td><strong>~3,800 行</strong>（10 个测试文件，352 个测试函数）</td>
+</tr>
+<tr>
+<td>演示文件</td>
+<td>47 个</td>
+</tr>
+<tr>
+<td>硬依赖</td>
+<td><code>drawsvg</code> + <code>freetype-py</code> + <code>quickjax</code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Qalxry/LatticeSVG" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/latticesvg/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "navigation.indexes", "content.code.copy", "content.tabs.link", "search.suggest", "search.highlight", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

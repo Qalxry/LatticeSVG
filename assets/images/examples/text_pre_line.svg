@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="800.0" height="270.4" viewBox="0 0 800.0 270.4">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="800.0" height="270.4" fill="#fafafa" opacity="1.0" />
+<g>
+<text x="20.0" y="38.3" font-size="18" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">Demo 25: white-space: pre-line</text>
+</g>
+<g>
+<g>
+<text x="20.0" y="69.8" font-size="12" fill="#e74c3c" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">white-space: normal</text>
+</g>
+<g>
+<rect x="20.0" y="84.0" width="245.33333333333331" height="100.0" fill="#fff3f3" opacity="1.0" />
+<path d="M20.0,84.0 L265.3333333333333,84.0" stroke="#e74c3c" stroke-width="1.0" />
+<path d="M265.3333333333333,84.0 L265.3333333333333,184.0" stroke="#e74c3c" stroke-width="1.0" />
+<path d="M20.0,184.0 L265.3333333333333,184.0" stroke="#e74c3c" stroke-width="1.0" />
+<path d="M20.0,84.0 L20.0,184.0" stroke="#e74c3c" stroke-width="1.0" />
+<text x="31.0" y="108.8" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">第一行内容 第二行内容 带多个空格 第</text>
+<text x="31.0" y="124.39999999999999" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">三行是一段比较长的文本用于测试自动</text>
+<text x="31.0" y="140.0" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">折行是否在保留换行符的同时正常工作</text>
+</g>
+<g>
+<text x="20.0" y="206.5" font-size="10" fill="#999999" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">折叠空白 + 折叠换行</text>
+<text x="20.0" y="218.5" font-size="10" fill="#999999" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">→ 全部连成一段</text>
+</g>
+<g>
+<text x="277.3333333333333" y="69.8" font-size="12" fill="#27ae60" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">white-space: pre-line</text>
+</g>
+<g>
+<rect x="277.3333333333333" y="84.0" width="245.33333333333331" height="100.0" fill="#f0fff0" opacity="1.0" />
+<path d="M277.3333333333333,84.0 L522.6666666666666,84.0" stroke="#27ae60" stroke-width="1.0" />
+<path d="M522.6666666666666,84.0 L522.6666666666666,184.0" stroke="#27ae60" stroke-width="1.0" />
+<path d="M277.3333333333333,184.0 L522.6666666666666,184.0" stroke="#27ae60" stroke-width="1.0" />
+<path d="M277.3333333333333,84.0 L277.3333333333333,184.0" stroke="#27ae60" stroke-width="1.0" />
+<text x="288.3333333333333" y="108.8" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">第一行内容</text>
+<text x="288.3333333333333" y="124.39999999999999" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">第二行内容 带多个空格</text>
+<text x="288.3333333333333" y="140.0" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">第三行是一段比较长的文本用于测试自</text>
+<text x="288.3333333333333" y="155.60000000000002" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">动折行是否在保留换行符的同时正常工</text>
+<text x="288.3333333333333" y="171.20000000000002" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">作</text>
+</g>
+<g>
+<text x="277.3333333333333" y="206.5" font-size="10" fill="#999999" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">折叠空白 + 保留换行</text>
+<text x="277.3333333333333" y="218.5" font-size="10" fill="#999999" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">→ \n 处断行，空格折叠</text>
+</g>
+<g>
+<text x="534.6666666666666" y="69.8" font-size="12" fill="#3498db" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">white-space: pre</text>
+</g>
+<g>
+<rect x="534.6666666666666" y="84.0" width="245.33333333333331" height="100.0" fill="#f0f4ff" opacity="1.0" />
+<path d="M534.6666666666666,84.0 L780.0,84.0" stroke="#3498db" stroke-width="1.0" />
+<path d="M780.0,84.0 L780.0,184.0" stroke="#3498db" stroke-width="1.0" />
+<path d="M534.6666666666666,184.0 L780.0,184.0" stroke="#3498db" stroke-width="1.0" />
+<path d="M534.6666666666666,84.0 L534.6666666666666,184.0" stroke="#3498db" stroke-width="1.0" />
+<text x="545.6666666666666" y="108.8" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">第一行内容</text>
+<text x="545.6666666666666" y="124.39999999999999" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">第二行内容   带多个空格</text>
+<text x="545.6666666666666" y="140.0" font-size="13" fill="#333333" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">第三行是一段比较长的文本用于测试自动折行是否在保留换行符的同时正常工作</text>
+</g>
+<g>
+<text x="534.6666666666666" y="206.5" font-size="10" fill="#999999" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">保留空白 + 保留换行</text>
+<text x="534.6666666666666" y="218.5" font-size="10" fill="#999999" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">→ 完全保留原始格式</text>
+</g>
+</g>
+<g>
+<text x="20.0" y="248.2" font-size="12" fill="#27ae60" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">✓ 预期：pre-line 列应在 \n 处断行，但多余空格被折叠为一个；长行自动折行</text>
+</g>
+</g>
+</svg>

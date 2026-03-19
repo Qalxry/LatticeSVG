@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="500.0" height="1028.6" viewBox="0 0 500.0 1028.6">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="500.0" height="1028.6" fill="#ffffff" opacity="1.0" />
+<g>
+<text x="33.4453125" y="42.7" font-size="22" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">通过 grid-auto-rows / grid-auto-columns</text>
+<text x="162.0" y="69.1" font-size="22" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">控制隐式轨道尺寸</text>
+</g>
+<g>
+<text x="20.0" y="119.1" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">① grid-auto-rows: 80px</text>
+</g>
+<g>
+<text x="20.0" y="156.14999999999998" font-size="13" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">3 列模板 + 9 个色块自动放置。未定义 grid-template-rows，所有隐式行由</text>
+<text x="20.0" y="175.64999999999998" font-size="13" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">grid-auto-rows 统一设为 80px。</text>
+</g>
+<g>
+<rect x="20.0" y="197.39999999999998" width="460.0" height="276.0" fill="#f8f9fa" opacity="1.0" />
+<g>
+<rect x="30.0" y="207.39999999999998" width="141.33333333333331" height="80.0" fill="#e74c3c" opacity="1.0" />
+</g>
+<g>
+<rect x="179.33333333333331" y="207.39999999999998" width="141.33333333333331" height="80.0" fill="#3498db" opacity="1.0" />
+</g>
+<g>
+<rect x="328.66666666666663" y="207.39999999999998" width="141.33333333333331" height="80.0" fill="#2ecc71" opacity="1.0" />
+</g>
+<g>
+<rect x="30.0" y="295.4" width="141.33333333333331" height="80.0" fill="#f39c12" opacity="1.0" />
+</g>
+<g>
+<rect x="179.33333333333331" y="295.4" width="141.33333333333331" height="80.0" fill="#9b59b6" opacity="1.0" />
+</g>
+<g>
+<rect x="328.66666666666663" y="295.4" width="141.33333333333331" height="80.0" fill="#1abc9c" opacity="1.0" />
+</g>
+<g>
+<rect x="30.0" y="383.4" width="141.33333333333331" height="80.0" fill="#e67e22" opacity="1.0" />
+</g>
+<g>
+<rect x="179.33333333333331" y="383.4" width="141.33333333333331" height="80.0" fill="#34495e" opacity="1.0" />
+</g>
+<g>
+<rect x="328.66666666666663" y="383.4" width="141.33333333333331" height="80.0" fill="#c0392b" opacity="1.0" />
+</g>
+</g>
+<g>
+<text x="20.0" y="509.7" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">② grid-auto-columns: 120px + column flow</text>
+</g>
+<g>
+<text x="20.0" y="546.75" font-size="13" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">仅定义 2 行模板 (60px×2)，grid-auto-flow 设为 column。6 个色块纵向填充，</text>
+<text x="20.0" y="566.25" font-size="13" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">隐式列宽由 grid-auto-columns 固定为 120px。</text>
+</g>
+<g>
+<rect x="20.0" y="588.0" width="460.0" height="148.0" fill="#f8f9fa" opacity="1.0" />
+<g>
+<rect x="30.0" y="598.0" width="120.0" height="60.0" fill="#e74c3c" opacity="1.0" />
+</g>
+<g>
+<rect x="30.0" y="666.0" width="120.0" height="60.0" fill="#3498db" opacity="1.0" />
+</g>
+<g>
+<rect x="158.0" y="598.0" width="120.0" height="60.0" fill="#2ecc71" opacity="1.0" />
+</g>
+<g>
+<rect x="158.0" y="666.0" width="120.0" height="60.0" fill="#f39c12" opacity="1.0" />
+</g>
+<g>
+<rect x="286.0" y="598.0" width="120.0" height="60.0" fill="#9b59b6" opacity="1.0" />
+</g>
+<g>
+<rect x="286.0" y="666.0" width="120.0" height="60.0" fill="#1abc9c" opacity="1.0" />
+</g>
+</g>
+<g>
+<text x="20.0" y="772.3" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">③ 对比：默认 auto（无 grid-auto-rows）</text>
+</g>
+<g>
+<text x="20.0" y="809.35" font-size="13" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">不设 grid-auto-rows，各行高度由内容决定（取同行最大值）。默认</text>
+<text x="20.0" y="828.85" font-size="13" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">align-items:stretch 使同行 item 拉伸至行高。</text>
+</g>
+<g>
+<rect x="20.0" y="850.6" width="460.0" height="158.0" fill="#f8f9fa" opacity="1.0" />
+<g>
+<rect x="30.0" y="860.6" width="141.33333333333331" height="60.0" fill="#e74c3c" opacity="1.0" />
+</g>
+<g>
+<rect x="179.33333333333331" y="860.6" width="141.33333333333331" height="60.0" fill="#3498db" opacity="1.0" />
+</g>
+<g>
+<rect x="328.66666666666663" y="860.6" width="141.33333333333331" height="60.0" fill="#2ecc71" opacity="1.0" />
+</g>
+<g>
+<rect x="30.0" y="928.6" width="141.33333333333331" height="70.0" fill="#f39c12" opacity="1.0" />
+</g>
+<g>
+<rect x="179.33333333333331" y="928.6" width="141.33333333333331" height="70.0" fill="#9b59b6" opacity="1.0" />
+</g>
+<g>
+<rect x="328.66666666666663" y="928.6" width="141.33333333333331" height="70.0" fill="#1abc9c" opacity="1.0" />
+</g>
+</g>
+</g>
+</svg>

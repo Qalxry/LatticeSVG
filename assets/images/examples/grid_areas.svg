@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="700.0" height="358.4" viewBox="0 0 700.0 358.4">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="700.0" height="358.4" fill="#ecf0f1" opacity="1.0" />
+<g>
+<rect x="12.0" y="12.0" width="676.0" height="50.0" fill="#2c3e50" opacity="1.0" rx="6.0" ry="6.0" />
+<g>
+<text x="264.2265625" y="40.3" font-size="18" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Header 区域 (跨两列)</text>
+</g>
+</g>
+<g>
+<rect x="12.0" y="72.0" width="180.0" height="200.0" fill="#3498db" opacity="1.0" rx="6.0" ry="6.0" />
+<g>
+<text x="22.0" y="95.8" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">导航项 A</text>
+</g>
+<g>
+<text x="22.0" y="111.39999999999999" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">导航项 B</text>
+</g>
+<g>
+<text x="22.0" y="127.0" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">导航项 C</text>
+</g>
+</g>
+<g>
+<rect x="202.0" y="72.0" width="486.0" height="200.0" fill="#ffffff" opacity="1.0" rx="6.0" ry="6.0" />
+<rect x="202.0" y="72.0" width="486.0" height="200.0" fill="none" stroke="#bdc3c7" stroke-width="1.0" rx="6.0" ry="6.0" />
+<g>
+<text x="219.0" y="105.6" font-size="16" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">Main 内容区域</text>
+</g>
+<g>
+<text x="219.0" y="124.6" font-size="13" fill="#7f8c8d" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">通过 grid-template-areas 定义命名区域，子元素使用 area= 参数放置。支持</text>
+<text x="219.0" y="145.4" font-size="13" fill="#7f8c8d" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">跨行跨列的区域定义，以及使用 "." 表示空单元格。</text>
+</g>
+</g>
+<g>
+<rect x="12.0" y="282.0" width="676.0" height="40.0" fill="#2c3e50" opacity="1.0" rx="6.0" ry="6.0" />
+<g>
+<text x="310.515625" y="302.2" font-size="12" fill="#95a5a6" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Footer © 2025</text>
+</g>
+</g>
+<g>
+<text x="12.0" y="344.2" font-size="12" fill="#2ecc71" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">✓ 预期：经典 Holy Grail 布局 — header/footer 全宽，sidebar 在左，main 在右</text>
+</g>
+</g>
+</svg>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="560.0" height="729.9000000000001" viewBox="0 0 560.0 729.9000000000001">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="560.0" height="729.9000000000001" fill="#ffffff" opacity="1.0" />
+<g>
+<text x="127.5390625" y="42.7" font-size="22" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">repeat() / minmax() 轨道函数</text>
+</g>
+<g>
+<text x="20.0" y="92.7" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">① repeat(3, 1fr)</text>
+</g>
+<g>
+<text x="20.0" y="129.75" font-size="13" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">等价于 "1fr 1fr 1fr"，三列等宽</text>
+</g>
+<g>
+<g>
+<rect x="20.0" y="151.5" width="168.0" height="35.6" fill="#e74c3c" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="84.6875" y="175.3" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">1fr (1)</text>
+</g>
+<g>
+<rect x="196.0" y="151.5" width="168.0" height="35.6" fill="#3498db" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="260.6875" y="175.3" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">1fr (2)</text>
+</g>
+<g>
+<rect x="372.0" y="151.5" width="168.0" height="35.6" fill="#2ecc71" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="436.6875" y="175.3" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">1fr (3)</text>
+</g>
+</g>
+<g>
+<text x="20.0" y="223.39999999999998" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">② repeat(2, 100px 1fr)</text>
+</g>
+<g>
+<text x="20.0" y="260.45" font-size="13" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">展开为 "100px 1fr 100px 1fr"</text>
+</g>
+<g>
+<g>
+<rect x="20.0" y="282.2" width="100.0" height="35.6" fill="#f39c12" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="50.6484375" y="306.0" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">100px</text>
+</g>
+<g>
+<rect x="128.0" y="282.2" width="148.0" height="35.6" fill="#9b59b6" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="192.90625" y="306.0" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">1fr</text>
+</g>
+<g>
+<rect x="284.0" y="282.2" width="100.0" height="35.6" fill="#1abc9c" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="314.6484375" y="306.0" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">100px</text>
+</g>
+<g>
+<rect x="392.0" y="282.2" width="148.0" height="35.6" fill="#e67e22" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="456.90625" y="306.0" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">1fr</text>
+</g>
+</g>
+<g>
+<text x="20.0" y="354.1" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">③ minmax(100px, 300px) 1fr</text>
+</g>
+<g>
+<text x="20.0" y="391.15" font-size="13" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">第一列在 100~300px 范围内弹性伸缩</text>
+</g>
+<g>
+<g>
+<rect x="20.0" y="412.9" width="300.0" height="35.6" fill="#e74c3c" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="95.15625" y="436.7" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">minmax (100px, 300px)</text>
+</g>
+<g>
+<rect x="328.0" y="412.9" width="212.0" height="35.6" fill="#3498db" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="424.90625" y="436.7" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">1fr</text>
+</g>
+</g>
+<g>
+<text x="20.0" y="484.8" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">④ repeat(3, minmax(80px, 1fr))</text>
+</g>
+<g>
+<text x="20.0" y="521.85" font-size="13" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">三列均分，每列最小 80px</text>
+</g>
+<g>
+<g>
+<rect x="20.0" y="543.6" width="168.0" height="35.6" fill="#e67e22" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="43.25" y="567.4" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">minmax (80px, 1fr)</text>
+</g>
+<g>
+<rect x="196.0" y="543.6" width="168.0" height="35.6" fill="#34495e" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="219.25" y="567.4" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">minmax (80px, 1fr)</text>
+</g>
+<g>
+<rect x="372.0" y="543.6" width="168.0" height="35.6" fill="#c0392b" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="395.25" y="567.4" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">minmax (80px, 1fr)</text>
+</g>
+</g>
+<g>
+<text x="20.0" y="615.5" font-size="18" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">⑤ 综合：minmax + 固定 + fr</text>
+</g>
+<g>
+<text x="20.0" y="652.5500000000001" font-size="13" fill="#555555" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">"120px minmax(80px, 200px) 1fr" — 三种轨道并列</text>
+</g>
+<g>
+<g>
+<rect x="20.0" y="674.3000000000001" width="120.0" height="35.6" fill="#8e44ad" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="46.171875" y="698.1" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">120px 固定</text>
+</g>
+<g>
+<rect x="148.0" y="674.3000000000001" width="200.0" height="35.6" fill="#16a085" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="176.9921875" y="698.1" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">minmax (80px, 200px)</text>
+</g>
+<g>
+<rect x="356.0" y="674.3000000000001" width="184.0" height="35.6" fill="#d35400" opacity="1.0" rx="4.0" ry="4.0" />
+<text x="424.4296875" y="698.1" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">1fr 弹性</text>
+</g>
+</g>
+</g>
+</svg>

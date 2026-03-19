@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="600.0" height="170.8" viewBox="0 0 600.0 170.8">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="600.0" height="170.8" fill="#ffffff" opacity="1.0" />
+<g>
+<text x="20.0" y="34.4" font-size="14" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">white-space: normal — 这段文字会自动按照可用宽度折行。超出容器宽度的内容会被拆分</text>
+<text x="20.0" y="51.199999999999996" font-size="14" fill="#2c3e50" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">到下一行显示。</text>
+</g>
+<g>
+<rect x="20.0" y="68.6" width="560.0" height="50.400000000000006" fill="#f8f9fa" opacity="1.0" />
+<text x="20.0" y="83.0" font-size="14" fill="#8e44ad" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">white-space: pre</text>
+<text x="20.0" y="99.8" font-size="14" fill="#8e44ad" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">  保留换行符</text>
+<text x="20.0" y="116.6" font-size="14" fill="#8e44ad" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal" xml:space="preserve">  和前导空格</text>
+</g>
+<g>
+<text x="20.0" y="148.4" font-size="14" fill="#e74c3c" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">white-space: nowrap — 这段文字不会折行，即使超出容器宽度也保持单行。在正常模式下这段文字应该会换行，但 nowrap 让它保持在一行中直到结束。</text>
+</g>
+</g>
+</svg>

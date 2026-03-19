@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="720.0" height="200.0" viewBox="0 0 720.0 200.0">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="720.0" height="200.0" fill="#f8f9fa" opacity="1.0" />
+<g>
+<path d="M32.0,20.0 L224.0,20.0 A12.0,12.0,0,0,1,236.0,32.0 L236.0,60.8 L236.0,60.8 L20.0,60.8 L20.0,60.8 L20.0,32.0 A12.0,12.0,0,0,1,32.0,20.0 Z" fill="#3498db" opacity="1.0" />
+<g>
+<text x="57.96875" y="46.4" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">Tab 标签（顶部圆角）</text>
+</g>
+</g>
+<g>
+<path d="M276.0,20.0 L468.0,20.0 L468.0,20.0 L468.0,60.8 L468.0,60.8 L252.0,60.8 L252.0,60.8 L252.0,44.0 A24.0,24.0,0,0,1,276.0,20.0 Z" fill="#2ecc71" opacity="1.0" />
+<g>
+<text x="307.8359375" y="46.4" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">仅左上圆角 24px</text>
+</g>
+</g>
+<g>
+<path d="M504.0,20.0 L700.0,20.0 L700.0,20.0 L700.0,40.8 A20.0,20.0,0,0,1,680.0,60.8 L484.0,60.8 L484.0,60.8 L484.0,40.0 A20.0,20.0,0,0,1,504.0,20.0 Z" fill="#e74c3c" opacity="1.0" />
+<g>
+<text x="564.0" y="46.4" font-size="14" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">对角圆角</text>
+</g>
+</g>
+<g>
+<path d="M36.0,76.8 L220.0,76.8 A16.0,16.0,0,0,1,236.0,92.8 L236.0,104.4 A16.0,16.0,0,0,1,220.0,120.4 L20.0,120.4 L20.0,120.4 L20.0,92.8 A16.0,16.0,0,0,1,36.0,76.8 Z" fill="#dfe6e9" opacity="1.0" />
+<g>
+<text x="34.0" y="104.6" font-size="13" fill="#2d3436" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">对话气泡（左下直角）</text>
+</g>
+</g>
+<g>
+<path d="M268.0,76.8 L452.0,76.8 A16.0,16.0,0,0,1,468.0,92.8 L468.0,120.4 L468.0,120.4 L268.0,120.4 A16.0,16.0,0,0,1,252.0,104.4 L252.0,92.8 A16.0,16.0,0,0,1,268.0,76.8 Z" fill="#74b9ff" opacity="1.0" />
+<g>
+<text x="324.0" y="104.6" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">对话气泡（右下直角）</text>
+</g>
+</g>
+<g>
+<path d="M484.0,76.8 L700.0,76.8 L700.0,76.8 L700.0,104.4 A16.0,16.0,0,0,1,684.0,120.4 L500.0,120.4 A16.0,16.0,0,0,1,484.0,104.4 L484.0,76.8 Z" fill="#fdcb6e" opacity="1.0" />
+<g>
+<text x="559.5" y="104.6" font-size="13" fill="#2d3436" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">仅底部圆角</text>
+</g>
+</g>
+<g>
+<path d="M30.0,136.4 L226.0,136.4 A10.0,10.0,0,0,1,236.0,146.4 L236.0,180.0 L236.0,180.0 L20.0,180.0 L20.0,180.0 L20.0,146.4 A10.0,10.0,0,0,1,30.0,136.4 Z" fill="#ffffff" opacity="1.0" />
+<path d="M30.0,136.4 L226.0,136.4 A10.0,10.0,0,0,1,236.0,146.4 L236.0,180.0 L236.0,180.0 L20.0,180.0 L20.0,180.0 L20.0,146.4 A10.0,10.0,0,0,1,30.0,136.4 Z" fill="none" stroke="#6c5ce7" stroke-width="2.0" />
+<g>
+<text x="101.984375" y="164.20000000000002" font-size="13" fill="#6c5ce7" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">边框 Tab</text>
+</g>
+</g>
+<g>
+<path d="M260.0,136.4 L448.0,136.4 A20.0,20.0,0,0,1,468.0,156.4 L468.0,172.0 A8.0,8.0,0,0,1,460.0,180.0 L272.0,180.0 A20.0,20.0,0,0,1,252.0,160.0 L252.0,144.4 A8.0,8.0,0,0,1,260.0,136.4 Z" fill="#ffeaa7" opacity="1.0" />
+<path d="M260.0,136.4 L448.0,136.4 A20.0,20.0,0,0,1,468.0,156.4 L468.0,172.0 A8.0,8.0,0,0,1,460.0,180.0 L272.0,180.0 A20.0,20.0,0,0,1,252.0,160.0 L252.0,144.4 A8.0,8.0,0,0,1,260.0,136.4 Z" fill="none" stroke="#d63031" stroke-width="2.0" stroke-dasharray="6.0,4.0" />
+<g>
+<text x="334.0" y="164.20000000000002" font-size="13" fill="#d63031" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">票券风格</text>
+</g>
+</g>
+<g>
+<rect x="484.0" y="136.4" width="216.0" height="43.6" fill="#a29bfe" opacity="1.0" rx="21.8" ry="21.8" />
+<g>
+<text x="566.0" y="162.20000000000002" font-size="13" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">药丸按钮</text>
+</g>
+</g>
+</g>
+</svg>

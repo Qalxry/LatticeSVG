@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="800.0" height="253.6" viewBox="0 0 800.0 253.6">
+<defs>
+</defs>
+<g>
+<rect x="0.0" y="0.0" width="800.0" height="253.6" fill="#1a1a2e" opacity="1.0" />
+<g>
+<text x="20.0" y="38.3" font-size="18" fill="#ffffff" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">Demo 26: opacity 渲染</text>
+</g>
+<g>
+<g>
+<rect x="20.0" y="53.599999999999994" width="145.6" height="60.0" fill="#3498db" opacity="1.0" />
+</g>
+<g>
+<text x="63.3" y="132.7" font-size="11" fill="#aaaaaa" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">opacity: 1.0</text>
+</g>
+<g>
+<rect x="173.6" y="53.599999999999994" width="145.6" height="60.0" fill="#3498db" opacity="0.8" />
+</g>
+<g>
+<text x="216.89999999999998" y="132.7" font-size="11" fill="#aaaaaa" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">opacity: 0.8</text>
+</g>
+<g>
+<rect x="327.2" y="53.599999999999994" width="145.6" height="60.0" fill="#3498db" opacity="0.6" />
+</g>
+<g>
+<text x="370.5" y="132.7" font-size="11" fill="#aaaaaa" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">opacity: 0.6</text>
+</g>
+<g>
+<rect x="480.79999999999995" y="53.599999999999994" width="145.6" height="60.0" fill="#3498db" opacity="0.4" />
+</g>
+<g>
+<text x="524.0999999999999" y="132.7" font-size="11" fill="#aaaaaa" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">opacity: 0.4</text>
+</g>
+<g>
+<rect x="634.4" y="53.599999999999994" width="145.6" height="60.0" fill="#3498db" opacity="0.2" />
+</g>
+<g>
+<text x="677.6999999999999" y="132.7" font-size="11" fill="#aaaaaa" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">opacity: 0.2</text>
+</g>
+</g>
+<g>
+<g>
+<rect x="20.0" y="146.8" width="145.6" height="39.2" fill="#2a2a4e" opacity="1.0" />
+<text x="49.7375" y="173.4" font-size="16" fill="#e74c3c" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal">LatticeSVG</text>
+</g>
+<g>
+<text x="52.1359375" y="205.1" font-size="11" fill="#aaaaaa" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">text opacity: 1.0</text>
+</g>
+<g>
+<rect x="173.6" y="146.8" width="145.6" height="39.2" fill="#2a2a4e" opacity="0.8" />
+<text x="203.33749999999998" y="173.4" font-size="16" fill="#e74c3c" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal" opacity="0.8">LatticeSVG</text>
+</g>
+<g>
+<text x="205.73593749999998" y="205.1" font-size="11" fill="#aaaaaa" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">text opacity: 0.8</text>
+</g>
+<g>
+<rect x="327.2" y="146.8" width="145.6" height="39.2" fill="#2a2a4e" opacity="0.6" />
+<text x="356.9375" y="173.4" font-size="16" fill="#e74c3c" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal" opacity="0.6">LatticeSVG</text>
+</g>
+<g>
+<text x="359.3359375" y="205.1" font-size="11" fill="#aaaaaa" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">text opacity: 0.6</text>
+</g>
+<g>
+<rect x="480.79999999999995" y="146.8" width="145.6" height="39.2" fill="#2a2a4e" opacity="0.4" />
+<text x="510.53749999999997" y="173.4" font-size="16" fill="#e74c3c" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal" opacity="0.4">LatticeSVG</text>
+</g>
+<g>
+<text x="512.9359374999999" y="205.1" font-size="11" fill="#aaaaaa" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">text opacity: 0.4</text>
+</g>
+<g>
+<rect x="634.4" y="146.8" width="145.6" height="39.2" fill="#2a2a4e" opacity="0.2" />
+<text x="664.1374999999999" y="173.4" font-size="16" fill="#e74c3c" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="bold" font-style="normal" opacity="0.2">LatticeSVG</text>
+</g>
+<g>
+<text x="666.5359374999999" y="205.1" font-size="11" fill="#aaaaaa" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">text opacity: 0.2</text>
+</g>
+</g>
+<g>
+<text x="20.0" y="231.39999999999998" font-size="12" fill="#2ecc71" font-family="Noto Sans CJK JP, Noto Sans, DejaVu Sans, Arial, Liberation Sans, FreeSans, sans-serif" font-weight="normal" font-style="normal">✓ 预期：从左到右透明度递增，背景和文字均应逐渐变淡</text>
+</g>
+</g>
+</svg>
