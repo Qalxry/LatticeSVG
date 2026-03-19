@@ -2,6 +2,29 @@
 
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v0.1.2 — Font Query API & MplNode Auto-Font (2026-03-19)
+
+### New Features
+
+- **Font Query API** (`latticesvg.text`)
+    - `get_font_path(family, weight="normal", style="normal") -> Optional[str]` — resolve a CSS family name to its filesystem path without silent fallback.
+    - `list_fonts() -> List[FontInfo]` — enumerate every indexed font as a `FontInfo` dataclass (fields: `family`, `path`, `weight`, `style`, `format`, `face_index`).
+    - `parse_font_families(value) -> List[str]` — parse a CSS `font-family` string / list / `None` into a flat list of family names.
+    - `FontInfo` frozen dataclass exported from `latticesvg.text`.
+    - New `FontManager` methods: `get_font_path()` and `list_fonts()` (same semantics as the convenience wrappers above).
+
+- **MplNode — Auto-font configuration**
+    - New parameter `auto_mpl_font: bool = True` — when enabled, `MplNode` reads `font-family` from its computed/inherited style, resolves font paths via `FontManager`, registers them with `matplotlib.font_manager.fontManager.addfont()`, and wraps `savefig()` in a `matplotlib.rc_context()` so the chart text uses the same font family as the surrounding LatticeSVG layout.
+    - `svg.fonttype` is always set to `"path"` inside the context, ensuring text renders as vector outlines for cross-platform consistency.
+    - New parameter `tight_layout: bool = True` — calls `figure.tight_layout()` inside the font-aware `rc_context` (so label metrics are correct before the layout adjustment).
+    - `font-family` is inherited from a parent `GridContainer` when not set on `MplNode` directly.
+
+### Examples
+
+- `demo_51_font_query_mpl.py` — 2×2 multi-font comparison showcasing `get_font_path`, `list_fonts`, and `MplNode` auto-font with Microsoft YaHei, KaiTi, FangSong, and Noto Sans CJK JP.
+
+---
+
 ## v0.1.0 — Initial Release
 
 First public release.

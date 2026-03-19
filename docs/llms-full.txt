@@ -1,6 +1,6 @@
 # LatticeSVG — Complete Technical Reference
 
-> **Version:** 0.1.1 | **License:** MIT | **Python:** ≥ 3.8
+> **Version:** 0.1.2 | **License:** MIT | **Python:** ≥ 3.8
 >
 > A declarative vector layout engine powered by CSS Grid. Describe layouts with Python dicts, get pixel-perfect SVG/PNG output.
 >
@@ -191,7 +191,7 @@ from latticesvg import (
     build_table,        # Quick table builder function
 )
 
-latticesvg.__version__  # "0.1.1"
+latticesvg.__version__  # "0.1.2"
 ```
 
 **Submodule-level imports** (advanced use):

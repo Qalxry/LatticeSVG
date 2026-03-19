@@ -2,6 +2,29 @@
 
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/) 规范。
 
+## v0.1.2 — 字体查询 API 与 MplNode 自动字体配置（2026-03-19）
+
+### 新增功能
+
+- **字体查询 API**（`latticesvg.text`）
+    - `get_font_path(family, weight="normal", style="normal") -> Optional[str]` — 将 CSS 字族名解析为文件系统路径，找不到时返回 `None`（不进行静默回退）。
+    - `list_fonts() -> List[FontInfo]` — 枚举所有已索引字体，返回 `FontInfo` 数据类列表（字段：`family`、`path`、`weight`、`style`、`format`、`face_index`）。
+    - `parse_font_families(value) -> List[str]` — 将 CSS `font-family` 字符串 / 列表 / `None` 解析为字族名平铺列表。
+    - `FontInfo` 不可变数据类从 `latticesvg.text` 对外导出。
+    - `FontManager` 新增实例方法：`get_font_path()` 和 `list_fonts()`。
+
+- **MplNode — 自动字体配置**
+    - 新参数 `auto_mpl_font: bool = True` — 启用后，`MplNode` 从计算/继承样式中读取 `font-family`，通过 `FontManager` 解析字体路径，调用 `fontManager.addfont()` 注册到 matplotlib，并在 `rc_context()` 中执行 `savefig()`，使图表文字与 LatticeSVG 布局使用相同字体。
+    - 上下文内始终设置 `svg.fonttype="path"`，确保文字以矢量轮廓渲染。
+    - 新参数 `tight_layout: bool = True` — 在字体感知的 `rc_context` 内调用 `figure.tight_layout()`，使标签度量在布局调整前即已正确。
+    - 未在 `MplNode` 直接设置 `font-family` 时，自动继承父级 `GridContainer` 的字体设置。
+
+### 示例
+
+- `demo_51_font_query_mpl.py` — 2×2 多字体对比演示，展示 `get_font_path`、`list_fonts` 及 `MplNode` 自动字体，涵盖微软雅黑、楷体、仿宋、Noto Sans CJK JP。
+
+---
+
 ## v0.1.0 — 初始版本
 
 首个公开发布版本。
