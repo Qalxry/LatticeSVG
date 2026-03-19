@@ -2,6 +2,27 @@
 
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/) 规范。
 
+## v0.1.3 — Matplotlib 字体便捷函数与回退修复（2026-03-19）
+
+### 新增功能
+
+- **Matplotlib 字体便捷函数**（`latticesvg.text`）
+    - `mpl_font_context(font_family)` — 上下文管理器，临时将 LatticeSVG 字体应用于 matplotlib，退出时自动恢复。
+    - `apply_mpl_fonts(font_family)` — 将 LatticeSVG 字体解析应用于 matplotlib 全局 `rcParams`。
+    - `restore_mpl_fonts()` — 恢复到 `apply_mpl_fonts` 之前的状态。
+    - 三个函数均接受 CSS `font-family` 字符串，通过 `addfont()` 注册字体，并设置 `svg.fonttype: "path"` + `axes.unicode_minus: False`。
+
+### Bug 修复
+
+- **修复 matplotlib 字体回退失败。** 此前 `font.family` 被设为泛型名（`"sans-serif"`），导致 matplotlib 只解析到一个字体文件，丢失逐字形 CJK 回退。现在设为具体字体名列表（如 `["Arial", "Microsoft YaHei"]`），使 `_find_fonts_by_props` 构建带 `_fallback_list` 的 `FT2Font`，实现逐字形回退。
+- **修复 MplNode 对预创建 figure 的回退问题。** 同时填充 `font.sans-serif`、`font.serif`、`font.monospace` 列表，使在 `rc_context` 之前创建的 text 元素（其 `FontProperties` 默认为 `"sans-serif"`）也能解析到正确字体。
+
+### 内部重构
+
+- `MplNode._resolve_mpl_font_rc()` 和 `_register_fonts_with_mpl()` 已委托给 `latticesvg.text` 中的共享 `_build_mpl_rc()` 和 `_register_mpl_fonts()`。
+
+---
+
 ## v0.1.2 — 字体查询 API 与 MplNode 自动字体配置（2026-03-19）
 
 ### 新增功能

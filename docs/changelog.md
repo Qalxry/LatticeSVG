@@ -2,6 +2,27 @@
 
 This project follows [Semantic Versioning](https://semver.org/).
 
+## v0.1.3 — Matplotlib Font Helpers & Fallback Fix (2026-03-19)
+
+### New Features
+
+- **Matplotlib font helpers** (`latticesvg.text`)
+    - `mpl_font_context(font_family)` — context manager that temporarily applies LatticeSVG fonts to matplotlib; restores on exit.
+    - `apply_mpl_fonts(font_family)` — apply LatticeSVG font resolution to matplotlib’s global `rcParams`.
+    - `restore_mpl_fonts()` — revert `rcParams` to the state before `apply_mpl_fonts`.
+    - All three accept a CSS `font-family` string, register fonts via `addfont()`, and set `svg.fonttype: "path"` + `axes.unicode_minus: False`.
+
+### Bug Fixes
+
+- **Fixed matplotlib font fallback failure.** Previously, `font.family` was set to a generic name (`"sans-serif"`) which caused matplotlib to resolve only one font file, losing per-glyph CJK fallback. Now `font.family` is set to the concrete name list (e.g. `["Arial", "Microsoft YaHei"]`) so that `_find_fonts_by_props` builds an `FT2Font` with `_fallback_list`, enabling per-glyph fallback.
+- **Fixed MplNode regression with pre-created figures.** Also populates `font.sans-serif`, `font.serif`, `font.monospace` lists so that text elements created before `rc_context` (whose `FontProperties` default to `"sans-serif"`) can still resolve to the correct fonts.
+
+### Internal
+
+- Refactored `MplNode._resolve_mpl_font_rc()` and `_register_fonts_with_mpl()` to delegate to shared `_build_mpl_rc()` and `_register_mpl_fonts()` in `latticesvg.text`.
+
+---
+
 ## v0.1.2 — Font Query API & MplNode Auto-Font (2026-03-19)
 
 ### New Features
