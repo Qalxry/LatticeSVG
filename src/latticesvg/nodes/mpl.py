@@ -122,72 +122,25 @@ class MplNode(Node):
         Returns ``(rc_dict, font_paths)`` where *font_paths* is a list
         of filesystem paths that must be registered with matplotlib's
         ``fontManager`` before the rc overrides take effect.
-        """
-        from ..text.font import (
-            FontManager,
-            _GENERIC_FAMILIES,
-            parse_font_families,
-        )
 
-        families = parse_font_families(self.style.get("font-family"))
+        Delegates to :func:`latticesvg.text._build_mpl_rc`.
+        """
+        from ..text import _build_mpl_rc
+
+        css_font = self.style.get("font-family") or "sans-serif"
         weight = self.style.get("font-weight") or "normal"
         fstyle = self.style.get("font-style") or "normal"
-
-        # Detect generic family at the tail of the list
-        generic = "sans-serif"
-        for fam in reversed(families):
-            if fam.lower() in _GENERIC_FAMILIES:
-                generic = fam.lower()
-                break
-
-        fm = FontManager.instance()
-        chain = fm.find_font_chain(families, weight=weight, style=fstyle)
-
-        # Convert file paths to embedded family names for matplotlib,
-        # preserving the user's intended priority order from CSS
-        # font-family.  matplotlib 3.10+ supports per-glyph fallback
-        # across the font list, so CJK characters will still be found
-        # from a later entry if the primary font lacks them.
-        mpl_names: List[str] = []
-        seen: set = set()
-        for path in chain:
-            name = fm.font_family_name(path)
-            if name and name not in seen:
-                seen.add(name)
-                mpl_names.append(name)
-
-        rc: Dict[str, Any] = {"svg.fonttype": "path"}
-        if mpl_names:
-            # Map generic family to the corresponding matplotlib rc key
-            rc_key = f"font.{generic}"
-            rc["font.family"] = generic
-            rc[rc_key] = mpl_names
-            # Also populate the other generic lists so that any
-            # pre-existing text elements (which may default to
-            # sans-serif) can still find the CJK fonts.
-            for alt in ("sans-serif", "serif", "monospace"):
-                alt_key = f"font.{alt}"
-                if alt_key not in rc:
-                    rc[alt_key] = mpl_names
-        return rc, chain
+        return _build_mpl_rc(css_font, weight=weight, style=fstyle)
 
     @staticmethod
     def _register_fonts_with_mpl(font_paths: List[str]) -> None:
         """Ensure each font path is known to matplotlib's fontManager.
 
-        LatticeSVG may discover fonts that matplotlib has not indexed.
-        Calling ``fontManager.addfont()`` registers them so that
-        ``findfont()`` can locate them by family name.
+        Delegates to :func:`latticesvg.text._register_mpl_fonts`.
         """
-        from matplotlib.font_manager import fontManager
+        from ..text import _register_mpl_fonts
 
-        known = {fe.fname for fe in fontManager.ttflist}
-        for path in font_paths:
-            if path not in known:
-                try:
-                    fontManager.addfont(path)
-                except Exception:
-                    pass
+        _register_mpl_fonts(font_paths)
 
     def get_svg_fragment(self) -> str:
         """Export the figure to an SVG string (cached).

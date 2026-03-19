@@ -38,6 +38,7 @@
 - [8. Text Typesetting](#8-text-typesetting)
   - [8.1 Font Management](#81-font-management-fontmanager)
   - [8.1.1 Font Query API](#811-font-query-api)
+  - [8.1.2 Matplotlib Font Helpers](#812-matplotlib-font-helpers)
   - [8.2 Line Breaking Algorithm](#82-line-breaking-algorithm)
   - [8.3 Rich Text (HTML/Markdown)](#83-rich-text-htmlmarkdown-markup)
   - [8.4 Vertical Writing Modes](#84-vertical-writing-modes)
@@ -1113,6 +1114,47 @@ for fi in list_fonts():
 parse_font_families('"Noto Sans CJK SC", sans-serif')  # ["Noto Sans CJK SC", "sans-serif"]
 parse_font_families(None)                                # ["sans-serif"]
 ```
+
+#### 8.1.2 Matplotlib Font Helpers
+
+Convenience functions that apply LatticeSVG's font resolution to standalone matplotlib figures — no `MplNode` or grid layout required.
+
+```python
+from latticesvg.text import apply_mpl_fonts, restore_mpl_fonts, mpl_font_context
+```
+
+**Context manager** — temporary override, automatically restored on exit:
+
+```python
+with mpl_font_context("Times New Roman, Microsoft YaHei, sans-serif"):
+    fig, ax = plt.subplots()
+    ax.bar(["春季 Spring", "夏季 Summer"], [28, 45])
+    ax.set_title("中英文混排 Title")
+    fig.savefig("chart.svg")
+# matplotlib fonts restored here
+```
+
+**Global apply / restore** — for scripts that create many figures:
+
+```python
+apply_mpl_fonts("Times New Roman, Microsoft YaHei, sans-serif")
+# ... all subsequent figures use these fonts ...
+fig, ax = plt.subplots()
+ax.plot([1, 2, 3], [1, 4, 9])
+fig.savefig("plot.png")
+
+restore_mpl_fonts()   # revert to previous state
+```
+
+**API summary:**
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `mpl_font_context` | `(font_family, weight="normal", style="normal")` | Context manager; wraps `matplotlib.rc_context()` |
+| `apply_mpl_fonts` | `(font_family, weight="normal", style="normal") -> None` | Modify global `rcParams`; saves snapshot for restore |
+| `restore_mpl_fonts` | `() -> None` | Revert `rcParams` to pre-`apply_mpl_fonts` state |
+
+> All three accept a CSS `font-family` string (e.g. `"Arial, 'Noto Sans CJK SC', sans-serif"`). They resolve fonts via `FontManager`, register paths with `fontManager.addfont()`, and set `svg.fonttype: "path"` + `axes.unicode_minus: False`.
 
 ---
 

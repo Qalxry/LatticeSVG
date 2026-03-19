@@ -149,10 +149,8 @@ class TestMplNodeAutoFont:
         from latticesvg.nodes.mpl import MplNode
         node = MplNode(mpl_figure, style={"font-family": "Arial, sans-serif"})
         rc, paths = node._resolve_mpl_font_rc()
-        assert rc["font.family"] == "sans-serif"
-        assert "font.sans-serif" in rc
-        assert isinstance(rc["font.sans-serif"], list)
-        assert len(rc["font.sans-serif"]) > 0
+        assert isinstance(rc["font.family"], list)
+        assert len(rc["font.family"]) > 0
         assert rc["svg.fonttype"] == "path"
         assert isinstance(paths, list)
 
@@ -160,15 +158,15 @@ class TestMplNodeAutoFont:
         from latticesvg.nodes.mpl import MplNode
         node = MplNode(mpl_figure, style={"font-family": "Times New Roman, serif"})
         rc, paths = node._resolve_mpl_font_rc()
-        assert rc["font.family"] == "serif"
-        assert "font.serif" in rc
+        assert isinstance(rc["font.family"], list)
+        assert len(rc["font.family"]) > 0
 
     def test_resolve_mpl_font_rc_monospace(self, mpl_figure):
         from latticesvg.nodes.mpl import MplNode
         node = MplNode(mpl_figure, style={"font-family": "monospace"})
         rc, paths = node._resolve_mpl_font_rc()
-        assert rc["font.family"] == "monospace"
-        assert "font.monospace" in rc
+        assert isinstance(rc["font.family"], list)
+        assert len(rc["font.family"]) > 0
 
     def test_get_svg_fragment_with_auto_font(self, mpl_figure):
         from latticesvg.nodes.mpl import MplNode
@@ -213,3 +211,86 @@ class TestGenericFamilies:
     def test_contains_standard(self):
         for name in ("serif", "sans-serif", "monospace"):
             assert name in _GENERIC_FAMILIES
+
+
+# ---------------------------------------------------------------
+# mpl font helpers (apply_mpl_fonts / restore / context manager)
+# ---------------------------------------------------------------
+
+
+mpl = pytest.importorskip("matplotlib")
+plt = pytest.importorskip("matplotlib.pyplot")
+
+
+class TestBuildMplRc:
+    def test_returns_rc_and_paths(self):
+        from latticesvg.text import _build_mpl_rc
+        rc, paths = _build_mpl_rc("sans-serif")
+        assert isinstance(rc, dict)
+        assert isinstance(paths, list)
+        assert rc["svg.fonttype"] == "path"
+        assert rc["axes.unicode_minus"] is False
+
+    def test_generic_serif(self):
+        from latticesvg.text import _build_mpl_rc
+        rc, _ = _build_mpl_rc("Times New Roman, serif")
+        assert isinstance(rc["font.family"], list)
+        assert len(rc["font.family"]) > 0
+
+    def test_generic_monospace(self):
+        from latticesvg.text import _build_mpl_rc
+        rc, _ = _build_mpl_rc("monospace")
+        assert isinstance(rc["font.family"], list)
+        assert len(rc["font.family"]) > 0
+
+
+class TestApplyRestoreMplFonts:
+    def test_apply_changes_rcparams(self):
+        from latticesvg.text import apply_mpl_fonts, restore_mpl_fonts
+        old_family = mpl.rcParams["font.family"]
+        apply_mpl_fonts("sans-serif")
+        assert mpl.rcParams["axes.unicode_minus"] is False
+        restore_mpl_fonts()
+        assert mpl.rcParams["font.family"] == old_family
+
+    def test_restore_is_idempotent(self):
+        from latticesvg.text import restore_mpl_fonts
+        restore_mpl_fonts()  # should not raise when nothing saved
+
+    def test_apply_twice_overwrites_snapshot(self):
+        from latticesvg.text import apply_mpl_fonts, restore_mpl_fonts
+        apply_mpl_fonts("sans-serif")
+        apply_mpl_fonts("serif")
+        # font.family is now a concrete name list
+        family = mpl.rcParams["font.family"]
+        assert isinstance(family, list)
+        assert len(family) > 0
+        restore_mpl_fonts()
+
+    def test_apply_sets_svg_fonttype(self):
+        from latticesvg.text import apply_mpl_fonts, restore_mpl_fonts
+        apply_mpl_fonts("sans-serif")
+        assert mpl.rcParams["svg.fonttype"] == "path"
+        restore_mpl_fonts()
+
+
+class TestMplFontContext:
+    def test_context_applies_and_restores(self):
+        from latticesvg.text import mpl_font_context
+        old_minus = mpl.rcParams["axes.unicode_minus"]
+        old_fonttype = mpl.rcParams["svg.fonttype"]
+        with mpl_font_context("sans-serif"):
+            assert mpl.rcParams["axes.unicode_minus"] is False
+            assert mpl.rcParams["svg.fonttype"] == "path"
+        # Restored after exit
+        assert mpl.rcParams["axes.unicode_minus"] == old_minus
+        assert mpl.rcParams["svg.fonttype"] == old_fonttype
+
+    def test_context_with_figure(self):
+        from latticesvg.text import mpl_font_context
+        with mpl_font_context("sans-serif"):
+            fig, ax = plt.subplots()
+            ax.plot([1, 2], [3, 4])
+            ax.set_title("Test")
+            plt.close(fig)
+        # Just verify no exception
